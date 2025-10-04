@@ -1,0 +1,256 @@
+.about {
+  background: var(--bg-primary);
+  position: relative;
+}
+
+/* Section-specific background pattern */
+.about::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(45deg, transparent 25%, var(--accent-primary) 25%, var(--accent-primary) 50%, transparent 50%, transparent 75%, var(--accent-primary) 75%);
+  background-size: 20px 20px;
+  opacity: 0.03;
+  z-index: 0;
+}
+
+.about-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 4rem;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.about-image {
+  display: flex;
+  justify-content: center;
+}
+
+.profile-image-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+}
+
+.profile-image-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background: var(--accent-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 20px 40px var(--shadow-medium);
+  transition: transform 0.3s ease;
+}
+
+.profile-image-placeholder:hover {
+  transform: scale(1.05);
+}
+
+.initials {
+  font-size: 4rem;
+  font-weight: 700;
+  color: white;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.image-glow {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  border-radius: 20px;
+  background: var(--accent-gradient);
+  opacity: 0.3;
+  filter: blur(20px);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.about-text {
+  max-width: 600px;
+}
+
+.about-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.about-subtitle {
+  font-size: 1.3rem;
+  color: var(--accent-primary);
+  font-weight: 600;
+  margin-bottom: 2rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #555;
+  font-size: 1rem;
+}
+
+.contact-icon {
+  color: #667eea;
+  font-size: 1.2rem;
+  width: 20px;
+  text-align: center;
+}
+
+.about-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+  text-align: justify;
+}
+
+.about-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.about-buttons .btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-buttons .btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.about-buttons .btn:hover::before {
+  left: 100%;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .about-content {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+  }
+  
+  .about-text {
+    max-width: 100%;
+  }
+  
+  .profile-image-container {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .initials {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-title {
+    font-size: 2rem;
+  }
+  
+  .about-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .about-description {
+    font-size: 1rem;
+  }
+  
+  .about-buttons {
+    justify-content: center;
+  }
+  
+  .about-buttons .btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+  
+  .profile-image-container {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .initials {
+    font-size: 2.5rem;
+  }
+  
+  .contact-info {
+    padding: 1rem;
+  }
+  
+  .contact-item {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-title {
+    font-size: 1.8rem;
+  }
+  
+  .about-subtitle {
+    font-size: 1rem;
+  }
+  
+  .about-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .about-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .profile-image-container {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .initials {
+    font-size: 2rem;
+  }
+}
