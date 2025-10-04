@@ -4,6 +4,7 @@ import { FaGithub, FaLinkedin, FaChevronDown } from 'react-icons/fa';
 import { useInView } from 'react-intersection-observer';
 import api from '../services/api';
 import './Home.css';
+import profileImage from '../assets/profile/my resume photot.jpg'; // ✅ Added import
 
 const Home = () => {
   const [personalInfo, setPersonalInfo] = useState(null);
@@ -128,13 +129,9 @@ const Home = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <div className="profile-image-container">
+              {/* ✅ Replaced initials with actual profile photo */}
               <div className="profile-image-placeholder">
-                <span className="initials">
-                  {(personalInfo?.full_name || 'Sarthak Sharma')
-                    .split(' ')
-                    .map(name => name[0])
-                    .join('')}
-                </span>
+                <img src={profileImage} alt="Profile" className="profile-image" />
               </div>
               <div className="image-glow"></div>
             </div>
