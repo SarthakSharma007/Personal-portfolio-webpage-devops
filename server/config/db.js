@@ -1,31 +1,24 @@
 const mysql = require('mysql2');
-require('dotenv').config();
+const dotenv = require('dotenv');
 
-// Create connection pool for better performance
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'portfolio_db',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  acquireTimeout: 60000,
-  timeout: 60000
+dotenv.config();
+
+const db = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
-// Get promise-based connection
-const promisePool = pool.promise();
-
-// Test database connection
-const testConnection = async () => {
-  try {
-    const connection = await promisePool.getConnection();
-    console.log('✅ Database connected successfully');
-    connection.release();
-  } catch (error) {
-    console.error('❌ Database connection failed:', error.message);
+db.connect(error => {
+  if (error) {
+    console.error('Error connecting to the database:', error);
+    return;
   }
-};
+  console.log('Successfully connected to the database.');
+});
 
-module.exports = { promisePool, testConnection };
+module.exports = db;

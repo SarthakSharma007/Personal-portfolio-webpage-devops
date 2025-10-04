@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaGithub, FaExternalLinkAlt, FaCode, FaEye } from 'react-icons/fa';
+import { FaGithub, FaCode } from 'react-icons/fa';
 import { useInView } from 'react-intersection-observer';
 import api from '../services/api';
 import './Projects.css';

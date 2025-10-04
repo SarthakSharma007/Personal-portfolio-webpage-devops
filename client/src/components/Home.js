@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaGithub, FaLinkedin, FaFileDownload, FaChevronDown } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaChevronDown } from 'react-icons/fa';
 import { useInView } from 'react-intersection-observer';
 import api from '../services/api';
 import './Home.css';
@@ -30,8 +30,8 @@ const Home = () => {
           full_name: 'Sarthak Sharma',
           title: 'DevOps Engineer',
           bio: 'I am a passionate DevOps Engineer with expertise in cloud technologies, containerization, and automation. I love building scalable infrastructure and implementing CI/CD pipelines to streamline development workflows.',
-          github_url: 'https://github.com/sarthaksharma',
-          linkedin_url: 'https://linkedin.com/in/sarthaksharma',
+          github_url: 'https://github.com/sarthaksharma007',
+          linkedin_url: 'https://linkedin.com/in/sarthak-sharma-a4bb4b1a6',
           resume_url: '/resume.pdf'
         });
       } finally {
@@ -102,34 +102,21 @@ const Home = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
             >
               <a
-                href={personalInfo?.resume_url || '/resume.pdf'}
+                href={personalInfo?.linkedin_url || '#'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-primary"
               >
-                <FaFileDownload /> Resume
+                <FaLinkedin /> LinkedIn
               </a>
               
               <a
-                href="#contact"
+                href={personalInfo?.github_url || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn btn-secondary"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                }}
               >
-                Hire Me
-              </a>
-              
-              <a
-                href="#contact"
-                className="btn btn-outline"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Contact Me
+                <FaGithub /> GitHub
               </a>
             </motion.div>
           </div>

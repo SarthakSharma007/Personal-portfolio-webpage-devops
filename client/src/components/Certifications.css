@@ -229,6 +229,32 @@
   font-size: 1.1rem;
 }
 
+/* Dark Theme Styles */
+[data-theme="dark"] .certification-card {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .carousel-btn {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .carousel-btn:hover {
+  background: var(--accent-primary);
+  color: white;
+}
+
+[data-theme="dark"] .indicator {
+  background: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .indicator.active {
+  background: var(--accent-gradient);
+}
+
+
 /* Responsive design */
 @media (max-width: 768px) {
   .certification-card {
