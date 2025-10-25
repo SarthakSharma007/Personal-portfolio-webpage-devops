@@ -1,19 +1,18 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// 1. The context MUST be created and exported first.
+// 1. Create and export the context FIRST
 export const ThemeContext = createContext();
 
-// 2. The provider component, which USES the context, is defined second.
+// 2. NOW, create the provider that uses the context
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
-    // Check for saved theme in localStorage
     const savedTheme = localStorage.getItem('theme');
-    // Check for user's system preference
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     return savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
   });
 
   useEffect(() => {
+    // Apply theme to the body or root element
     document.body.className = theme;
     localStorage.setItem('theme', theme);
   }, [theme]);
@@ -23,9 +22,14 @@ export const ThemeProvider = ({ children }) => {
   };
 
   return (
-    // 3. This line will no longer fail, because ThemeContext is guaranteed to be defined.
+    // 3. This line will now work correctly
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
+};
+
+// 4. Create and export the custom hook
+export const useTheme = () => {
+  return useContext(ThemeContext);
 };
