@@ -1,21 +1,19 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-
 const api = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  // This is the fix:
+  // We change '/api' to the full backend URL.
+  baseURL: 'http://localhost:5000/api', 
+  
+  withCredentials: true,
 });
 
-// Request interceptor to add auth token
+// Interceptor to automatically add the auth token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
   },
@@ -24,17 +22,16 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors
+// Interceptor for response errors (e.g., token expired)
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
+      // Handle unauthorized errors, e.g., redirect to login
       localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      // Optionally redirect to login
+      // You could redirect here:
+      // window.location.href = '/login'; 
+      console.error('Unauthorized, token might be invalid or expired.');
     }
     return Promise.reject(error);
   }
