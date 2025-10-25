@@ -1,11 +1,16 @@
 import React from 'react';
 import { FaSun, FaMoon } from 'react-icons/fa';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext'; // Your import is correct
 import './ThemeToggle.css';
 
 const ThemeToggle = () => {
-  const { isDarkMode, toggleTheme } = useTheme();
+  // 1. Get 'theme' from the hook, not 'isDarkMode'
+  const { theme, toggleTheme } = useTheme(); 
 
+  // 2. Create 'isDarkMode' based on the 'theme' state
+  const isDarkMode = theme === 'dark';
+
+  // The rest of your code will now work perfectly
   return (
     <button
       className="theme-toggle"
