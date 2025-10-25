@@ -1,9 +1,9 @@
-const mysql = require('mysql2/promise'); // 1. Import 'mysql2/promise'
+const mysql = require('mysql2/promise'); // Import the 'promise' version
 const dotenv = require('dotenv');
 
 dotenv.config();
 
-// 2. Use 'createPool' instead of 'createConnection'
+// Use 'createPool' for modern async/await
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -14,7 +14,7 @@ const pool = mysql.createPool({
   }
 });
 
-// 3. (Optional but good) Add a function to test the connection
+// Test the connection
 const testConnection = async () => {
   try {
     await pool.execute('SELECT 1');
@@ -24,8 +24,7 @@ const testConnection = async () => {
   }
 };
 
-// 4. Call the test function
 testConnection();
 
-// 5. Export the pool. The pool object HAS the .execute() method.
+// Export the pool
 module.exports = pool;
