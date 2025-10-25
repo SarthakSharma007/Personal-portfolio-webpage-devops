@@ -31,5 +31,10 @@ export const ThemeProvider = ({ children }) => {
 
 // 4. Create and export the custom hook
 export const useTheme = () => {
-  return useContext(ThemeContext);
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
 };
+
