@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react'; // <-- 1. REMOVE { useContext }
 import { Routes, Route } from 'react-router-dom';
-import { ThemeContext } from './contexts/ThemeContext';
+import { useTheme } from './contexts/ThemeContext'; // <-- 2. IMPORT useTheme INSTEAD
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import About from './components/About';
@@ -12,11 +12,10 @@ import Education from './components/Education';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
-import Login from './components/Login'; // <-- 1. IMPORT THE NEW COMPONENT
+import Login from './components/Login';
 import './App.css';
 
-// 2. CREATE A COMPONENT FOR YOUR MAIN PORTFOLIO PAGE
-// This contains everything that was in App.js before
+// This component is correct
 const HomePage = () => {
   return (
     <>
@@ -37,10 +36,11 @@ const HomePage = () => {
   );
 };
 
-// 3. UPDATE THE APP COMPONENT TO USE ROUTES
+// 3. UPDATE THE APP COMPONENT TO USE THE HOOK
 function App() {
-  const { theme } = useContext(ThemeContext);
-
+  const { theme } = useTheme(); // <-- 4. USE THE HOOK
+  
+  // This line will now work
   return (
     <div className={`App ${theme}`}>
       <Routes>
