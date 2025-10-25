@@ -4,7 +4,7 @@ import { FaGithub, FaLinkedin, FaChevronDown } from 'react-icons/fa';
 import { useInView } from 'react-intersection-observer';
 import api from '../services/api';
 import './Home.css';
-import profileImage from '../assets/profile/my resume photot.jpg'; // ✅ Added import
+import profileImage from '../assets/profile/20160518234238_IMG_8927 (2).JPG'; 
 
 const Home = () => {
   const [personalInfo, setPersonalInfo] = useState(null);
@@ -29,11 +29,10 @@ const Home = () => {
         // Set fallback data
         setPersonalInfo({
           full_name: 'Sarthak Sharma',
-          title: 'DevOps Engineer',
-          bio: 'I am a passionate DevOps Engineer with expertise in cloud technologies, containerization, and automation. I love building scalable infrastructure and implementing CI/CD pipelines to streamline development workflows.',
-          github_url: 'https://github.com/sarthaksharma007',
-          linkedin_url: 'https://linkedin.com/in/sarthak-sharma-a4bb4b1a6',
-          resume_url: '/resume.pdf'
+          title: 'DevOps Cloud Engineer',
+          
+          github_url: 'https://github.com/SarthakSharma007',
+          linkedin_url: 'https://www.linkedin.com/in/sarthaksharmaprofile/',
         });
       } finally {
         setLoading(false);

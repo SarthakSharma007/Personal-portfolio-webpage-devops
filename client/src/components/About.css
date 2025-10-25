@@ -11,7 +11,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: 
+  background-image:
     linear-gradient(45deg, transparent 25%, var(--accent-primary) 25%, var(--accent-primary) 50%, transparent 50%, transparent 75%, var(--accent-primary) 75%);
   background-size: 20px 20px;
   opacity: 0.03;
@@ -32,12 +32,34 @@
   justify-content: center;
 }
 
+/* ✅ Final unified profile image container */
 .profile-image-container {
   position: relative;
   width: 300px;
   height: 300px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px var(--shadow-medium);
+  transition: transform 0.3s ease;
 }
 
+.profile-image-container:hover {
+  transform: scale(1.05);
+}
+
+/* ✅ Actual image */
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 20px 40px var(--shadow-medium);
+  transition: transform 0.3s ease;
+}
+
+/* ✅ Fallback initials (if image fails to load) */
 .profile-image-placeholder {
   width: 100%;
   height: 100%;
@@ -63,6 +85,7 @@
   font-family: 'JetBrains Mono', monospace;
 }
 
+/* ✅ Glow effect */
 .image-glow {
   position: absolute;
   top: -20px;
@@ -76,6 +99,7 @@
   animation: pulse 2s ease-in-out infinite;
 }
 
+/* ✅ Text styling */
 .about-text {
   max-width: 600px;
 }
@@ -95,6 +119,15 @@
   font-family: 'JetBrains Mono', monospace;
 }
 
+.about-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+  text-align: justify;
+}
+
+/* ✅ Contact info block (if needed later) */
 .contact-info {
   display: flex;
   flex-direction: column;
@@ -121,14 +154,7 @@
   text-align: center;
 }
 
-.about-description {
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: var(--text-secondary);
-  margin-bottom: 2.5rem;
-  text-align: justify;
-}
-
+/* ✅ Buttons styling */
 .about-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -164,23 +190,33 @@
   left: 100%;
 }
 
-/* Responsive design */
+/* ✅ Glow animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* ✅ Responsive Design */
 @media (max-width: 1024px) {
   .about-content {
     grid-template-columns: 1fr;
     gap: 3rem;
     text-align: center;
   }
-  
+
   .about-text {
     max-width: 100%;
   }
-  
+
   .profile-image-container {
     width: 250px;
     height: 250px;
   }
-  
+
   .initials {
     font-size: 3rem;
   }
@@ -190,37 +226,37 @@
   .about-title {
     font-size: 2rem;
   }
-  
+
   .about-subtitle {
     font-size: 1.1rem;
   }
-  
+
   .about-description {
     font-size: 1rem;
   }
-  
+
   .about-buttons {
     justify-content: center;
   }
-  
+
   .about-buttons .btn {
     padding: 10px 20px;
     font-size: 0.9rem;
   }
-  
+
   .profile-image-container {
     width: 200px;
     height: 200px;
   }
-  
+
   .initials {
     font-size: 2.5rem;
   }
-  
+
   .contact-info {
     padding: 1rem;
   }
-  
+
   .contact-item {
     font-size: 0.9rem;
   }
@@ -230,26 +266,26 @@
   .about-title {
     font-size: 1.8rem;
   }
-  
+
   .about-subtitle {
     font-size: 1rem;
   }
-  
+
   .about-buttons {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .about-buttons .btn {
     width: 100%;
     justify-content: center;
   }
-  
+
   .profile-image-container {
     width: 150px;
     height: 150px;
   }
-  
+
   .initials {
     font-size: 2rem;
   }

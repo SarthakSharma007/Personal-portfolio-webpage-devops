@@ -30,34 +30,31 @@ const Education = () => {
           {
             id: 1,
             degree: 'Bachelor of Technology in Computer Science Engineering',
-            institution: 'XXXXX University',
-            location: 'India',
-            start_date: '2020-09-01',
-            end_date: '2024-06-30',
+            institution: 'The ICFAI University, Jaipur',
+            location: 'Jaipur, India',
+            start_date: '2022-08-01',
+            end_date: '2026-05-30',
             current: false,
-            gpa: 8.5,
-            description: 'Specialized in software engineering, data structures, algorithms, and system design. Completed projects in web development, machine learning, and cloud computing.'
+            description: 'I built a strong foundation in programming, data structures, algorithms, databases, operating systems, computer networks, and cloud computing. Beyond academics, I actively contributed to campus leadership as the Discipline Secretary of the Student Council, fostering teamwork, discipline, and student engagement.'
           },
           {
             id: 2,
-            degree: '12th Standard - Intermediate Education',
-            institution: 'ABC School',
-            location: 'India',
-            start_date: '2018-04-01',
-            end_date: '2020-03-31',
+            degree: '12th Standard',
+            institution: 'Shri Maheshwari Senior Secondary School',
+            location: 'Jaipur, India',
+            start_date: '2020-04',
+            end_date: '2021-03',
             current: false,
-            gpa: 9.2,
-            description: 'Completed 12th grade with focus on Mathematics, Physics, and Chemistry. Participated in science exhibitions and won several awards for innovative projects.'
+            description: 'Completed 12th grade with focus on Mathematics, Physics, and Chemistry.'
           },
           {
             id: 3,
-            degree: '10th Standard - Secondary Education',
-            institution: 'XYZ School',
-            location: 'India',
-            start_date: '2016-04-01',
-            end_date: '2018-03-31',
+            degree: '10th Standard',
+            institution: 'Shri Maheshwari Senior Secondary School',
+            location: 'Jaipur, India',
+            start_date: '2018-04-01',
+            end_date: '2019-03-31',
             current: false,
-            gpa: 9.0,
             description: 'Completed 10th grade with excellent academic performance. Active participation in extracurricular activities and leadership roles.'
           }
         ]);

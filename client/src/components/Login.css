@@ -1,0 +1,89 @@
+/* Uses variables from your App.css and index.css */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--background-color-dark);
+  color: var(--text-color-dark);
+  padding: 2rem;
+}
+
+.login-form {
+  background-color: var(--background-color-light); /* #1E1E1E */
+  padding: 2.5rem;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border: 1px solid #333;
+}
+
+.login-form h2 {
+  text-align: center;
+  color: var(--primary-color); /* #00A7C7 */
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.form-group input {
+  padding: 0.85rem;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: #2a2a2a;
+  color: var(--text-color-dark);
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 167, 199, 0.2);
+}
+
+.login-form button {
+  padding: 0.85rem;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--primary-color);
+  color: #121212; /* Dark text for high contrast on the button */
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.login-form button:hover {
+  background-color: #00c4e8;
+}
+
+.login-form button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #ff6b6b;
+  background-color: rgba(255, 107, 107, 0.1);
+  border: 1px solid #ff6b6b;
+  padding: 0.75rem;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.9rem;
+}

@@ -4,7 +4,8 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
-const { testConnection } = require('./config/db');
+// The { testConnection } import is removed from this line:
+require('./config/db');
 
 // Import routes
 const projectRoutes = require('./routes/projects');
@@ -45,8 +46,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Static files
 app.use('/uploads', express.static('uploads'));
 
-// Test database connection
-testConnection();
+// The testConnection(); call is removed from here.
 
 // Routes
 app.use('/api/projects', projectRoutes);

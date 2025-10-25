@@ -30,26 +30,26 @@ const Experience = () => {
         setExperiences([
           {
             id: 1,
-            title: 'Web Development Intern',
-            company: 'Techno Hack',
+            title: 'DevOps Intern',
+            company: 'Elevate Labs',
             location: 'Remote',
-            start_date: '2023-06-01',
-            end_date: '2023-08-31',
+            start_date: '2025-08-01',
+            end_date: '2025-09-30',
             current: false,
-            description: 'Developed responsive web applications using React.js and Node.js. Implemented RESTful APIs and integrated third-party services. Collaborated with a team of 5 developers to deliver high-quality software solutions.',
-            technologies: 'React.js, Node.js, MongoDB, Express.js, Git',
+            description: 'Engineered and implemented a full CI/CD pipeline using GitHub Actions, slashing build and release cycles by 95%. Eliminated 80% of configuration errors by creating a standardized Docker file and optimizing deployment workflows. Strengthened application security by integrating GitHub Secrets for credential management and enforcing automated Docker version tagging.',
+            technologies: 'AWS, Jenkins, Docker, Kubernetes, Terraform, Python, Git',
             type: 'Internship'
           },
           {
             id: 2,
-            title: 'DevOps Intern',
-            company: 'CloudTech Solutions',
-            location: 'Bangalore, India',
-            start_date: '2023-01-01',
-            end_date: '2023-05-31',
+            title: 'Full Stack Developer Intern',
+            company: 'BMP Infotech',
+            location: 'Jaipur, India',
+            start_date: '2024-05-01',
+            end_date: '2024-07-31',
             current: false,
-            description: 'Assisted in setting up CI/CD pipelines using Jenkins and Docker. Managed cloud infrastructure on AWS and implemented monitoring solutions with Prometheus and Grafana. Automated deployment processes and improved system reliability.',
-            technologies: 'AWS, Docker, Jenkins, Kubernetes, Terraform, Python',
+            description: 'Working as a Full Stack Web Developer. Develop and solve real time problems create real world projects.',
+            technologies: 'HTML, CSS, JavaScript, MongoDB',
             type: 'Internship'
           }
         ]);

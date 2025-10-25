@@ -29,40 +29,40 @@ const Projects = () => {
         setProjects([
           {
             id: 1,
-            title: 'DevOps CI/CD Pipeline',
-            description: 'Implemented a complete CI/CD pipeline using Jenkins, Docker, and Kubernetes for automated deployment of microservices. The pipeline includes automated testing, security scanning, and blue-green deployment strategy.',
-            tech_stack: 'Jenkins, Docker, Kubernetes, AWS, Terraform, Python',
+            title: 'Automated Node.js Application Deployment using CI/CD and Kubernetes',
+            description: 'This repository includes two key DevOps automation tasks completed during the Elevate Labs DevOps Internship. The first task focuses on automating Node.js application deployment using GitHub Actions and Docker Hub, where a CI/CD pipeline was configured to automatically build and push Docker images on every code update. The second task demonstrates deploying the same containerized Node.js application on a local Kubernetes cluster using Minikube, showcasing concepts like pods, deployments, services, and scaling. Together, these projects highlight a complete workflow from continuous integration to container orchestration.',
+            tech_stack: 'JavaScript (Node.js), YAML, Bash, GitHub Actions, Docker, Docker Hub, Kubernetes, Minikube, kubectl, Git',
             github_link: 'https://github.com/sarthaksharma/devops-pipeline',
-            demo_link: 'https://demo.sarthaksharma.com',
+            demo_link: null,
             image_url: null,
             featured: true
           },
           {
             id: 2,
-            title: 'Cloud Infrastructure Automation',
-            description: 'Built an automated cloud infrastructure using Terraform and Ansible for provisioning and configuration management. The infrastructure includes auto-scaling groups, load balancers, and monitoring setup.',
-            tech_stack: 'Terraform, Ansible, AWS, Python, Bash',
-            github_link: 'https://github.com/sarthaksharma/cloud-infra',
+            title: 'Automated DevOps Workflows using Shell Scripting',
+            description: 'This project is a lightweight and efficient Python-based automation tool designed to create compressed backups of files and folders. It automatically generates a .zip archive of a specified source directory and stores it in a chosen destination folder. The backup file is named with the current date, making it easy to track and manage multiple versions over time. This script is ideal for automating daily or periodic backups, organizing data efficiently, and ensuring file safety without the need for external software. It is simple to configure, extend, and integrate into larger automation workflows.',
+            tech_stack: 'Python',
+            github_link: 'https://github.com/SarthakSharma007/automated-backup.py.git',
             demo_link: null,
             image_url: null,
             featured: true
           },
-          {
-            id: 3,
-            title: 'Container Orchestration Platform',
-            description: 'Developed a container orchestration platform using Kubernetes with custom operators and monitoring solutions. Includes Prometheus, Grafana, and custom dashboards for application metrics.',
-            tech_stack: 'Kubernetes, Prometheus, Grafana, Go, Helm',
-            github_link: 'https://github.com/sarthaksharma/k8s-platform',
-            demo_link: null,
-            image_url: null,
-            featured: true
-          },
+          // {
+          //   id: 3,
+          //   title: 'Container Orchestration Platform',
+          //   description: 'Developed a container orchestration platform using Kubernetes with custom operators and monitoring solutions. Includes Prometheus, Grafana, and custom dashboards for application metrics.',
+          //   tech_stack: 'Kubernetes, Prometheus, Grafana, Go, Helm',
+          //   github_link: 'https://github.com/sarthaksharma/k8s-platform',
+          //   demo_link: null,
+          //   image_url: null,
+          //   featured: true
+          // },
           {
             id: 4,
-            title: 'Monitoring & Alerting System',
-            description: 'Created a comprehensive monitoring and alerting system using Prometheus, Grafana, and custom alerting rules. Includes custom dashboards and automated incident response.',
-            tech_stack: 'Prometheus, Grafana, AlertManager, Python, Docker',
-            github_link: 'https://github.com/sarthaksharma/monitoring-system',
+            title: 'DevOps Automation with Bash Scripting',
+            description: 'This repository showcases two automation projects built using Bash scripting to streamline DevOps workflows. The first project automates Django application deployment using Docker and Docker Compose, while the second project automates AWS EC2 instance creation using AWS CLI. Both scripts are designed for simplicity, reusability, and reliability — helping developers deploy and manage infrastructure seamlessly with minimal manual effort.',
+            tech_stack: 'Bash (Shell Scripting), Docker, Docker Compose, Nginx, AWS CLI, EC2, Linux',
+            github_link: 'https://github.com/SarthakSharma007/use-shell-scripting-to-deploy.git',
             demo_link: null,
             image_url: null,
             featured: true
@@ -179,7 +179,7 @@ const Projects = () => {
               <h3>Explore More Projects</h3>
               <p>Check out my complete GitHub profile for more projects, contributions, and open-source work.</p>
               <a
-                href="https://github.com/sarthaksharma"
+                href="https://github.com/SarthakSharma007"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-outline"

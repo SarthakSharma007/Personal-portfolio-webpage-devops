@@ -10,10 +10,10 @@ const Certifications = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  
+
   const { ref, inView } = useInView({
     threshold: 0.1,
-    triggerOnce: true
+    triggerOnce: true,
   });
 
   useEffect(() => {
@@ -26,38 +26,53 @@ const Certifications = () => {
       } catch (err) {
         console.error('Error fetching certifications:', err);
         setError('Failed to load certifications');
-        // Set fallback data
+        // ✅ Expanded fallback data
         setCertifications([
           {
             id: 1,
-            cert_name: 'AWS Certified Solutions Architect',
-            issuing_organization: 'Amazon Web Services',
-            issue_date: '2023-08-15',
-            expiry_date: '2026-08-15',
-            credential_id: 'AWS-SAA-123456',
-            credential_url: 'https://aws.amazon.com/verification',
-            image_url: null
+            cert_name: 'Introduction to Containers, Kubernetes, and OpenShift',
+            issuing_organization: 'CognitiveClass.ai',
+            issue_date: '2025-07-12',
+            credential_id: 'CC0201EN',
+            credential_url: 'https://courses.cognitiveclass.ai/certificates/3b62291dfc534c06898e6b94beacbb46',
+            image_url: null,
           },
           {
             id: 2,
-            cert_name: 'Certified Kubernetes Administrator (CKA)',
-            issuing_organization: 'Cloud Native Computing Foundation',
-            issue_date: '2023-06-20',
-            expiry_date: '2026-06-20',
-            credential_id: 'CKA-789012',
-            credential_url: 'https://cncf.io/certification/cka',
-            image_url: null
+            cert_name: 'Introduction to Linux',
+            issuing_organization: 'The Linux Foundation',
+            issue_date: '2025-06-28',
+            credential_id: 'LF-ku85gwty6e',
+            credential_url: 'https://drive.google.com/file/d/1o_Uz0TCW70ejhGt1qNEE42hqMKoTY4bc/view?usp=sharing',
+            image_url: null,
           },
           {
             id: 3,
-            cert_name: 'Docker Certified Associate',
-            issuing_organization: 'Docker Inc.',
-            issue_date: '2023-04-10',
-            expiry_date: '2025-04-10',
-            credential_id: 'DCA-345678',
-            credential_url: 'https://docker.com/certification',
-            image_url: null
-          }
+            cert_name: 'Introduction to GitOps',
+            issuing_organization: 'The Linux Foundation',
+            issue_date: '2025-04-25',
+            credential_id: 'LF-qpj6j47gsq',
+            credential_url: 'https://drive.google.com/file/d/18f9Uq3V7B63IAqM50gSThfSam2AlnLNA/view?usp=sharing',
+            image_url: null,
+          },
+          {
+            id: 4,
+            cert_name: 'GitLab 101 Certification',
+            issuing_organization: 'GitLab',
+            issue_date: '2025-06-15',
+            credential_id: null,
+            credential_url: 'https://drive.google.com/file/d/1Igey6zht7uBiQQQGDBpUOnsZ-E_0TvZ2/view?usp=sharing',
+            image_url: null,
+          },
+          {
+            id: 5,
+            cert_name: 'Introduction to Cloud Computing',
+            issuing_organization: 'Simplilearn',
+            issue_date: '2025-04-20',
+            credential_id: null,
+            credential_url: 'https://drive.google.com/file/d/1BC2vh2gBgEFVBKXIoHcC7pfhltqNocQd/view?usp=sharing',
+            image_url: null,
+          },
         ]);
       } finally {
         setLoading(false);
@@ -70,7 +85,7 @@ const Certifications = () => {
   useEffect(() => {
     if (certifications.length > 1) {
       const interval = setInterval(() => {
-        setCurrentIndex((prevIndex) => 
+        setCurrentIndex((prevIndex) =>
           prevIndex === certifications.length - 1 ? 0 : prevIndex + 1
         );
       }, 5000);
@@ -81,21 +96,21 @@ const Certifications = () => {
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
   const nextCert = () => {
-    setCurrentIndex((prevIndex) => 
+    setCurrentIndex((prevIndex) =>
       prevIndex === certifications.length - 1 ? 0 : prevIndex + 1
     );
   };
 
   const prevCert = () => {
-    setCurrentIndex((prevIndex) => 
+    setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? certifications.length - 1 : prevIndex - 1
     );
   };
@@ -150,11 +165,11 @@ const Certifications = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <div className="carousel-container">
-              <div 
+              <div
                 className="carousel-track"
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
               >
-                {certifications.map((cert, index) => (
+                {certifications.map((cert) => (
                   <div key={cert.id} className="certification-slide">
                     <div className="certification-card">
                       <div className="certification-header">
@@ -163,7 +178,9 @@ const Certifications = () => {
                         </div>
                         <div className="certification-info">
                           <h3 className="certification-name">{cert.cert_name}</h3>
-                          <p className="certification-organization">{cert.issuing_organization}</p>
+                          <p className="certification-organization">
+                            {cert.issuing_organization}
+                          </p>
                         </div>
                       </div>
 
@@ -173,11 +190,6 @@ const Certifications = () => {
                             <FaCalendarAlt className="meta-icon" />
                             <span>Issued: {formatDate(cert.issue_date)}</span>
                           </div>
-                          {cert.expiry_date && (
-                            <div className="certification-expiry">
-                              <span>Expires: {formatDate(cert.expiry_date)}</span>
-                            </div>
-                          )}
                           {cert.credential_id && (
                             <div className="certification-id">
                               <span>ID: {cert.credential_id}</span>

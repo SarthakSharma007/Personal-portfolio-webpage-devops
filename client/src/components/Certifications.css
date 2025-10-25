@@ -3,7 +3,6 @@
   position: relative;
 }
 
-/* Section-specific background pattern */
 .certifications::before {
   content: '';
   position: absolute;
@@ -11,8 +10,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: 
-    radial-gradient(circle at 30% 70%, var(--accent-primary) 0%, transparent 50%),
+  background-image: radial-gradient(circle at 30% 70%, var(--accent-primary) 0%, transparent 50%),
     radial-gradient(circle at 70% 30%, var(--accent-secondary) 0%, transparent 50%);
   opacity: 0.04;
   z-index: 0;
@@ -38,7 +36,7 @@
 
 .carousel-track {
   display: flex;
-  transition: transform 0.5s ease-in-out;
+  transition: transform 0.6s ease-in-out;
 }
 
 .certification-slide {
@@ -93,14 +91,12 @@
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 0.5rem;
-  line-height: 1.3;
 }
 
 .certification-organization {
   font-size: 1.1rem;
   color: var(--accent-primary);
   font-weight: 600;
-  margin: 0;
 }
 
 .certification-details {
@@ -117,7 +113,6 @@
 }
 
 .certification-date,
-.certification-expiry,
 .certification-id {
   display: flex;
   align-items: center;
@@ -128,12 +123,6 @@
 
 .meta-icon {
   color: var(--accent-primary);
-  font-size: 0.9rem;
-}
-
-.certification-expiry {
-  color: #e74c3c;
-  font-weight: 500;
 }
 
 .certification-id {
@@ -142,7 +131,6 @@
   border-radius: 20px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85rem;
-  color: var(--text-primary);
 }
 
 .certification-link {
@@ -156,7 +144,6 @@
   text-decoration: none;
   font-weight: 600;
   transition: all 0.3s ease;
-  align-self: center;
 }
 
 .certification-link:hover {
@@ -164,6 +151,7 @@
   box-shadow: 0 8px 25px var(--shadow-medium);
 }
 
+/* Carousel buttons */
 .carousel-btn {
   position: absolute;
   top: 50%;
@@ -222,71 +210,51 @@
   background: var(--accent-primary);
 }
 
-.no-certifications {
-  text-align: center;
-  padding: 4rem 2rem;
-  color: var(--text-secondary);
-  font-size: 1.1rem;
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 250px;
 }
 
-/* Dark Theme Styles */
-[data-theme="dark"] .certification-card {
-  background: var(--bg-secondary);
-  border-color: var(--border-color);
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top: 4px solid var(--accent-primary);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
 }
 
-[data-theme="dark"] .carousel-btn {
-  background: var(--bg-secondary);
-  border-color: var(--border-color);
-  color: var(--text-primary);
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-[data-theme="dark"] .carousel-btn:hover {
-  background: var(--accent-primary);
-  color: white;
-}
-
-[data-theme="dark"] .indicator {
-  background: var(--bg-tertiary);
-}
-
-[data-theme="dark"] .indicator.active {
-  background: var(--accent-gradient);
-}
-
-
-/* Responsive design */
+/* Responsive */
 @media (max-width: 768px) {
   .certification-card {
     padding: 2rem;
   }
-  
+
   .certification-icon {
     width: 60px;
     height: 60px;
     font-size: 1.5rem;
   }
-  
+
   .certification-name {
     font-size: 1.4rem;
   }
-  
-  .certification-organization {
-    font-size: 1rem;
-  }
-  
+
   .carousel-btn {
     width: 40px;
     height: 40px;
-    font-size: 1.2rem;
-  }
-  
-  .prev-btn {
-    left: 10px;
-  }
-  
-  .next-btn {
-    right: 10px;
   }
 }
 
@@ -294,43 +262,13 @@
   .certification-card {
     padding: 1.5rem;
   }
-  
-  .certification-icon {
-    width: 50px;
-    height: 50px;
-    font-size: 1.2rem;
-  }
-  
+
   .certification-name {
     font-size: 1.2rem;
   }
-  
-  .certification-organization {
-    font-size: 0.9rem;
-  }
-  
-  .certification-date,
-  .certification-expiry,
-  .certification-id {
-    font-size: 0.85rem;
-  }
-  
+
   .certification-link {
     padding: 10px 20px;
     font-size: 0.9rem;
-  }
-  
-  .carousel-btn {
-    width: 35px;
-    height: 35px;
-    font-size: 1rem;
-  }
-  
-  .prev-btn {
-    left: 5px;
-  }
-  
-  .next-btn {
-    right: 5px;
   }
 }
