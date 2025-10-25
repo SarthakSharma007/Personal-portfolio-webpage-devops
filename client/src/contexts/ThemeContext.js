@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// 1. Create and export the context FIRST
+// 1. Create and export the context
 export const ThemeContext = createContext();
 
-// 2. NOW, create the provider that uses the context
+// 2. Create and export the provider
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -12,24 +12,26 @@ export const ThemeProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    // Apply theme to the body or root element
-    document.body.className = theme;
+    // THIS IS THE FIX:
+    // We change this from document.body.className = theme
+    // to match what your index.css file expects.
+    document.documentElement.setAttribute('data-theme', theme); 
+    
     localStorage.setItem('theme', theme);
-  }, [theme]);
+  }, [theme]); // This array ensures the effect runs only when 'theme' changes
 
   const toggleTheme = () => {
     setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
   };
 
   return (
-    // 3. This line will now work correctly
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
 };
 
-// 4. Create and export the custom hook
+// 3. Create and export the 'useTheme' hook
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
@@ -37,4 +39,3 @@ export const useTheme = () => {
   }
   return context;
 };
-
