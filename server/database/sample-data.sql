@@ -28,48 +28,32 @@ INSERT INTO skills (skill_name, proficiency_level, category, icon) VALUES
 ('Vagrant', 'Intermediate', 'Other', '📦');
 
 -- Insert sample projects
+-- (Replaced sample projects with the 3 from your Projects.js component)
 INSERT INTO projects (title, description, tech_stack, github_link, demo_link, image_url, featured) VALUES
-('DevOps CI/CD Pipeline', 
-'Implemented a complete CI/CD pipeline using Jenkins, Docker, and Kubernetes for automated deployment of microservices. The pipeline includes automated testing, security scanning, and blue-green deployment strategy.',
-'Jenkins, Docker, Kubernetes, AWS, Terraform, Python',
+('Automated Node.js Application Deployment using CI/CD and Kubernetes', 
+'This repository includes two key DevOps automation tasks completed during the Elevate Labs DevOps Internship. The first task focuses on automating Node.js application deployment using GitHub Actions and Docker Hub, where a CI/CD pipeline was configured to automatically build and push Docker images on every code update. The second task demonstrates deploying the same containerized Node.js application on a local Kubernetes cluster using Minikube, showcasing concepts like pods, deployments, services, and scaling. Together, these projects highlight a complete workflow from continuous integration to container orchestration.',
+'JavaScript (Node.js), YAML, Bash, GitHub Actions, Docker, Docker Hub, Kubernetes, Minikube, kubectl, Git',
 'https://github.com/sarthaksharma/devops-pipeline',
-'https://demo.sarthaksharma.com',
-NULL, TRUE),
-
-('Cloud Infrastructure Automation', 
-'Built an automated cloud infrastructure using Terraform and Ansible for provisioning and configuration management. The infrastructure includes auto-scaling groups, load balancers, and monitoring setup.',
-'Terraform, Ansible, AWS, Python, Bash',
-'https://github.com/sarthaksharma/cloud-infra',
 NULL,
-NULL, TRUE),
+NULL, 
+TRUE),
 
-('Container Orchestration Platform', 
-'Developed a container orchestration platform using Kubernetes with custom operators and monitoring solutions. Includes Prometheus, Grafana, and custom dashboards for application metrics.',
-'Kubernetes, Prometheus, Grafana, Go, Helm',
-'https://github.com/sarthaksharma/k8s-platform',
+('Automated DevOps Workflows using Shell Scripting', 
+'This project is a lightweight and efficient Python-based automation tool designed to create compressed backups of files and folders. It automatically generates a .zip archive of a specified source directory and stores it in a chosen destination folder. The backup file is named with the current date, making it easy to track and manage multiple versions over time. This script is ideal for automating daily or periodic backups, organizing data efficiently, and ensuring file safety without the need for external software. It is simple to configure, extend, and integrate into larger automation workflows.',
+'Python',
+'https://github.com/SarthakSharma007/automated-backup.py.git',
 NULL,
-NULL, TRUE),
+NULL, 
+TRUE),
 
-('Monitoring & Alerting System', 
-'Created a comprehensive monitoring and alerting system using Prometheus, Grafana, and custom alerting rules. Includes custom dashboards and automated incident response.',
-'Prometheus, Grafana, AlertManager, Python, Docker',
-'https://github.com/sarthaksharma/monitoring-system',
+('DevOps Automation with Bash Scripting', 
+'This repository showcases two automation projects built using Bash scripting to streamline DevOps workflows. The first project automates Django application deployment using Docker and Docker Compose, while the second project automates AWS EC2 instance creation using AWS CLI. Both scripts are designed for simplicity, reusability, and reliability — helping developers deploy and manage infrastructure seamlessly with minimal manual effort.',
+'Bash (Shell Scripting), Docker, Docker Compose, Nginx, AWS CLI, EC2, Linux',
+'https://github.com/SarthakSharma007/use-shell-scripting-to-deploy.git',
 NULL,
-NULL, TRUE),
+NULL, 
+TRUE);
 
-('Microservices Architecture', 
-'Designed and implemented a microservices architecture with service mesh using Istio. Includes API gateway, service discovery, and distributed tracing.',
-'Docker, Kubernetes, Istio, Go, gRPC',
-'https://github.com/sarthaksharma/microservices-arch',
-'https://microservices-demo.sarthaksharma.com',
-NULL, FALSE),
-
-('Infrastructure as Code', 
-'Created reusable Terraform modules for AWS infrastructure provisioning. Includes VPC, subnets, security groups, and auto-scaling configurations.',
-'Terraform, AWS, CloudFormation, Python',
-'https://github.com/sarthaksharma/terraform-modules',
-NULL,
-NULL, FALSE);
 
 -- Insert sample certifications
 INSERT INTO certifications (cert_name, issuing_organization, issue_date, expiry_date, credential_id, credential_url, image_url) VALUES
@@ -107,7 +91,7 @@ NULL),
 
 ('HashiCorp Certified: Terraform Associate',
 'HashiCorp',
-'2023-01-15',
+'2DOM-01-15',
 '2025-01-15',
 'HCT-A-567890',
 'https://hashicorp.com/certification',

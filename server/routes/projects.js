@@ -3,11 +3,12 @@ const router = express.Router();
 const { promisePool } = require('../config/db');
 const auth = require('../middleware/auth');
 
-// GET /api/projects - Get all projects
+// GET /api/projects - Get all featured projects
 router.get('/', async (req, res) => {
   try {
     const [rows] = await promisePool.execute(
-      'SELECT * FROM projects ORDER BY featured DESC, created_at DESC'
+      // This query now only selects projects where featured is true (or 1)
+      'SELECT * FROM projects WHERE featured = 1 ORDER BY created_at DESC'
     );
     res.json({
       success: true,

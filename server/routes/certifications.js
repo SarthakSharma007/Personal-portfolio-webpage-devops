@@ -1,26 +1,34 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../config/db');
+// THE FIX: Import promisePool directly, not the entire db object
+const { promisePool } = require('../config/db');
 const auth = require('../middleware/auth');
 
 // GET all certifications
 router.get('/', async (req, res) => {
     try {
-        // THE FIX: Changed from db.promise().query() to db.execute()
-        const [rows] = await db.execute('SELECT * FROM certifications');
-        res.json(rows);
+        // THE FIX: Use promisePool.execute instead of db.execute
+        const [rows] = await promisePool.execute('SELECT * FROM certifications ORDER BY issue_date DESC');
+        res.json({
+            success: true,
+            data: rows
+        });
     } catch (err) {
         console.error('Error fetching certifications:', err);
-        res.status(500).json({ error: 'Server error' });
+        res.status(500).json({ 
+            success: false,
+            message: 'Failed to fetch certifications',
+            error: err.message 
+        });
     }
 });
 
-// (The rest of your file is protected by auth, so it's correct)
 // POST a new certification
 router.post('/', auth, async (req, res) => {
     const { name, issuing_organization, issue_date, credential_id } = req.body;
     try {
-        const [result] = await db.execute(
+        // THE FIX: Use promisePool.execute instead of db.execute
+        const [result] = await promisePool.execute(
             'INSERT INTO certifications (name, issuing_organization, issue_date, credential_id) VALUES (?, ?, ?, ?)',
             [name, issuing_organization, issue_date, credential_id]
         );
@@ -29,5 +37,6 @@ router.post('/', auth, async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-// ... (PUT and DELETE routes)
+
+// ... (PUT and DELETE routes should also be updated to use promisePool)
 module.exports = router;
