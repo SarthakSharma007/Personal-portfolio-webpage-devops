@@ -1,13 +1,13 @@
+// server.js
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-require('dotenv').config();
 
-// ✅ Import DB config and test connection
 const { promisePool, testConnection } = require('./config/db');
 
-// ✅ Import routes
+// Routes
 const projectRoutes = require('./routes/projects');
 const skillRoutes = require('./routes/skills');
 const certificationRoutes = require('./routes/certifications');
@@ -20,10 +20,10 @@ const authRoutes = require('./routes/auth');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ Security middleware
+// Security middleware
 app.use(helmet());
 
-// ✅ Rate limiting
+// Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
@@ -31,7 +31,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// ✅ CORS configuration
+// CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
     ? ['https://yourdomain.com']
@@ -39,14 +39,14 @@ app.use(cors({
   credentials: true
 }));
 
-// ✅ Body parsers
+// Body parsers
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// ✅ Static file serving
+// Static file serving (uploads)
 app.use('/uploads', express.static('uploads'));
 
-// ✅ Routes
+// API routes
 app.use('/api/projects', projectRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/certifications', certificationRoutes);
@@ -56,7 +56,7 @@ app.use('/api/messages', messageRoutes);
 app.use('/api/personal-info', personalInfoRoutes);
 app.use('/api/auth', authRoutes);
 
-// ✅ Health check route
+// Health check
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
@@ -65,7 +65,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// ✅ 404 handler
+// 404 handler
 app.use('*', (req, res) => {
   res.status(404).json({
     error: 'Route not found',
@@ -73,7 +73,7 @@ app.use('*', (req, res) => {
   });
 });
 
-// ✅ Global error handler
+// Global error handler
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(err.status || 500).json({
@@ -84,12 +84,17 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ✅ Start server only after DB connection test
+// Start server only after DB connection test
 (async () => {
-  await testConnection();
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🔗 API Base URL: http://localhost:${PORT}/api`);
-  });
+  try {
+    await testConnection();
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+      console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`API Base URL: http://localhost:${PORT}/api`);
+    });
+  } catch (err) {
+    console.error('Failed to start server due to database connection error:', err.message);
+    process.exit(1);
+  }
 })();

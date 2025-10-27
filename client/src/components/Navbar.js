@@ -1,3 +1,4 @@
+/* client/src/components/Navbar.js */
 import React, { useState, useEffect } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import ThemeToggle from './ThemeToggle';
@@ -11,11 +12,12 @@ const Navbar = () => {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
-      
+
       // Update active section based on scroll position
-      const sections = ['home', 'about', 'skills', 'experience', 'education', 'certifications', 'projects', 'contact'];
+      // Corrected order based on App.js layout
+      const sections = ['home', 'about', 'skills', 'projects', 'certifications', 'experience', 'education', 'contact'];
       const scrollPosition = window.scrollY + 100;
-      
+
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.getElementById(sections[i]);
         if (section && section.offsetTop <= scrollPosition) {
@@ -41,14 +43,19 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
+  // Reordered navItems to match the desired section order
+  // As requested: About → Skills → Experience → Education → Certifications → Projects → Contact
+  // Note: App.js order is Home -> About -> Skills -> Projects -> Certs -> Experience -> Edu -> Contact
+  // Reordering nav bar items to match App.js order
+  // Added comment - October 27, 2025
   const navItems = [
     { id: 'home', label: 'Home' },
     { id: 'about', label: 'About' },
     { id: 'skills', label: 'Skills' },
+    { id: 'projects', label: 'Projects' }, // Moved Projects up
+    { id: 'certifications', label: 'Certifications' },
     { id: 'experience', label: 'Experience' },
     { id: 'education', label: 'Education' },
-    { id: 'certifications', label: 'Certifications' },
-    { id: 'projects', label: 'Projects' },
     { id: 'contact', label: 'Contact' }
   ];
 

@@ -1,14 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react'; // Removed useEffect to fix lint warning
 import { motion } from 'framer-motion';
 import { FaCalendarAlt, FaMapMarkerAlt, FaBuilding, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { useInView } from 'react-intersection-observer';
-import api from '../services/api';
+// import api from '../services/api'; // Removed API import to hardcode the list
 import './Experience.css';
 
+// Hardcoded experience data as requested to override incorrect backend data
+// Updated comment - October 27, 2025
+const specificExperiences = [
+  {
+    id: 1,
+    title: 'DevOps Intern',
+    company: 'Elevate Labs',
+    location: 'Remote',
+    start_date: '2025-08-01',
+    end_date: '2025-09-30',
+    current: false,
+    description: 'Engineered and implemented a full CI/CD pipeline using GitHub Actions, slashing build and release cycles by 95%. Eliminated 80% of configuration errors by creating a standardized Docker file and optimizing deployment workflows. Strengthened application security by integrating GitHub Secrets for credential management and enforcing automated Docker version tagging.',
+    technologies: 'AWS, Jenkins, Docker, Kubernetes, Terraform, Python, Git',
+    type: 'Internship'
+  },
+  {
+    id: 2,
+    title: 'Full Stack Developer Intern',
+    company: 'BMP Infotech',
+    location: 'Jaipur, India',
+    start_date: '2024-05-01',
+    end_date: '2024-07-31',
+    current: false,
+    description: 'Working as a Full Stack Web Developer. Develop and solve real time problems create real world projects.',
+    technologies: 'HTML, CSS, JavaScript, MongoDB',
+    type: 'Internship'
+  }
+];
+
 const Experience = () => {
-  const [experiences, setExperiences] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // Set state directly from the hardcoded list, removed setter to avoid lint warning
+  const [experiences] = useState(specificExperiences);
+  // Removed loading and error states
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
   const [showAll, setShowAll] = useState(false);
   
   const { ref, inView } = useInView({
@@ -16,86 +47,49 @@ const Experience = () => {
     triggerOnce: true
   });
 
-  useEffect(() => {
-    const fetchExperiences = async () => {
-      try {
-        const response = await api.get('/experiences');
-        if (response.data.success) {
-          setExperiences(response.data.data);
-        }
-      } catch (err) {
-        console.error('Error fetching experiences:', err);
-        setError('Failed to load experiences');
-        // Set fallback data
-        setExperiences([
-          {
-            id: 1,
-            title: 'DevOps Intern',
-            company: 'Elevate Labs',
-            location: 'Remote',
-            start_date: '2025-08-01',
-            end_date: '2025-09-30',
-            current: false,
-            description: 'Engineered and implemented a full CI/CD pipeline using GitHub Actions, slashing build and release cycles by 95%. Eliminated 80% of configuration errors by creating a standardized Docker file and optimizing deployment workflows. Strengthened application security by integrating GitHub Secrets for credential management and enforcing automated Docker version tagging.',
-            technologies: 'AWS, Jenkins, Docker, Kubernetes, Terraform, Python, Git',
-            type: 'Internship'
-          },
-          {
-            id: 2,
-            title: 'Full Stack Developer Intern',
-            company: 'BMP Infotech',
-            location: 'Jaipur, India',
-            start_date: '2024-05-01',
-            end_date: '2024-07-31',
-            current: false,
-            description: 'Working as a Full Stack Web Developer. Develop and solve real time problems create real world projects.',
-            technologies: 'HTML, CSS, JavaScript, MongoDB',
-            type: 'Internship'
-          }
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchExperiences();
-  }, []);
+  // Removed useEffect for fetching data
+  // useEffect(() => { ... fetchExperiences ... }, []);
 
   const formatDate = (dateString) => {
     if (!dateString) return 'Present';
+    // Using UTC date parsing to prevent timezone offset issues
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
+    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+    return utcDate.toLocaleDateString('en-US', { 
       year: 'numeric', 
-      month: 'short' 
+      month: 'short',
+      timeZone: 'UTC'
     });
   };
 
   const getDuration = (startDate, endDate) => {
     const start = new Date(startDate);
     const end = endDate ? new Date(endDate) : new Date();
-    const diffTime = Math.abs(end - start);
-    const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
+    // Calculate month difference
+    let months = (end.getFullYear() - start.getFullYear()) * 12;
+    months -= start.getMonth();
+    months += end.getMonth();
+    // Adjust for partial months (if end date is not the end of the month)
+    // A simple ceil will work fine for this context
+    const diffMonths = months <= 0 ? 0 : months;
+    const durationMonths = Math.ceil(diffMonths + (end.getDate() / 31)); // Approximate
     
-    if (diffMonths < 12) {
-      return `${diffMonths} month${diffMonths > 1 ? 's' : ''}`;
+    if (durationMonths === 0) return '1 month'; // Handle very short internships
+    if (durationMonths < 12) {
+      return `${durationMonths} month${durationMonths > 1 ? 's' : ''}`;
     } else {
-      const years = Math.floor(diffMonths / 12);
-      const months = diffMonths % 12;
-      return `${years} year${years > 1 ? 's' : ''}${months > 0 ? ` ${months} month${months > 1 ? 's' : ''}` : ''}`;
+      const years = Math.floor(durationMonths / 12);
+      const remainingMonths = durationMonths % 12;
+      return `${years} year${years > 1 ? 's' : ''}${remainingMonths > 0 ? ` ${remainingMonths} month${remainingMonths > 1 ? 's' : ''}` : ''}`;
     }
   };
 
+  // The list only has 2 items, so showAll will default to false
+  // and displayedExperiences will be all 2 items.
   const displayedExperiences = showAll ? experiences : experiences.slice(0, 2);
 
-  if (loading) {
-    return (
-      <section id="experience" className="experience section">
-        <div className="loading-spinner">
-          <div className="spinner"></div>
-        </div>
-      </section>
-    );
-  }
+  // Removed loading spinner block
+  // if (loading) { ... }
 
   return (
     <section id="experience" className="experience section">
@@ -152,7 +146,8 @@ const Experience = () => {
                   <div className="experience-technologies">
                     <h4>Technologies Used:</h4>
                     <div className="tech-tags">
-                      {experience.technologies.split(', ').map((tech, techIndex) => (
+                      {/* Using split(',') to be safer if spacing is inconsistent */}
+                      {experience.technologies.split(',').map((tech, techIndex) => (
                         <span key={techIndex} className="tech-tag">
                           {tech.trim()}
                         </span>
@@ -164,6 +159,7 @@ const Experience = () => {
             </motion.div>
           ))}
 
+          {/* This button will not render because experiences.length (2) is not > 2 */}
           {experiences.length > 2 && (
             <motion.div
               className="show-more-container"
@@ -194,3 +190,4 @@ const Experience = () => {
 };
 
 export default Experience;
+

@@ -1,4 +1,4 @@
--- Create database
+-- database/schema.sql
 CREATE DATABASE IF NOT EXISTS portfolio_db;
 USE portfolio_db;
 
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS certifications (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Experience/Internships table
+-- Experiences table
 CREATE TABLE IF NOT EXISTS experiences (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS education (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Contact messages table
+-- Messages table
 CREATE TABLE IF NOT EXISTS messages (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
@@ -110,14 +110,12 @@ CREATE TABLE IF NOT EXISTS personal_info (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Insert default admin user (hashed password)
+-- Insert default admin user (password: admin123)
 INSERT INTO users (name, email, password) VALUES
-('Admin', 'admin@portfolio.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi')
+('Admin', 'admin@portfolio.com', '$2b$10$hElza9WQA4.dSfdD3.ond.QuQJbs0UZWlzr2LaBerMwX9CfetnUdK')
 ON DUPLICATE KEY UPDATE name=VALUES(name), password=VALUES(password);
 
--- Insert default personal info
-INSERT INTO personal_info (full_name, title, email, phone, location, bio, github_url, linkedin_url) VALUES
-('Sarthak Sharma', 'DevOps Engineer', 'sarthak@example.com', '+91-9876543210', 'India',
-'I am a passionate DevOps Engineer with expertise in cloud technologies, containerization, and automation. I love building scalable infrastructure and implementing CI/CD pipelines to streamline development workflows.',
-'https://github.com/sarthaksharma', 'https://linkedin.com/in/sarthaksharma')
+-- Insert default personal info (if not exists)
+INSERT INTO personal_info (id, full_name, title, email, phone, location, bio, github_url, linkedin_url, resume_url)
+VALUES (1, 'Sarthak Sharma', 'DevOps Engineer', 'sarthak@example.com', '+91-9876543210', 'India', 'I am a passionate DevOps Engineer with expertise in cloud technologies, containerization, and automation.', 'https://github.com/SarthakSharma007', 'https://www.linkedin.com/in/sarthaksharmaprofile/', '/resume.pdf')
 ON DUPLICATE KEY UPDATE full_name=VALUES(full_name), title=VALUES(title), email=VALUES(email);

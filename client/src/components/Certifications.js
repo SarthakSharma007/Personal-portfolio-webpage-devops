@@ -2,13 +2,66 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaCertificate, FaExternalLinkAlt, FaCalendarAlt } from 'react-icons/fa';
 import { useInView } from 'react-intersection-observer';
-import api from '../services/api';
+// import api from '../services/api'; // Removed API import to hardcode the list
 import './Certifications.css';
 
+// Hardcoded certification data as requested to override incorrect backend data
+// Updated comment - October 27, 2025
+const specificCertifications = [
+  {
+    id: 1,
+    cert_name: 'Introduction to Containers, Kubernetes, and OpenShift',
+    issuing_organization: 'CognitiveClass.ai',
+    issue_date: '2025-07-12',
+    credential_id: 'CC0201EN',
+    credential_url: 'https://courses.cognitiveclass.ai/certificates/3b62291dfc534c06898e6b94beacbb46',
+    image_url: null,
+  },
+  {
+    id: 2,
+    cert_name: 'Introduction to Linux',
+    issuing_organization: 'The Linux Foundation',
+    issue_date: '2025-06-28',
+    credential_id: 'LF-ku85gwty6e',
+    credential_url: 'https://drive.google.com/file/d/1o_Uz0TCW70ejhGt1qNEE42hqMKoTY4bc/view?usp=sharing',
+    image_url: null,
+  },
+  {
+    id: 3,
+    cert_name: 'Introduction to GitOps',
+    issuing_organization: 'The Linux Foundation',
+    issue_date: '2025-04-25',
+    credential_id: 'LF-qpj6j47gsq',
+    credential_url: 'https://drive.google.com/file/d/18f9Uq3V7B63IAqM50gSThfSam2AlnLNA/view?usp=sharing',
+    image_url: null,
+  },
+  {
+    id: 4,
+    cert_name: 'GitLab 101 Certification',
+    issuing_organization: 'GitLab',
+    issue_date: '2025-06-15',
+    credential_id: null,
+    credential_url: 'https://drive.google.com/file/d/1Igey6zht7uBiQQQGDBpUOnsZ-E_0TvZ2/view?usp=sharing',
+    image_url: null,
+  },
+  {
+    id: 5,
+    cert_name: 'Introduction to Cloud Computing',
+    issuing_organization: 'Simplilearn',
+    issue_date: '2025-04-20',
+    credential_id: null,
+    credential_url: 'https://drive.google.com/file/d/1BC2vh2gBgEFVBKXIoHcC7pfhltqNocQd/view?usp=sharing',
+    image_url: null,
+  },
+];
+
 const Certifications = () => {
-  const [certifications, setCertifications] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // Set state directly from the hardcoded list
+  // Removed setCertifications setter to fix 'no-unused-vars' lint warning
+  const [certifications] = useState(specificCertifications);
+  // Removed loading and error states as they are no longer needed
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const { ref, inView } = useInView({
@@ -16,72 +69,10 @@ const Certifications = () => {
     triggerOnce: true,
   });
 
-  useEffect(() => {
-    const fetchCertifications = async () => {
-      try {
-        const response = await api.get('/certifications');
-        if (response.data.success) {
-          setCertifications(response.data.data);
-        }
-      } catch (err) {
-        console.error('Error fetching certifications:', err);
-        setError('Failed to load certifications');
-        // ✅ Expanded fallback data
-        setCertifications([
-          {
-            id: 1,
-            cert_name: 'Introduction to Containers, Kubernetes, and OpenShift',
-            issuing_organization: 'CognitiveClass.ai',
-            issue_date: '2025-07-12',
-            credential_id: 'CC0201EN',
-            credential_url: 'https://courses.cognitiveclass.ai/certificates/3b62291dfc534c06898e6b94beacbb46',
-            image_url: null,
-          },
-          {
-            id: 2,
-            cert_name: 'Introduction to Linux',
-            issuing_organization: 'The Linux Foundation',
-            issue_date: '2025-06-28',
-            credential_id: 'LF-ku85gwty6e',
-            credential_url: 'https://drive.google.com/file/d/1o_Uz0TCW70ejhGt1qNEE42hqMKoTY4bc/view?usp=sharing',
-            image_url: null,
-          },
-          {
-            id: 3,
-            cert_name: 'Introduction to GitOps',
-            issuing_organization: 'The Linux Foundation',
-            issue_date: '2025-04-25',
-            credential_id: 'LF-qpj6j47gsq',
-            credential_url: 'https://drive.google.com/file/d/18f9Uq3V7B63IAqM50gSThfSam2AlnLNA/view?usp=sharing',
-            image_url: null,
-          },
-          {
-            id: 4,
-            cert_name: 'GitLab 101 Certification',
-            issuing_organization: 'GitLab',
-            issue_date: '2025-06-15',
-            credential_id: null,
-            credential_url: 'https://drive.google.com/file/d/1Igey6zht7uBiQQQGDBpUOnsZ-E_0TvZ2/view?usp=sharing',
-            image_url: null,
-          },
-          {
-            id: 5,
-            cert_name: 'Introduction to Cloud Computing',
-            issuing_organization: 'Simplilearn',
-            issue_date: '2025-04-20',
-            credential_id: null,
-            credential_url: 'https://drive.google.com/file/d/1BC2vh2gBgEFVBKXIoHcC7pfhltqNocQd/view?usp=sharing',
-            image_url: null,
-          },
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Removed useEffect for fetching data
+  // useEffect(() => { ... fetchCertifications ... }, []);
 
-    fetchCertifications();
-  }, []);
-
+  // Keep the useEffect for the carousel timer
   useEffect(() => {
     if (certifications.length > 1) {
       const interval = setInterval(() => {
@@ -95,11 +86,14 @@ const Certifications = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
+    // Using UTC date parsing to prevent timezone offset issues
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+    return utcDate.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
+      timeZone: 'UTC' // Specify UTC timezone
     });
   };
 
@@ -115,16 +109,10 @@ const Certifications = () => {
     );
   };
 
-  if (loading) {
-    return (
-      <section id="certifications" className="certifications section">
-        <div className="loading-spinner">
-          <div className="spinner"></div>
-        </div>
-      </section>
-    );
-  }
+  // Removed the loading spinner block
+  // if (loading) { ... }
 
+  // This block will now only run if the hardcoded list is empty
   if (certifications.length === 0) {
     return (
       <section id="certifications" className="certifications section">
@@ -232,6 +220,7 @@ const Certifications = () => {
                   key={index}
                   className={`indicator ${index === currentIndex ? 'active' : ''}`}
                   onClick={() => setCurrentIndex(index)}
+                  aria-label={`Go to slide ${index + 1}`}
                 />
               ))}
             </div>
@@ -243,3 +232,4 @@ const Certifications = () => {
 };
 
 export default Certifications;
+

@@ -1,9 +1,8 @@
+// config/db.js
 const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
-
 dotenv.config();
 
-// ✅ Create MySQL connection pool
 const promisePool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
@@ -12,19 +11,18 @@ const promisePool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+  // If you need SSL, set DB_SSL=true in .env and configure correctly
   ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
 });
 
-// ✅ Optional function to test DB connection
 const testConnection = async () => {
   try {
     await promisePool.execute('SELECT 1');
-    console.log('✅ Successfully connected to the database.');
+    console.log('Successfully connected to the database.');
   } catch (error) {
-    console.error('❌ Error connecting to the database:', error.message);
-    process.exit(1);
+    console.error('Error connecting to the database:', error.message);
+    throw error;
   }
 };
 
-// ✅ Export the pool and testConnection function
 module.exports = { promisePool, testConnection };
