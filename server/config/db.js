@@ -11,17 +11,16 @@ const promisePool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  // If you need SSL, set DB_SSL=true in .env and configure correctly
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
+  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
 });
 
 const testConnection = async () => {
   try {
     await promisePool.execute('SELECT 1');
-    console.log('Successfully connected to the database.');
-  } catch (error) {
-    console.error('Error connecting to the database:', error.message);
-    throw error;
+    console.log('✅ Database connected successfully');
+  } catch (err) {
+    console.error('❌ Database connection error:', err.message);
+    throw err;
   }
 };
 
