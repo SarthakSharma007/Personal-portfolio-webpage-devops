@@ -110,14 +110,14 @@ CREATE TABLE IF NOT EXISTS personal_info (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Insert default admin user (password: admin123)
-INSERT INTO users (name, email, password) VALUES 
+-- Insert default admin user (hashed password)
+INSERT INTO users (name, email, password) VALUES
 ('Admin', 'admin@portfolio.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi')
-ON DUPLICATE KEY UPDATE name=VALUES(name);
+ON DUPLICATE KEY UPDATE name=VALUES(name), password=VALUES(password);
 
 -- Insert default personal info
-INSERT INTO personal_info (full_name, title, email, phone, location, bio, github_url, linkedin_url) VALUES 
-('Sarthak Sharma', 'DevOps Engineer', 'sarthak@example.com', '+91-9876543210', 'India', 
-'I am a passionate DevOps Engineer with expertise in cloud technologies, containerization, and automation. I love building scalable infrastructure and implementing CI/CD pipelines to streamline development workflows.', 
+INSERT INTO personal_info (full_name, title, email, phone, location, bio, github_url, linkedin_url) VALUES
+('Sarthak Sharma', 'DevOps Engineer', 'sarthak@example.com', '+91-9876543210', 'India',
+'I am a passionate DevOps Engineer with expertise in cloud technologies, containerization, and automation. I love building scalable infrastructure and implementing CI/CD pipelines to streamline development workflows.',
 'https://github.com/sarthaksharma', 'https://linkedin.com/in/sarthaksharma')
-ON DUPLICATE KEY UPDATE full_name=VALUES(full_name);
+ON DUPLICATE KEY UPDATE full_name=VALUES(full_name), title=VALUES(title), email=VALUES(email);
