@@ -1,0 +1,291 @@
+/* Basic Admin Panel Styling */
+.admin-panel {
+  padding: 2rem;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.admin-header h1 {
+  color: var(--text-primary);
+  font-size: 2rem;
+}
+
+.logout-button {
+  padding: 0.6rem 1.2rem;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+.admin-sections-container {
+  display: grid;
+  gap: 2rem;
+}
+
+.admin-section {
+  background-color: var(--bg-primary);
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+}
+
+.admin-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--accent-primary);
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--accent-primary);
+  display: inline-block;
+}
+
+.admin-section-content {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-section label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.admin-section input[type="text"],
+.admin-section input[type="url"],
+.admin-section input[type="email"],
+.admin-section input[type="tel"],
+.admin-section input[type="date"],
+.admin-section input[type="number"],
+.admin-section textarea,
+.admin-section select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  box-sizing: border-box; /* Ensure padding doesn't increase size */
+}
+
+.admin-section textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.admin-section input:focus,
+.admin-section textarea:focus,
+.admin-section select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-weight: normal; /* Override default label weight */
+  color: var(--text-primary);
+}
+.checkbox-label input[type="checkbox"] {
+   width: auto; /* Prevent checkbox from taking full width */
+   margin-right: 5px;
+}
+
+
+.save-button {
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.5rem;
+  background: var(--accent-gradient);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.save-button:hover {
+  opacity: 0.9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.save-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* List Item Styling */
+.list-item {
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  background-color: var(--bg-secondary);
+  position: relative; /* For positioning controls */
+  display: grid;
+  gap: 0.8rem; /* Space between inputs within an item */
+}
+.project-item, .experience-item, .education-item {
+   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive columns */
+}
+
+
+.list-item-controls {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.remove-button,
+.add-button,
+.add-button-empty {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.remove-button {
+  color: #e74c3c; /* Red */
+}
+
+.remove-button:hover {
+  background-color: rgba(231, 76, 60, 0.1);
+}
+
+.add-button,
+.add-button-empty {
+  color: #2ecc71; /* Green */
+}
+.add-button:hover,
+.add-button-empty:hover {
+  background-color: rgba(46, 204, 113, 0.1);
+}
+
+.add-button-empty {
+    margin-top: 1rem;
+    padding: 0.6rem 1rem;
+    border: 1px dashed var(--accent-primary);
+    color: var(--accent-primary);
+    width: 100%;
+    justify-content: center;
+    font-weight: 600;
+    gap: 0.5rem;
+}
+
+
+/* Status Messages */
+.status-message {
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  border-left: 4px solid;
+}
+
+.status-message.success {
+  background-color: #e6f7f0;
+  color: #1f784a;
+  border-left-color: #2ecc71;
+}
+
+.status-message.error {
+  background-color: #fce8e8;
+  color: #a12f2f;
+  border-left-color: #e74c3c;
+}
+
+/* Dark theme overrides */
+[data-theme="dark"] .admin-panel {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+[data-theme="dark"] .admin-header {
+  border-bottom-color: #404040;
+}
+[data-theme="dark"] .admin-header h1 {
+   color: #ffffff;
+}
+
+[data-theme="dark"] .admin-section {
+  background-color: #2d2d2d;
+  border-color: #404040;
+}
+[data-theme="dark"] .admin-section h2 {
+   color: var(--accent-primary);
+   border-bottom-color: var(--accent-primary);
+}
+[data-theme="dark"] .admin-section label {
+  color: #b3b3b3;
+}
+[data-theme="dark"] .admin-section input,
+[data-theme="dark"] .admin-section textarea,
+[data-theme="dark"] .admin-section select {
+  background-color: #404040;
+  color: #ffffff;
+  border-color: #555;
+}
+
+[data-theme="dark"] .list-item {
+  background-color: #404040;
+  border-color: #555;
+}
+[data-theme="dark"] .checkbox-label {
+    color: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-panel {
+    padding: 1rem;
+  }
+  .admin-header h1 {
+     font-size: 1.5rem;
+  }
+  .admin-section {
+     padding: 1rem 1.5rem;
+  }
+  .list-item {
+     grid-template-columns: 1fr; /* Stack inputs on mobile */
+  }
+  .list-item-controls {
+     position: static; /* Let controls flow naturally */
+     justify-content: flex-end; /* Align to the right */
+     margin-top: 0.5rem;
+   }
+
+}

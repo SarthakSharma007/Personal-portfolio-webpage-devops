@@ -1,6 +1,6 @@
 import React from 'react';
 // --- FIX: Add 'useNavigate' to the import list ---
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'; 
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useTheme } from './contexts/ThemeContext';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
@@ -14,32 +14,8 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import Login from './components/Login';
+import AdminPanel from './components/AdminPanel'; // Import the new AdminPanel
 import './App.css';
-
-// --- Simple Admin Panel Placeholder ---
-const AdminPanel = () => {
-  const navigate = useNavigate(); // Hook for navigation
-
-  const handleLogout = () => {
-    localStorage.removeItem('token'); // Clear the token
-    navigate('/login'); // Redirect to login page
-  };
-
-  return (
-    <div style={{ padding: '2rem', minHeight: '100vh', background: '#f0f0f0' }}>
-      <h1>Admin Panel</h1>
-      <p>Welcome, Admin! This is a placeholder for your admin content.</p>
-      {/* Add a simple logout button */}
-      <button
-        onClick={handleLogout}
-        style={{ padding: '10px 20px', marginTop: '20px', cursor: 'pointer' }}
-      >
-        Logout
-      </button>
-    </div>
-  );
-};
-// --- End Admin Panel Placeholder ---
 
 // --- Protected Route Component (Basic Example) ---
 const ProtectedRoute = ({ children }) => {
@@ -83,17 +59,17 @@ function App() {
         {/* Route for the login page */}
         <Route path="/login" element={<Login />} />
 
-        {/* --- FIX: Add the Admin Panel Route --- */}
+        {/* --- UPDATE: Use the imported AdminPanel --- */}
         {/* Wrap AdminPanel with ProtectedRoute */}
         <Route
           path="/admin"
           element={
             <ProtectedRoute>
-              <AdminPanel />
+              <AdminPanel /> {/* Use the actual component */}
             </ProtectedRoute>
           }
         />
-        {/* --- END FIX --- */}
+        {/* --- END UPDATE --- */}
 
         {/* Route for all other paths (your main portfolio) */}
         <Route path="/*" element={<HomePage />} />
@@ -103,4 +79,3 @@ function App() {
 }
 
 export default App;
-
