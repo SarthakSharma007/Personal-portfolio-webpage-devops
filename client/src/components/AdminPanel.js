@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { ThemeContext } from '../contexts/ThemeContext';
 import './AdminPanel.css'; // Make sure you have styles for this
-import { FaSave, FaTrash, FaPlus, FaLink, FaImage, FaGithub } from 'react-icons/fa'; // Added FaLink, FaImage, and FaGithub
+// FIX: Added FaGithub import
+import { FaSave, FaTrash, FaPlus, FaLink, FaImage, FaGithub } from 'react-icons/fa';
 
 // --- Reusable Section Wrapper ---
 // Updated to make onSave optional
@@ -103,7 +104,7 @@ const AdminPanel = () => {
         } else {
            console.error("Failed to fetch personal info or no data found:", infoRes.data);
            // Set default structure if fetch fails or no data
-           setPersonalInfo({ full_name: '', title: '', linkedin_url: '', github_url: '', profile_image: '', bio: '' });
+           setPersonalInfo({ full_name: '', title: '', linkedin_url: '', github_url: '', profile_image: '', bio: '', email: '', phone: '', location: '', resume_url: '' }); // Added removed fields back to default state
         }
 
         if (skillsRes.data.success) setSkills(skillsRes.data.data || []); else console.error("Failed to fetch skills:", skillsRes.data);
@@ -117,7 +118,7 @@ const AdminPanel = () => {
         console.error('Error fetching admin data:', err);
         showStatus('page', 'error', 'Failed to load initial data.');
         // Initialize personalInfo with default structure on error
-        setPersonalInfo({ full_name: '', title: '', linkedin_url: '', github_url: '', profile_image: '', bio: '' });
+        setPersonalInfo({ full_name: '', title: '', linkedin_url: '', github_url: '', profile_image: '', bio: '', email: '', phone: '', location: '', resume_url: '' }); // Added removed fields back to default state
       } finally {
         setLoadingStates(prev => ({ ...prev, page: false }));
       }
@@ -156,13 +157,15 @@ const AdminPanel = () => {
     if (inputFiles.length > 0) {
       setFiles(prev => ({ ...prev, [name]: inputFiles[0] }));
       // Optional: Show image preview immediately
+      // This requires careful state management if you also display the current URL
+      /*
       const reader = new FileReader();
       reader.onloadend = () => {
-        // You might want a separate state for previews if personalInfo.profile_image holds a URL/path
-        // For simplicity, updating personalInfo state directly if needed, but be cautious
+        // Example: set a separate preview state
         // setPersonalInfo(prev => ({...prev, profile_image_preview: reader.result }));
       };
       reader.readAsDataURL(inputFiles[0]);
+      */
     } else {
         // Clear the file if user cancels selection
         setFiles(prev => ({ ...prev, [name]: null }));
@@ -192,6 +195,7 @@ const AdminPanel = () => {
 
     // If it's an existing item, attempt to delete from DB
     if (itemToRemove?.id) {
+      // Use browser confirm for simplicity, replace with modal if needed
       const confirmDelete = window.confirm(`Are you sure you want to delete this ${key} item?`);
       if (!confirmDelete) return;
 
@@ -227,60 +231,43 @@ const AdminPanel = () => {
     const formData = new FormData();
 
     // Append all text fields from the personalInfo state
-    // We send all fields back, even hidden ones, to prevent the DB
-    // from setting them to NULL on update.
+    // Ensure all expected fields by the backend are included
     const fieldsToSave = [
         'full_name', 'title', 'email', 'phone', 'location',
         'bio', 'github_url', 'linkedin_url', 'resume_url'
+        // 'profile_image' is handled separately below if it's a file
     ];
 
     fieldsToSave.forEach(key => {
-        // Use the value from state (which was loaded initially)
+        // FIX: Send null if value is undefined or null, otherwise send the value
         const value = personalInfo[key];
-        // Send `null` (which becomes string "null") if value is null or undefined.
-        // This is to prevent sending `undefined` which the server errors on.
-        // This aligns with the error hint "To pass SQL NULL specify JS null".
-        formData.append(key, (value === undefined || value === null) ? null : value);
+        formData.append(key, value === undefined || value === null ? null : value);
     });
 
     // Append the profile image file if selected
     if (files.profile_image) {
       formData.append('profile_image', files.profile_image);
       // Backend needs to handle 'profile_image' field as a file upload
-    } else {
-        // If no new file is selected, ensure the backend doesn't clear the existing image
-        // Option 1: Send the existing image path/URL back (if backend expects it)
-        // formData.append('profile_image', personalInfo.profile_image || '');
-        // Option 2: Backend logic should only update image if a new file is provided (preferred)
-        // We won't append 'profile_image' if no new file exists. Backend should handle this.
     }
+    // No need to append profile_image if no new file is selected,
+    // as the backend route `personalInfo.js` is updated to handle this.
 
     try {
-      // Backend PUT /api/personal-info expects an ID, but since it's always ID 1,
-      // we can hardcode the endpoint or adjust backend to not require ID in URL for PUT.
-      // Assuming backend uses PUT /api/personal-info/ (or similar) and gets ID from context/session or knows it's always 1.
-      // If backend MUST have ID 1: const res = await api.put('/personal-info/1', formData, { ... });
-      const res = await api.put('/personal-info', formData, { // Using the simpler route based on personalInfo.js
+      // Using PUT /api/personal-info (assuming backend handles ID 1 implicitly)
+      const res = await api.put('/personal-info', formData, {
         headers: {
           'Content-Type': 'multipart/form-data', // Important for file uploads
         },
       });
 
       if (res.data.success) {
-        // --- IMPORTANT: Update state with potentially new data from server ---
-        // The server SHOULD return the updated record, including the new image URL if uploaded
-        // If the server doesn't return the full updated record, refetch might be needed,
-        // but it's better if the server returns it. Let's assume it does for now.
+        // Update state with potentially new data from server (including image URL)
         if (res.data.data) {
              const updatedInfo = Array.isArray(res.data.data) ? res.data.data[0] : res.data.data;
              setPersonalInfo(updatedInfo);
         } else {
-            // If server doesn't return data, merge the successful updates (excluding file)
-            // This is less ideal, especially for the image URL.
-            // setPersonalInfo(prev => ({ ...prev, ...Object.fromEntries(formData.entries()) }));
-            // Refetch after save might be necessary if backend doesn't return data:
-            // fetchData(); // Consider calling the initial fetch function again
-            console.warn("Save successful, but no updated data returned from server.");
+             console.warn("Save successful, but no updated data returned from server.");
+             // Optionally refetch if needed: fetchData();
         }
         setFiles({ profile_image: null }); // Clear file input state on success
         showStatus('personalInfo', 'success', 'Personal Info saved successfully.');
@@ -299,60 +286,64 @@ const AdminPanel = () => {
   const createSaveHandler = (endpoint, state, setState, key) => async () => {
     setLoadingStates(prev => ({ ...prev, [key]: true }));
     let hasError = false;
-    const results = [];
+    const results = []; // To store results including new IDs
 
     try {
-      for (const item of state) {
-        const { id, ...data } = item;
-        try {
-          let response;
-          if (id?.toString().startsWith('new-')) {
-            // Create new item
-            response = await api.post(endpoint, data);
-          } else {
-            // Update existing item
-            response = await api.put(`${endpoint}/${id}`, data);
-            // Ensure response structure matches POST for consistency if needed
-            if (response.data.success && !response.data.data) {
-                response.data.data = { id, ...data }; // Add data back if PUT doesn't return it
-            }
-          }
-           if (response.data.success && response.data.data) {
-                results.push(response.data.data); // Collect successful results
-           } else {
-                console.error(`Failed operation for item ${id || 'new'} in ${key}:`, response.data.message);
-                showStatus(key, 'error', `Failed for item "${data.title || data.skill_name || data.cert_name || data.degree || 'New Item'}": ${response.data.message || 'Unknown error'}`);
+        // Use Promise.all to run updates/creates concurrently for better performance
+        await Promise.all(state.map(async (item) => {
+            const { id, ...data } = item;
+            try {
+                let response;
+                if (id?.toString().startsWith('new-')) {
+                    // Create new item
+                    response = await api.post(endpoint, data);
+                } else if (id) {
+                    // Update existing item
+                    response = await api.put(`${endpoint}/${id}`, data);
+                    // Ensure response structure matches POST for consistency if needed
+                    if (response.data.success && !response.data.data && id) {
+                       // If PUT doesn't return data, reconstruct it (less ideal but functional)
+                       response.data.data = { id, ...data };
+                    }
+                } else {
+                    console.warn(`Item in ${key} is missing an ID and doesn't start with 'new-'`, item);
+                    results.push(item); // Keep the item in state if it has no ID
+                    return; // Skip API call for items without ID
+                }
+
+                if (response.data.success && response.data.data) {
+                    results.push(response.data.data); // Collect successful results with potentially new IDs
+                } else {
+                    console.error(`Failed operation for item ${id || 'new'} in ${key}:`, response.data.message);
+                    showStatus(key, 'error', `Failed for item "${data.title || data.skill_name || data.cert_name || data.degree || 'New Item'}": ${response.data.message || 'Unknown error'}`);
+                    hasError = true;
+                    results.push(item); // Push original item back on failure
+                }
+            } catch (itemError) {
+                console.error(`Error saving item ${id || 'new'} in ${key}:`, itemError.response?.data || itemError.message);
+                showStatus(key, 'error', `Error for item "${data.title || data.skill_name || data.cert_name || data.degree || 'New Item'}": ${itemError.response?.data?.message || 'Check console'}`);
                 hasError = true;
-                // Optionally push the original item back if you want partial saves
-                 results.push(item);
-           }
+                results.push(item); // Push original item back on error
+            }
+        }));
 
-        } catch (itemError) {
-          console.error(`Error saving item ${id || 'new'} in ${key}:`, itemError.response?.data || itemError.message);
-          showStatus(key, 'error', `Error for item "${data.title || data.skill_name || data.cert_name || data.degree || 'New Item'}": ${itemError.response?.data?.message || 'Check console'}`);
-          hasError = true;
-          // Optionally push the original item back
-          results.push(item);
+        // Update state with results (important for new IDs and reflecting any failed items)
+        setState(results);
+
+        if (!hasError) {
+            showStatus(key, 'success', `${key.charAt(0).toUpperCase() + key.slice(1)} saved successfully.`);
+        } else {
+            showStatus(key, 'warning', `Some ${key} items may not have saved. Check messages.`);
         }
-      }
-
-      // Update state with results (including new IDs from server)
-      setState(results);
-
-      if (!hasError) {
-          showStatus(key, 'success', `${key.charAt(0).toUpperCase() + key.slice(1)} saved successfully.`);
-      } else {
-          showStatus(key, 'warning', `Some ${key} items saved, but errors occurred. Check messages.`);
-      }
 
     } catch (err) {
-      // Catch errors during the Promise.all phase (less likely now with loop)
-      console.error(`General error saving ${key}:`, err);
-      showStatus(key, 'error', `Failed to save ${key}. Check console.`);
+        // Catch errors during the Promise.all phase itself (less likely now)
+        console.error(`General error saving ${key}:`, err);
+        showStatus(key, 'error', `Failed to save ${key}. Check console.`);
     } finally {
-      setLoadingStates(prev => ({ ...prev, [key]: false }));
+        setLoadingStates(prev => ({ ...prev, [key]: false }));
     }
-  };
+};
 
 
   // --- Skill Grouping Logic ---
@@ -440,8 +431,13 @@ const AdminPanel = () => {
 
 
   // --- Logout ---
+  // Ensure this function correctly removes the token
   const handleLogout = () => {
+    console.log("Attempting logout..."); // Add log
     localStorage.removeItem('token');
+    console.log("Token removed from localStorage (verify in dev tools)"); // Add log
+    // Also clear Axios default headers if set globally
+    delete api.defaults.headers.common['Authorization'];
     navigate('/login');
   };
 
@@ -471,7 +467,7 @@ const AdminPanel = () => {
 
       <div className="admin-sections-container">
 
-        {/* --- 🏠 Personal Information Section (Home & About Combined) --- */}
+        {/* --- 🏠 Personal Information Section --- */}
         <AdminSection
           title="Personal Information"
           onSave={savePersonalInfo}
@@ -530,51 +526,15 @@ const AdminPanel = () => {
 
              {/* --- ABOUT SECTION SUB-BLOCK --- */}
              <h4 style={{ marginTop: '2rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem', marginBottom: '1rem' }}>About Section</h4>
-              {/* Assuming these fields might still be useful, map them to DB fields if needed */}
+              {/* Only Bio is needed here based on previous request */}
              <label htmlFor="about_bio">Bio / About Me Description:</label>
              <textarea
                id="about_bio"
                value={personalInfo.bio || ''}
                onChange={e => handleInputChange(setPersonalInfo, null, 'bio', e.target.value)}
                placeholder="Write a short description about yourself..."
+               rows="5" // Give it a bit more space
              />
-              
-              {/* --- REMOVED FIELDS AS REQUESTED --- */}
-              {/* <label htmlFor="contact_email">Contact Email:</label>
-             <input
-               id="contact_email"
-               type="email"
-               value={personalInfo.email || ''}
-               onChange={e => handleInputChange(setPersonalInfo, null, 'email', e.target.value)}
-                placeholder="your.email@example.com"
-             />
-              <label htmlFor="contact_phone">Contact Phone:</label>
-             <input
-               id="contact_phone"
-               type="tel"
-               value={personalInfo.phone || ''}
-               onChange={e => handleInputChange(setPersonalInfo, null, 'phone', e.target.value)}
-                placeholder="+91 1234567890"
-             />
-              <label htmlFor="contact_location">Location:</label>
-             <input
-               id="contact_location"
-               type="text"
-               value={personalInfo.location || ''}
-               onChange={e => handleInputChange(setPersonalInfo, null, 'location', e.target.value)}
-                placeholder="City, Country"
-             />
-              <label htmlFor="resume_url"><FaLink /> Resume URL:</label>
-             <input
-               id="resume_url"
-               type="url"
-               value={personalInfo.resume_url || ''}
-               onChange={e => handleInputChange(setPersonalInfo, null, 'resume_url', e.target.value)}
-                placeholder="Link to your resume PDF (e.g., Google Drive)"
-             />
-              */}
-             {/* Note: About image field is removed for simplicity, profile_image is used */}
-
         </AdminSection>
 
 
@@ -977,4 +937,3 @@ const AdminPanel = () => {
 };
 
 export default AdminPanel;
-

@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+// Import Outlet for nested routing layout
+// FIX: Removed Router (BrowserRouter as Router) import, assuming it's in index.js
+import { Route, Routes, Outlet } from 'react-router-dom';
 import { ThemeProvider, ThemeContext } from './contexts/ThemeContext';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
@@ -13,58 +15,68 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Login from './components/Login';
 import AdminPanel from './components/AdminPanel';
-import ProtectedRoute from './components/ProtectedRoute'; // Import the ProtectedRoute component
+import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
-// Main App component wrapped with ThemeProvider
+// Main App component wrapped ONLY with ThemeProvider
 const App = () => {
   return (
     <ThemeProvider>
-      <AppContent />
+      {/* FIX: Removed Router wrapper here, assuming it's in index.js */}
+      <AppRoutes /> {/* Component defining routes */}
     </ThemeProvider>
   );
 };
 
-// Separate component to consume ThemeContext
-const AppContent = () => {
+// Layout component: Includes elements common to main pages (Navbar, theme)
+const MainLayout = () => {
   const { theme } = useContext(ThemeContext);
-
   return (
-    <Router>
-      <div className={`App ${theme}`}>
-        <ScrollToTop />
-        <Navbar />
-        <main>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<Login />} />
-
-            {/* Protected Admin Route */}
-            {/* Wrap the AdminPanel route within the ProtectedRoute */}
-            <Route element={<ProtectedRoute />}>
-              <Route path="/admin" element={<AdminPanel />} />
-            </Route>
-
-            {/* Optional: Add a 404 Not Found route */}
-            {/* <Route path="*" element={<NotFound />} /> */}
-          </Routes>
-        </main>
-        {/* Footer might need conditional rendering if you don't want it on login/admin pages */}
-        {/* Example: Add logic based on location if needed */}
-        {/* <Footer /> */}
-      </div>
-    </Router>
+    <div className={`App ${theme}`}>
+      <ScrollToTop />
+      <Navbar />
+      <main>
+        {/* Child routes defined within this layout will render here */}
+        <Outlet />
+      </main>
+      {/* Footer moved inside HomePage component which is rendered via Outlet */}
+    </div>
   );
 };
 
-// Component to render all sections for the home page
+// Component that defines all the application routes
+const AppRoutes = () => {
+  return (
+    <Routes>
+      {/* Routes that use the MainLayout (Navbar, ScrollToTop, theme) */}
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<HomePage />} />
+        {/* Add any other public pages that need the Navbar/Footer here */}
+        {/* e.g., <Route path="/portfolio" element={<PortfolioPage />} /> */}
+      </Route>
+
+      {/* Routes that DO NOT use the MainLayout */}
+      <Route path="/login" element={<Login />} />
+
+      {/* Protected Admin Route (also does not use MainLayout) */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/admin" element={<AdminPanel />} />
+      </Route>
+
+      {/* Optional: Catch-all 404 Not Found route */}
+      {/* <Route path="*" element={<div>404 Not Found</div>} /> */}
+    </Routes>
+  );
+};
+
+
+// Component to render all sections for the home page (content part)
+// FIX: Restored original components
 const HomePage = () => {
-  // FIX: Removed unused theme variable declaration
-  // const { theme } = useContext(ThemeContext);
   return (
     <>
+      {/* Restored original components */}
       <Home />
       <About />
       <Skills />
@@ -73,7 +85,7 @@ const HomePage = () => {
       <Experience />
       <Education />
       <Contact />
-      <Footer /> {/* Include Footer here since it's part of the main page layout */}
+      <Footer /> {/* Footer is part of the home page content */}
     </>
   );
 };
