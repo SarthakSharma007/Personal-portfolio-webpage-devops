@@ -6,17 +6,11 @@ https://sarthaksharma007.github.io/
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DevOps Portfolio Website</title>
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; background-color: #f9f9f9; color: #333; }
-    h1, h2, h3, h4 { color: #222; }
-    a { color: #1a73e8; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    code { background-color: #eee; padding: 2px 5px; border-radius: 3px; }
-    pre { background-color: #eee; padding: 10px; border-radius: 5px; overflow-x: auto; }
-    ul { margin: 10px 0; padding-left: 20px; }
-    li { margin-bottom: 5px; }
-    hr { border: 1px solid #ddd; margin: 20px 0; }
-  </style>
+
+<h1>DevOps Portfolio Website</h1>
+
+<p>This is the README for my DevOps Portfolio Website project.</p>
+
 </head>
 <body>
 
