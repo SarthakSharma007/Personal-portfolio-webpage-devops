@@ -1,0 +1,47 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: portfolio-frontend-hpa
+  namespace: portfolio-devops
+spec:
+  # Targets the Frontend Deployment
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: portfolio-frontend
+  # Minimum number of replicas (Pods)
+  minReplicas: 3
+  # Maximum number of replicas (Pods)
+  maxReplicas: 10
+  metrics:
+  # Scale up if average CPU utilization exceeds 60%
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: portfolio-backend-hpa
+  namespace: portfolio-devops
+spec:
+  # Targets the Backend Deployment
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: portfolio-backend
+  # Minimum number of replicas (Pods)
+  minReplicas: 3
+  # Maximum number of replicas (Pods)
+  maxReplicas: 10
+  metrics:
+  # Scale up if average CPU utilization exceeds 70%
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+  namespace: portfolio-devops
+spec:
+  # Defines how the volume can be accessed (ReadWriteOnce is standard for single-node DB)
+  accessModes:
+    - ReadWriteOnce 
+  resources:
+    requests:
+      # Request 5 Gigabytes of storage
+      storage: 5Gi

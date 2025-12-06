@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfolio-frontend
+  namespace: portfolio-devops
+  labels:
+    app: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: sarthaksharma19/portfolio-frontend
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "300m"
+            memory: "256Mi"
+        ports:
+        - containerPort: 80
+        env:
+        # Set the environment variable for the frontend to know the API location
+        # The value is the name of the Backend Service (ClusterIP)
+        - name: REACT_APP_API_URL
+          value: "http://portfolio-backend-service:5000"
+          
+        # Liveness probe checks Nginx server health
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        # Readiness probe ensures Nginx is ready before accepting external traffic
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
