@@ -64,7 +64,7 @@ app.use('/api/personal-info', personalInfoRoutes);
 app.use('/api/auth', authRoutes);
 
 // ---------------------------
-// ✅ Health Check Route
+// ✅ API Health Check Route
 // ---------------------------
 app.get('/api/health', (req, res) => {
   res.json({
@@ -72,6 +72,26 @@ app.get('/api/health', (req, res) => {
     message: 'Portfolio API is running',
     timestamp: new Date().toISOString()
   });
+});
+
+// ---------------------------
+// ✅ Liveness & Readiness Endpoints
+// - /health  -> quick liveness check (no DB call)
+// - /ready   -> readiness check (verifies DB connectivity)
+// ---------------------------
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
+app.get('/ready', async (req, res) => {
+  try {
+    // simple DB query to verify connectivity; adapt if you use a different client
+    await promisePool.query('SELECT 1');
+    return res.status(200).json({ status: 'ok', db: 'connected' });
+  } catch (err) {
+    console.error('Readiness check failed:', err && err.message ? err.message : err);
+    return res.status(503).json({ status: 'error', db: 'unreachable' });
+  }
 });
 
 // ---------------------------
