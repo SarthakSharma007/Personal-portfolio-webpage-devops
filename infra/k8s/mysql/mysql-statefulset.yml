@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet # IMPORTANT: Must be StatefulSet for persistence (volumeClaimTemplates)
+metadata:
+  name: mysql
+  namespace: portfolio-devops
+  labels:
+    app: mysql
+spec:
+  serviceName: "mysql-service" 
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.0 # Use a specific, stable version
+        ports:
+        - containerPort: 3306
+        env:
+        # Load credentials from the Kubernetes Secret
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: portfolio-secret
+              key: mysql-password
+        # FIX: This instructs MySQL to create the 'portfolio_db' database on first startup
+        - name: MYSQL_DATABASE
+          value: "portfolio_db" 
+        
+        # Readiness probe ensures we wait until the DB is truly ready
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+  
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-persistent-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
+
+
+
+
+          
