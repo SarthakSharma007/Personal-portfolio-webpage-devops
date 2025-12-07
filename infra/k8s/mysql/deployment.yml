@@ -1,11 +1,13 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: apps/v1 # This is the correct API version for both Deployments and StatefulSets
+kind: StatefulSet # CHANGED from Deployment to StatefulSet
 metadata:
   name: mysql
   namespace: portfolio-devops
   labels:
     app: mysql
 spec:
+  # StatefulSets require a service name to provide network identity to replicas
+  serviceName: "mysql-service" 
   # Database should typically be a single instance unless clustered
   replicas: 1 
   selector:
@@ -27,7 +29,8 @@ spec:
           valueFrom:
             secretKeyRef:
               name: portfolio-secret
-              key: mysql-root-password
+              key: mysql-password # Note: Using mysql-password for root password as per standard mysql image convention
+        
         # Readiness probe ensures we wait until the DB is truly ready before the backend connects
         readinessProbe:
           tcpSocket:
@@ -38,13 +41,15 @@ spec:
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
-  # Define the Persistent Volume Claim to be used by the Pod
+  
+  # This is the corrected field: volumeClaimTemplates, which is only allowed on StatefulSet
   volumeClaimTemplates:
   - metadata:
       name: mysql-persistent-storage
     spec:
-      # This matches the PVC defined below, using ReadWriteOnce access for a single node
+      # This accessMode means the volume can be mounted as ReadWrite by a single node
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 5Gi # Request 5 Gigabytes of storage
+          # Request 5 Gigabytes of storage
+          storage: 5Gi

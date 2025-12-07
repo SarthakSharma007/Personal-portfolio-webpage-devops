@@ -1,4 +1,4 @@
-apiversion: v1
-kind: namespace
+apiVersion: v1
+kind: Namespace
 metadata:
   name: portfolio-devops
