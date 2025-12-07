@@ -3,10 +3,15 @@ kind: Service
 metadata:
   name: mysql-service
   namespace: portfolio-devops
+  # Add the annotation required for Docker Desktop LoadBalancer or other providers
+  annotations:
+    service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
 spec:
+  # clusterIP: None makes this a Headless Service, required by the StatefulSet
+  clusterIP: None
   selector:
     app: mysql
   ports:
-  - port: 3306 # Internal Port
-    targetPort: 3306 # Container Port
-  type: ClusterIP # Internal Service for the backend to access
+  - port: 3307
+    targetPort: 3306
+  type: ClusterIP
