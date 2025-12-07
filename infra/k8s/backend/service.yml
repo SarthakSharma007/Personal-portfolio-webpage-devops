@@ -9,4 +9,4 @@ spec:
   ports:
   - port: 5000
     targetPort: 5000
-  type: ClusterIP         # Internal Service for the frontend to access
+  type: ClusterIP         

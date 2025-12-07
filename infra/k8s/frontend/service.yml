@@ -9,5 +9,4 @@ spec:
   ports:
   - port: 80
     targetPort: 80
-  # LoadBalancer type exposes the service externally, essential for Docker Desktop K8s
   type: LoadBalancer

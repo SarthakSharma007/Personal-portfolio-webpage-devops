@@ -28,19 +28,14 @@ spec:
         ports:
         - containerPort: 80
         env:
-        # Set the environment variable for the frontend to know the API location
-        # The value is the name of the Backend Service (ClusterIP)
         - name: REACT_APP_API_URL
           value: "http://portfolio-backend-service:5000"
-          
-        # Liveness probe checks Nginx server health
         livenessProbe:
           httpGet:
             path: /
             port: 80
           initialDelaySeconds: 10
           periodSeconds: 10
-        # Readiness probe ensures Nginx is ready before accepting external traffic
         readinessProbe:
           httpGet:
             path: /
