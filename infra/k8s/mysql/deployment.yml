@@ -6,7 +6,6 @@ metadata:
   labels:
     app: mysql
 spec:
-  # Database should typically be a single instance unless clustered
   replicas: 1 
   selector:
     matchLabels:
@@ -18,33 +17,31 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: mysql:8.0 # Use a specific, stable version
+        image: mysql:8.0
         ports:
         - containerPort: 3306
         env:
-        # Load environment variables (password, user) from the Kubernetes Secret
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
               name: portfolio-secret
               key: mysql-root-password
-        # Readiness probe ensures we wait until the DB is truly ready before the backend connects
+        - name: MYSQL_DATABASE
+          value: "portfolio"
         readinessProbe:
           tcpSocket:
             port: 3306
-          initialDelaySeconds: 15
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 60
           periodSeconds: 20
-        # Volume mount connects the container path to the persistent volume
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
-  # Define the Persistent Volume Claim to be used by the Pod
-  volumeClaimTemplates:
-  - metadata:
-      name: mysql-persistent-storage
-    spec:
-      # This matches the PVC defined below, using ReadWriteOnce access for a single node
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 5Gi # Request 5 Gigabytes of storage
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc

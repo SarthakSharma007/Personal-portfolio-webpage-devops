@@ -18,7 +18,6 @@ spec:
       containers:
       - name: backend
         image: sarthaksharma19/portfolio-backend
-        # Define resource limits for the HPA to work correctly
         resources:
           requests:
             cpu: "200m"
@@ -29,10 +28,8 @@ spec:
         ports:
         - containerPort: 5000
         env:
-        # The host must be the name of the internal MySQL Service
         - name: DB_HOST
           value: "mysql-service" 
-        # Load sensitive database credentials from the Secret
         - name: DB_USER
           valueFrom:
             secretKeyRef:
@@ -43,19 +40,24 @@ spec:
             secretKeyRef:
               name: portfolio-secret
               key: mysql-password
-        # JWT_SECRET reference is REMOVED
-        
-        # Liveness probe checks if the container needs to be restarted
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: portfolio-secret
+              key: jwt-secret
+        - name: DB_NAME
+          value: "portfolio"
+        - name: DB_PORT
+          value: "3306"
         livenessProbe:
           httpGet:
             path: /health
             port: 5000
-          initialDelaySeconds: 15
+          initialDelaySeconds: 30
           periodSeconds: 20
-        # Readiness probe checks if the container is ready to serve traffic
         readinessProbe:
           httpGet:
             path: /health
             port: 5000
-          initialDelaySeconds: 5
+          initialDelaySeconds: 10
           periodSeconds: 5
