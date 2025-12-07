@@ -1,11 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-pvc-manual
-  namespace: portfolio-devops
+  name: my-node-app-pvc
 spec:
   accessModes:
-    - ReadWriteOnce 
+  - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 1Gi
