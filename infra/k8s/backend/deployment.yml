@@ -18,8 +18,8 @@ spec:
       containers:
       - name: backend
         image: sarthaksharma19/portfolio-backend
-        # Define resource limits for the HPA to work correctly
         resources:
+          # Define resource limits for the HPA to work correctly
           requests:
             cpu: "200m"
             memory: "256Mi"
@@ -29,10 +29,15 @@ spec:
         ports:
         - containerPort: 5000
         env:
-        # The host must be the name of the internal MySQL Service
+        # 1. Host Name (Internal K8s Service Name)
         - name: DB_HOST
           value: "mysql-service" 
-        # Load sensitive database credentials and JWT secret from the Secret
+          
+        # 2. Database Name (The name created by the MySQL StatefulSet)
+        - name: DB_NAME
+          value: "portfolio_db" # Explicitly set the database name here
+          
+        # 3. Load sensitive credentials from the Secret
         - name: DB_USER
           valueFrom:
             secretKeyRef:
