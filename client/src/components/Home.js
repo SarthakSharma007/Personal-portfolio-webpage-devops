@@ -9,7 +9,7 @@ import profileImage from '../assets/profile/20160518234238_IMG_8927 (2).JPG';
 const Home = () => {
   const [personalInfo, setPersonalInfo] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); // Now correctly used
   
   const { ref, inView } = useInView({
     threshold: 0.1,
@@ -22,6 +22,9 @@ const Home = () => {
         const response = await api.get('/personal-info');
         if (response.data.success) {
           setPersonalInfo(response.data.data);
+        } else {
+          // Handle API success=false case
+          setError('API request succeeded but returned no data.');
         }
       } catch (err) {
         console.error('Error fetching personal info:', err);
@@ -66,6 +69,29 @@ const Home = () => {
       </div>
       
       <div className="container">
+        {/* ADDED: Display the error message if the state is set */}
+        {error && (
+          <motion.div 
+            className="error-message"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ 
+              position: 'absolute', 
+              top: '10px', 
+              left: '50%', 
+              transform: 'translateX(-50%)', 
+              color: 'red', 
+              backgroundColor: 'rgba(255, 0, 0, 0.1)', 
+              padding: '10px', 
+              borderRadius: '5px',
+              zIndex: 100 
+            }}
+          >
+            {error}
+          </motion.div>
+        )}
+        
         <motion.div
           ref={ref}
           className={`hero-content ${inView ? 'visible' : ''}`}
