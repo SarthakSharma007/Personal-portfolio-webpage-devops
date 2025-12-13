@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const client = require('prom-client'); // Added for monitoring
 
 const { promisePool, testConnection } = require('./config/db');
 
@@ -19,6 +20,19 @@ const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// ---------------------------
+// ✅ Monitoring (Prometheus)
+// ---------------------------
+// Initialize default metrics (CPU, Memory usage, etc.)
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics({ register: client.register });
+
+// Metrics endpoint for Prometheus to scrape
+app.get('/metrics', async (req, res) => {
+  res.setHeader('Content-Type', client.register.contentType);
+  res.send(await client.register.metrics());
+});
 
 // ---------------------------
 // ✅ Security & Middleware
