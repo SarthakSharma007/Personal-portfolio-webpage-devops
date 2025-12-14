@@ -4,7 +4,6 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const client = require('prom-client'); // Added for monitoring
 
 const { promisePool, testConnection } = require('./config/db');
 
@@ -22,27 +21,14 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ---------------------------
-// ✅ Monitoring (Prometheus)
-// ---------------------------
-// Initialize default metrics (CPU, Memory usage, etc.)
-const collectDefaultMetrics = client.collectDefaultMetrics;
-collectDefaultMetrics({ register: client.register });
-
-// Metrics endpoint for Prometheus to scrape
-app.get('/metrics', async (req, res) => {
-  res.setHeader('Content-Type', client.register.contentType);
-  res.send(await client.register.metrics());
-});
-
-// ---------------------------
-// ✅ Security & Middleware
+// Security & Middleware
 // ---------------------------
 app.use(helmet());
 
-// ✅ Fix for express-rate-limit local issue
+// Fix for express-rate-limit local issue
 app.set('trust proxy', 1);
 
-// ✅ Rate limiting middleware
+// Rate limiting middleware
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
@@ -50,7 +36,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// ✅ CORS setup
+// CORS setup
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
     ? ['https://yourdomain.com']
@@ -58,15 +44,15 @@ app.use(cors({
   credentials: true
 }));
 
-// ✅ Body parsers
+// Body parsers
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// ✅ Static files (uploads)
+// Static files (uploads)
 app.use('/uploads', express.static('uploads'));
 
 // ---------------------------
-// ✅ API Routes
+// API Routes
 // ---------------------------
 app.use('/api/projects', projectRoutes);
 app.use('/api/skills', skillRoutes);
@@ -78,7 +64,7 @@ app.use('/api/personal-info', personalInfoRoutes);
 app.use('/api/auth', authRoutes);
 
 // ---------------------------
-// ✅ API Health Check Route
+// API Health Check Route
 // ---------------------------
 app.get('/api/health', (req, res) => {
   res.json({
@@ -89,7 +75,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // ---------------------------
-// ✅ Liveness & Readiness Endpoints
+// Liveness & Readiness Endpoints
 // - /health  -> quick liveness check (no DB call)
 // - /ready   -> readiness check (verifies DB connectivity)
 // ---------------------------
@@ -109,7 +95,7 @@ app.get('/ready', async (req, res) => {
 });
 
 // ---------------------------
-// ✅ 404 Handler
+// 404 Handler
 // ---------------------------
 app.use('*', (req, res) => {
   res.status(404).json({
