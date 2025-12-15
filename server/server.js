@@ -84,7 +84,7 @@ app.use('/api/auth', authRoutes);
    Health & Readiness
 --------------------------- */
 
-// Fast liveness check (used by Jenkins / Prometheus)
+// Fast liveness check (Jenkins / Prometheus)
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
@@ -131,21 +131,27 @@ app.use((err, req, res, next) => {
 });
 
 /* ---------------------------
-   Start Server (DB Verified)
+   Start Server (NON-BLOCKING)
+--------------------------- */
+app.listen(PORT, () => {
+  console.log('--------------------------------');
+  console.log(`Server running on port : ${PORT}`);
+  console.log(`Environment           : ${NODE_ENV}`);
+  console.log(`Health check          : /health`);
+  console.log(`Readiness check       : /ready`);
+  console.log(`API base              : /api`);
+  console.log('--------------------------------');
+});
+
+/* ---------------------------
+   DB Connection (Background)
 --------------------------- */
 (async () => {
   try {
     await testConnection();
-    app.listen(PORT, () => {
-      console.log('--------------------------------');
-      console.log(`Server running on port : ${PORT}`);
-      console.log(`Environment           : ${NODE_ENV}`);
-      console.log(`Health check          : /health`);
-      console.log(`API base              : /api`);
-      console.log('--------------------------------');
-    });
+    console.log('✅ Database connected successfully');
   } catch (err) {
-    console.error('❌ Server startup failed (DB error):', err.message);
-    process.exit(1);
+    console.error('⚠️ Database connection failed:', err.message);
+    console.error('⚠️ Application is running, but DB is NOT ready');
   }
 })();
