@@ -1,5 +1,15 @@
 // server.js
-require('dotenv').config();
+
+/* ---------------------------
+   Environment Configuration
+--------------------------- */
+try {
+  require('dotenv').config();
+  console.log('Environment variables loaded');
+} catch (err) {
+  console.warn('dotenv not found, continuing without .env file');
+}
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -19,41 +29,48 @@ const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// ---------------------------
-// Security & Middleware
-// ---------------------------
+/* ---------------------------
+   Security & Middleware
+--------------------------- */
 app.use(helmet());
 
-// Fix for express-rate-limit local issue
+// Required when behind Jenkins / reverse proxy
 app.set('trust proxy', 1);
 
-// Rate limiting middleware
+// Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 100,
-  message: 'Too many requests from this IP, please try again later.'
+  standardHeaders: true,
+  legacyHeaders: false
 });
 app.use(limiter);
 
-// CORS setup
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? ['https://yourdomain.com']
-    : ['http://localhost:4578'],
-  credentials: true
-}));
+// CORS configuration
+const allowedOrigins =
+  NODE_ENV === 'production'
+    ? (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : [])
+    : ['http://localhost:4578'];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true
+  })
+);
 
 // Body parsers
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Static files (uploads)
+// Static files
 app.use('/uploads', express.static('uploads'));
 
-// ---------------------------
-// API Routes
-// ---------------------------
+/* ---------------------------
+   API Routes
+--------------------------- */
 app.use('/api/projects', projectRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/certifications', certificationRoutes);
@@ -63,73 +80,72 @@ app.use('/api/messages', messageRoutes);
 app.use('/api/personal-info', personalInfoRoutes);
 app.use('/api/auth', authRoutes);
 
-// ---------------------------
-// API Health Check Route
-// ---------------------------
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'OK',
-    message: 'Portfolio API is running',
-    timestamp: new Date().toISOString()
-  });
-});
+/* ---------------------------
+   Health & Readiness
+--------------------------- */
 
-// ---------------------------
-// Liveness & Readiness Endpoints
-// - /health  -> quick liveness check (no DB call)
-// - /ready   -> readiness check (verifies DB connectivity)
-// ---------------------------
+// Fast liveness check (used by Jenkins / Prometheus)
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
+// API-level health
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'OK',
+    service: 'Portfolio API',
+    environment: NODE_ENV,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Readiness check (DB dependency)
 app.get('/ready', async (req, res) => {
   try {
-    // simple DB query to verify connectivity; adapt if you use a different client
     await promisePool.query('SELECT 1');
-    return res.status(200).json({ status: 'ok', db: 'connected' });
+    res.status(200).json({ status: 'ok', db: 'connected' });
   } catch (err) {
-    console.error('Readiness check failed:', err && err.message ? err.message : err);
-    return res.status(503).json({ status: 'error', db: 'unreachable' });
+    console.error('Readiness check failed:', err.message);
+    res.status(503).json({ status: 'error', db: 'unreachable' });
   }
 });
 
-// ---------------------------
-// 404 Handler
-// ---------------------------
-app.use('*', (req, res) => {
+/* ---------------------------
+   404 Handler
+--------------------------- */
+app.use((req, res) => {
   res.status(404).json({
     error: 'Route not found',
     message: `Cannot ${req.method} ${req.originalUrl}`
   });
 });
 
-// ---------------------------
-// Global Error Handler
-// ---------------------------
+/* ---------------------------
+   Global Error Handler
+--------------------------- */
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
+  console.error('Unhandled Error:', err);
   res.status(err.status || 500).json({
-    error: process.env.NODE_ENV === 'production'
-      ? 'Internal server error'
-      : err.message,
-    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
+    error: NODE_ENV === 'production' ? 'Internal server error' : err.message
   });
 });
 
-// ---------------------------
-// Start Server (after DB test)
-// ---------------------------
+/* ---------------------------
+   Start Server (DB Verified)
+--------------------------- */
 (async () => {
   try {
     await testConnection();
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-      console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`API Base URL: http://localhost:${PORT}/api`);
+      console.log('--------------------------------');
+      console.log(`Server running on port : ${PORT}`);
+      console.log(`Environment           : ${NODE_ENV}`);
+      console.log(`Health check          : /health`);
+      console.log(`API base              : /api`);
+      console.log('--------------------------------');
     });
   } catch (err) {
-    console.error('Failed to start server due to database connection error:', err.message);
+    console.error('❌ Server startup failed (DB error):', err.message);
     process.exit(1);
   }
 })();
