@@ -1,244 +1,200 @@
-.experience {
-  background: var(--bg-primary);
-  position: relative;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+
+/* ═══════════════════════════════════════════════════════
+   EXPERIENCE  ·  Contemporary Timeline Layout
+═══════════════════════════════════════════════════════ */
+
+:root {
+  --xp-bg: #f8fafc;
+  --xp-text: #0f172a;
+  --xp-body: #475569;
+  --xp-accent: #6366f1;
+  --xp-glass: rgba(255, 255, 255, 0.7);
+  --xp-border: rgba(0, 0, 0, 0.08);
+  --xp-pill-bg: rgba(0, 0, 0, 0.04);
 }
 
-/* Section-specific background pattern */
-.experience::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    linear-gradient(90deg, var(--accent-primary) 0%, transparent 50%, var(--accent-secondary) 100%);
-  opacity: 0.03;
-  z-index: 0;
+[data-theme="dark"] {
+  --xp-bg: #030712;
+  --xp-text: #f8fafc;
+  --xp-body: #94a3b8;
+  --xp-accent: #818cf8;
+  --xp-glass: rgba(15, 23, 42, 0.6);
+  --xp-border: rgba(255, 255, 255, 0.05);
+  --xp-pill-bg: rgba(255, 255, 255, 0.05);
 }
 
-.experience-content {
-  max-width: 800px;
-  margin: 0 auto;
+.xp-section {
   position: relative;
+  background: var(--xp-bg);
+  padding: 120px 0;
+  overflow: hidden;
   z-index: 1;
 }
 
-.experience-card {
-  background: var(--bg-primary);
-  border-radius: 16px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 20px var(--shadow-light);
-  border: 1px solid var(--border-color);
-  transition: all 0.3s ease;
+.xp-bg-grid {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(128,128,128,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(128,128,128,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+.xp-container {
+  position: relative; z-index: 2;
+  max-width: 1000px; margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ─── Header ─────────────────────────────────────────── */
+.xp-header-main {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.xp-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.15em;
+  color: var(--xp-accent); margin-bottom: 16px;
+  background: rgba(99, 102, 241, 0.1);
+  padding: 8px 18px; border-radius: 50px;
+}
+
+.xp-heading {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(2.8rem, 5vw, 4rem); font-weight: 800;
+  color: var(--xp-text); letter-spacing: -0.03em; margin: 0;
+}
+
+/* ─── Timeline Structure ─────────────────────────────── */
+.xp-timeline-container {
   position: relative;
+  padding-left: 40px; /* Space for the central line */
+}
+
+/* The vertical glowing line */
+.xp-timeline-line {
+  position: absolute;
+  top: 0; bottom: 0; left: 14px;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, var(--xp-accent), transparent);
+  opacity: 0.3;
+}
+
+.xp-timeline-list {
+  display: flex; flex-direction: column; gap: 60px;
+}
+
+.xp-timeline-item {
+  position: relative;
+}
+
+/* The Glowing Node */
+.xp-timeline-node {
+  position: absolute;
+  top: 32px; left: -40px;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--xp-bg);
+  border: 3px solid;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 3;
+  transform: translateX(-50%);
+}
+
+/* ─── Glassmorphic Card ──────────────────────────────── */
+.xp-card-glass {
+  position: relative;
+  background: var(--xp-glass);
+  border: 1px solid var(--xp-border);
+  border-radius: 24px;
+  padding: 40px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.02);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
 }
 
-.experience-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--accent-gradient);
-}
-
-.experience-card:hover {
+.xp-card-glass:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 30px var(--shadow-medium);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.05);
 }
 
-.experience-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
-  gap: 2rem;
+.xp-card-glow {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
 }
 
-.experience-title-section {
-  flex: 1;
+/* ─── Card Content ───────────────────────────────────── */
+.xp-card-header {
+  margin-bottom: 20px;
 }
 
-.experience-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
+.xp-company-wrap {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  margin-bottom: 8px;
 }
 
-.experience-company {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--accent-primary);
-  font-weight: 600;
-  font-size: 1.1rem;
+.xp-company {
+  font-family: 'Inter', sans-serif; font-size: 1.8rem; font-weight: 800;
+  color: var(--xp-text); margin: 0; letter-spacing: -0.02em;
 }
 
-.company-icon {
-  font-size: 1rem;
+.xp-duration-badge {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 600;
+  padding: 6px 12px; border-radius: 50px;
 }
 
-.experience-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  align-items: flex-end;
-  text-align: right;
+.xp-role {
+  font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 600;
+  color: var(--xp-body); margin: 0;
 }
 
-.experience-duration,
-.experience-location {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
+.xp-meta {
+  display: flex; gap: 20px; flex-wrap: wrap;
+  margin-bottom: 24px;
+  font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500;
+  color: var(--xp-body); opacity: 0.8;
 }
 
-.meta-icon {
-  font-size: 0.8rem;
-  color: var(--accent-primary);
+.xp-meta span {
+  display: flex; align-items: center; gap: 8px;
 }
 
-.duration-badge {
-  background: var(--accent-gradient);
-  color: white;
-  padding: 0.2rem 0.6rem;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  margin-left: 0.5rem;
+.xp-desc {
+  font-family: 'Inter', sans-serif; font-size: 1.05rem; line-height: 1.7;
+  color: var(--xp-body); margin: 0 0 32px 0;
 }
 
-.experience-content-details {
-  margin-left: 1rem;
+/* ─── Tech Stack Pills ───────────────────────────────── */
+.xp-tech-stack {
+  display: flex; flex-wrap: wrap; gap: 10px;
 }
 
-.experience-description {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: var(--text-secondary);
-  margin-bottom: 1.5rem;
-  text-align: justify;
-}
-
-.experience-technologies h4 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 0.8rem;
-}
-
-.tech-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.tech-tag {
-  background: var(--accent-gradient);
-  color: white;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  transition: transform 0.2s ease;
-}
-
-.tech-tag:hover {
-  transform: scale(1.05);
-}
-
-.show-more-container {
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.show-more-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 12px 30px;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 50px;
+.xp-tech-pill {
+  font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600;
+  color: var(--xp-text);
+  background: var(--xp-pill-bg);
+  padding: 8px 16px; border-radius: 12px;
+  border: 1px solid var(--xp-border);
   transition: all 0.3s ease;
 }
 
-.show-more-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px var(--shadow-medium);
+.xp-card-glass:hover .xp-tech-pill {
+  border-color: var(--pill-color);
+  background: rgba(255,255,255,0.02);
 }
 
-/* Responsive design */
+/* ─── Responsive ─────────────────────────────────────── */
 @media (max-width: 768px) {
-  .experience-card {
-    padding: 1.5rem;
-  }
+  .xp-timeline-container { padding-left: 30px; }
+  .xp-timeline-line { left: 9px; }
+  .xp-timeline-node { width: 20px; height: 20px; left: -30px; }
+  .xp-timeline-node svg { display: none; }
   
-  .experience-header {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: flex-start;
-  }
-  
-  .experience-meta {
-    align-items: flex-start;
-    text-align: left;
-  }
-  
-  .experience-title {
-    font-size: 1.3rem;
-  }
-  
-  .experience-company {
-    font-size: 1rem;
-  }
-  
-  .experience-content-details {
-    margin-left: 0;
-  }
-  
-  .experience-description {
-    font-size: 0.95rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .experience-card {
-    padding: 1.2rem;
-  }
-  
-  .experience-title {
-    font-size: 1.2rem;
-  }
-  
-  .experience-company {
-    font-size: 0.9rem;
-  }
-  
-  .experience-duration,
-  .experience-location {
-    font-size: 0.8rem;
-  }
-  
-  .duration-badge {
-    font-size: 0.7rem;
-    padding: 0.15rem 0.5rem;
-  }
-  
-  .tech-tag {
-    font-size: 0.75rem;
-    padding: 0.3rem 0.6rem;
-  }
-  
-  .show-more-btn {
-    padding: 10px 25px;
-    font-size: 0.9rem;
-  }
+  .xp-card-glass { padding: 24px; }
+  .xp-company { font-size: 1.4rem; }
+  .xp-meta { flex-direction: column; gap: 8px; }
 }

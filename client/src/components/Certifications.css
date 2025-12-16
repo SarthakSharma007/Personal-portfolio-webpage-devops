@@ -1,274 +1,259 @@
-.certifications {
-  background: var(--bg-secondary);
-  position: relative;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@600;700;800&family=Playfair+Display:ital,wght@1,700&family=JetBrains+Mono:wght@500&display=swap');
+
+/* ═══════════════════════════════════════════════════════
+   CERTIFICATIONS  ·  Split-View Interactive Showcase
+═══════════════════════════════════════════════════════ */
+
+:root {
+  --ct-bg:    #f8fafc;
+  --ct-grid:  rgba(99, 102, 241, 0.05);
+  --ct-text:  #0f172a;
+  --ct-body:  #475569;
+  --ct-list-bg: #ffffff;
+  --ct-list-hover: #f1f5f9;
+  --ct-border: rgba(0,0,0,0.06);
 }
 
-.certifications::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: radial-gradient(circle at 30% 70%, var(--accent-primary) 0%, transparent 50%),
-    radial-gradient(circle at 70% 30%, var(--accent-secondary) 0%, transparent 50%);
-  opacity: 0.04;
-  z-index: 0;
+[data-theme="dark"] {
+  --ct-bg:    #030712;
+  --ct-grid:  rgba(99, 102, 241, 0.03);
+  --ct-text:  #f8fafc;
+  --ct-body:  #94a3b8;
+  --ct-list-bg: rgba(255,255,255,0.02);
+  --ct-list-hover: rgba(255,255,255,0.05);
+  --ct-border: rgba(255,255,255,0.06);
 }
 
-.certifications-content {
-  max-width: 800px;
-  margin: 0 auto;
+/* ─── Section & Background ───────────────────────────── */
+.ct-section {
   position: relative;
+  background: var(--ct-bg);
+  padding: 110px 0 140px;
+  overflow: hidden;
   z-index: 1;
 }
 
-.certifications-carousel {
-  position: relative;
-  overflow: hidden;
-  border-radius: 16px;
+.ct-bg-grid {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(var(--ct-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ct-grid) 1px, transparent 1px);
+  background-size: 60px 60px;
 }
 
-.carousel-container {
-  overflow: hidden;
-  border-radius: 16px;
+.ct-bg-glow {
+  position: absolute; 
+  width: 700px; height: 700px; 
+  border-radius: 50%; filter: blur(140px);
+  top: 50%; left: 10%; transform: translateY(-50%);
+  pointer-events: none; z-index: 0;
+  transition: background 0.8s ease;
 }
 
-.carousel-track {
-  display: flex;
-  transition: transform 0.6s ease-in-out;
+.ct-container {
+  position: relative; z-index: 2;
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 36px;
 }
 
-.certification-slide {
-  min-width: 100%;
-  flex-shrink: 0;
-}
-
-.certification-card {
-  background: var(--bg-primary);
-  border-radius: 16px;
-  padding: 2.5rem;
-  box-shadow: 0 8px 30px var(--shadow-light);
-  border: 1px solid var(--border-color);
+/* ─── Header ─────────────────────────────────────────── */
+.ct-header {
   text-align: center;
+  margin-bottom: 60px;
+}
+.ct-eyebrow {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: #64748b; margin-bottom: 12px;
+}
+.ct-title {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(2.4rem, 4vw, 3.5rem);
+  font-weight: 800; color: var(--ct-text);
+  letter-spacing: -0.03em; margin: 0;
+}
+.ct-title em {
+  font-weight: 800;
+  background: linear-gradient(135deg, #6366f1, #a855f7 55%, #ec4899);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Layout ─────────────────────────────────────────── */
+.ct-layout {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  align-items: center;
+}
+
+/* ─── Left: Plaque ───────────────────────────────────── */
+.ct-plaque-wrapper {
+  perspective: 1000px;
+}
+
+.ct-plaque {
+  border-radius: 28px;
+  padding: 2px; /* Border thickness */
+  box-shadow: 0 24px 80px rgba(0,0,0,0.3);
   position: relative;
+  overflow: hidden;
+  border: 1px solid;
+}
+
+.ct-plaque::before {
+  content: ''; position: absolute; inset: 0;
+  background: url('https://www.transparenttextures.com/patterns/noise-pattern-with-subtle-cross-lines.png');
+  opacity: 0.15; mix-blend-mode: overlay; pointer-events: none;
+}
+
+.ct-plaque-inner {
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(20px);
+  border-radius: 26px;
+  padding: 48px;
+  display: flex; flex-direction: column; gap: 40px;
+  min-height: 420px;
+}
+
+.ct-plaque-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+}
+.ct-icon-shield {
+  width: 76px; height: 76px;
+  border-radius: 20px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+}
+.ct-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: #fff; background: rgba(255,255,255,0.15);
+  padding: 8px 14px; border-radius: 50px;
+  backdrop-filter: blur(10px);
+}
+
+.ct-plaque-body {
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+}
+.ct-cert-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.2rem); font-weight: 800;
+  color: #fff; line-height: 1.2; margin: 0 0 12px;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.ct-cert-org {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase; margin: 0;
+}
+
+.ct-plaque-footer {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 20px; flex-wrap: wrap;
+  padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.1);
+}
+.ct-meta-data {
+  display: flex; gap: 32px;
+}
+.ct-meta-label {
+  display: block; font-family: 'Inter', sans-serif;
+  font-size: 0.7rem; font-weight: 600; color: rgba(255,255,255,0.5);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;
+}
+.ct-meta-value {
+  display: block; font-family: 'Inter', sans-serif;
+  font-size: 0.95rem; font-weight: 500; color: #fff;
+}
+.ct-meta-value.id-code {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+}
+
+.ct-verify-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 700;
+  color: #fff; text-decoration: none;
+  background: var(--btn-color);
+  padding: 12px 24px; border-radius: 50px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  transition: all 0.3s ease;
+}
+.ct-verify-btn:hover {
+  transform: translateY(-2px); filter: brightness(1.1);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+}
+
+/* ─── Right: List ────────────────────────────────────── */
+.ct-list {
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.ct-list-item {
+  position: relative;
+  display: flex; align-items: center; gap: 18px;
+  background: var(--ct-list-bg);
+  border: 1px solid var(--ct-border);
+  padding: 20px 24px; border-radius: 20px;
+  cursor: pointer; text-align: left;
+  transition: all 0.25s ease;
   overflow: hidden;
 }
 
-.certification-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--accent-gradient);
+.ct-list-item:hover {
+  background: var(--ct-list-hover);
+  transform: translateX(4px);
 }
 
-.certification-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 2rem;
+.ct-list-item.active {
+  border-color: var(--active-color);
+  background: var(--ct-list-bg);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
-.certification-icon {
-  width: 80px;
-  height: 80px;
-  background: var(--accent-gradient);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 8px 25px var(--shadow-medium);
+.ct-list-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(128,128,128,0.1);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ct-body); transition: color 0.3s;
 }
 
-.certification-name {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
+.ct-list-content {
+  flex: 1;
+}
+.ct-list-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--ct-text); margin: 0 0 4px; line-height: 1.3;
+}
+.ct-list-org {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem; font-weight: 500;
+  color: var(--ct-body);
 }
 
-.certification-organization {
-  font-size: 1.1rem;
-  color: var(--accent-primary);
-  font-weight: 600;
+.ct-active-indicator {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-.certification-details {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+/* ─── Responsive ─────────────────────────────────────── */
+@media (max-width: 968px) {
+  .ct-layout { grid-template-columns: 1fr; gap: 60px; }
+  .ct-bg-glow { top: 30%; left: 50%; transform: translate(-50%, -50%); }
 }
 
-.certification-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-}
-
-.certification-date,
-.certification-id {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-}
-
-.meta-icon {
-  color: var(--accent-primary);
-}
-
-.certification-id {
-  background: var(--bg-tertiary);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.85rem;
-}
-
-.certification-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--accent-gradient);
-  color: white;
-  padding: 12px 24px;
-  border-radius: 50px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.certification-link:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px var(--shadow-medium);
-}
-
-/* Carousel buttons */
-.carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  font-size: 1.5rem;
-  color: var(--accent-primary);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px var(--shadow-light);
-  z-index: 10;
-}
-
-.carousel-btn:hover {
-  background: var(--accent-primary);
-  color: white;
-  transform: translateY(-50%) scale(1.1);
-  box-shadow: 0 6px 20px var(--shadow-medium);
-}
-
-.prev-btn {
-  left: 20px;
-}
-
-.next-btn {
-  right: 20px;
-}
-
-.carousel-indicators {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 2rem;
-}
-
-.indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: none;
-  background: var(--border-color);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.indicator.active {
-  background: var(--accent-gradient);
-  transform: scale(1.2);
-}
-
-.indicator:hover {
-  background: var(--accent-primary);
-}
-
-/* Loading spinner */
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 250px;
-}
-
-.spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-top: 4px solid var(--accent-primary);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .certification-card {
-    padding: 2rem;
-  }
-
-  .certification-icon {
-    width: 60px;
-    height: 60px;
-    font-size: 1.5rem;
-  }
-
-  .certification-name {
-    font-size: 1.4rem;
-  }
-
-  .carousel-btn {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-@media (max-width: 480px) {
-  .certification-card {
-    padding: 1.5rem;
-  }
-
-  .certification-name {
-    font-size: 1.2rem;
-  }
-
-  .certification-link {
-    padding: 10px 20px;
-    font-size: 0.9rem;
-  }
+@media (max-width: 600px) {
+  .ct-section { padding: 80px 0; }
+  .ct-container { padding: 0 20px; }
+  .ct-plaque-inner { padding: 32px 24px; gap: 30px; }
+  .ct-icon-shield { width: 56px; height: 56px; }
+  .ct-cert-name { font-size: 1.4rem; }
+  .ct-meta-data { flex-direction: column; gap: 16px; }
+  .ct-verify-btn { width: 100%; justify-content: center; }
+  .ct-list-item { padding: 16px; gap: 14px; }
+  .ct-list-name { font-size: 0.95rem; }
 }

@@ -1,171 +1,223 @@
 /* client/src/components/Projects.js */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { FaGithub, FaCode } from 'react-icons/fa';
-import { useInView } from 'react-intersection-observer';
-// Removed API import as we are hardcoding the project list to fix display issues
-// import api from '../services/api'; 
+import { Link } from 'react-router-dom';
+import { FaGithub, FaArrowRight } from 'react-icons/fa';
+import api from '../services/api';
 import './Projects.css';
 
-// Hardcoded project data as requested to override incorrect backend data
-// Updated comment - October 27, 2025
-const specificProjects = [
-  {
-    id: 1,
-    title: 'Automated Node.js Application Deployment using CI/CD and Kubernetes',
-    description: 'This repository includes two key DevOps automation tasks completed during the Elevate Labs DevOps Internship. The first task focuses on automating Node.js application deployment using GitHub Actions and Docker Hub, where a CI/CD pipeline was configured to automatically build and push Docker images on every code update. The second task demonstrates deploying the same containerized Node.js application on a local Kubernetes cluster using Minikube, showcasing concepts like pods, deployments, services, and scaling. Together, these projects highlight a complete workflow from continuous integration to container orchestration.',
-    tech_stack: 'JavaScript (Node.js), YAML, Bash, GitHub Actions, Docker, Docker Hub, Kubernetes, Minikube, kubectl, Git',
-    github_link: 'https://github.com/sarthaksharma/devops-pipeline',
-    demo_link: null,
-    image_url: null,
-    featured: true
-  },
-  {
-    id: 2,
-    title: 'Automated DevOps Workflows using Shell Scripting',
-    description: 'This project is a lightweight and efficient Python-based automation tool designed to create compressed backups of files and folders. It automatically generates a .zip archive of a specified source directory and stores it in a chosen destination folder. The backup file is named with the current date, making it easy to track and manage multiple versions over time. This script is ideal for automating daily or periodic backups, organizing data efficiently, and ensuring file safety without the need for external software. It is simple to configure, extend, and integrate into larger automation workflows.',
-    tech_stack: 'Python',
-    github_link: 'https://github.com/SarthakSharma007/automated-backup.py.git',
-    demo_link: null,
-    image_url: null,
-    featured: true
-  },
-  {
-    id: 4,
-    title: 'DevOps Automation with Bash Scripting',
-    description: 'This repository showcases two automation projects built using Bash scripting to streamline DevOps workflows. The first project automates Django application deployment using Docker and Docker Compose, while the second project automates AWS EC2 instance creation using AWS CLI. Both scripts are designed for simplicity, reusability, and reliability — helping developers deploy and manage infrastructure seamlessly with minimal manual effort.',
-    tech_stack: 'Bash (Shell Scripting), Docker, Docker Compose, Nginx, AWS CLI, EC2, Linux',
-    github_link: 'https://github.com/SarthakSharma007/use-shell-scripting-to-deploy.git',
-    demo_link: null,
-    image_url: null,
-    featured: true
+const viewportConfig = { once: false, amount: 0.15 };
+
+const headerVariant = {
+  hidden: { opacity: 0, y: 30, scale: 0.9 },
+  visible: {
+    opacity: 1, y: 0, scale: 1,
+    transition: { duration: 0.7, ease: "easeOut", delay: 0 }
   }
-];
+};
 
-const Projects = () => {
-  // Set state directly from the hardcoded list
-  const [projects, setProjects] = useState(specificProjects);
-  // Removed loading and error states as they are no longer needed
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
+const Tag = ({ label, accentA }) => (
+  <span className="prj-tag" style={{ '--ta': accentA }}>{label}</span>
+);
 
-  const { ref, inView } = useInView({
-    threshold: 0.1,
-    triggerOnce: true
-  });
-
-  useEffect(() => {
-    // API fetch removed to ensure only the 3 specified projects are shown.
-    // Comment added - October 27, 2025
-    setProjects(specificProjects);
-    // setLoading(false); // No longer needed
-  }, []); // Empty dependency array to run once on mount
-
-  // Removed loading and error conditional rendering blocks
+const HeroCard = ({ p }) => {
+  const cardVariant = {
+    hidden: { opacity: 0, scale: 0.5, rotateY: 30, transformPerspective: 1000 },
+    visible: { 
+      opacity: 1, scale: 1, rotateY: 0, transformPerspective: 1000,
+      transition: { duration: 0.8, type: "spring", stiffness: 100, damping: 20 } 
+    }
+  };
 
   return (
-    <section id="projects" className="projects section">
-      <div className="container">
-        <motion.h2
-          className="section-title"
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.6 }}
-        >
-          Featured Projects
-        </motion.h2>
+    <motion.div
+      className="prj-hero-card"
+      style={{ background: p.gradient }}
+      variants={cardVariant}
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportConfig}
+    >
+      <span className="prj-ghost-num">{p.num}</span>
+      <div className="prj-orb prj-orb-a" style={{ background: p.accentA }} />
+      <div className="prj-orb prj-orb-b" style={{ background: p.accentB }} />
 
-        <div ref={ref} className="projects-content">
-          <div className="projects-grid">
-            {/* Map over the state, which is now our hardcoded list */}
-            {projects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                className="project-card"
-                initial={{ opacity: 0, y: 50 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="project-image">
-                  {project.image_url ? (
-                    <img src={project.image_url} alt={project.title} />
-                  ) : (
-                    <div className="project-placeholder">
-                      <FaCode className="placeholder-icon" />
-                    </div>
-                  )}
-                  <div className="project-overlay">
-                    <div className="project-links">
-                      {project.github_link && (
-                        <a
-                          href={project.github_link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="project-link"
-                          title="View Code"
-                        >
-                          <FaGithub />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="project-content">
-                  <h3 className="project-title">{project.title}</h3>
-                  <p className="project-description">{project.description}</p>
-
-                  <div className="project-tech">
-                    <h4>Technologies:</h4>
-                    <div className="tech-tags">
-                      {project.tech_stack && project.tech_stack.split(',').map((tech, techIndex) => (
-                        <span key={techIndex} className="tech-tag">
-                          {tech.trim()}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="project-actions">
-                    {project.github_link && (
-                      <a
-                        href={project.github_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-primary"
-                      >
-                        <FaGithub /> Source Code
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            className="github-section"
-            initial={{ opacity: 0, y: 30 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-          >
-            <div className="github-card">
-              <div className="github-icon">
-                <FaGithub />
-              </div>
-              <h3>Explore More Projects</h3>
-              <p>Check out my complete GitHub profile for more projects, contributions, and open-source work.</p>
-              <a
-                href="https://github.com/SarthakSharma007" // This link was updated in the previous step
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-outline"
-              >
-                <FaGithub /> Visit GitHub Profile
+      <div className="prj-hero-body">
+        <span className="prj-label" style={{ '--ta': p.accentA }}>{p.label}</span>
+        <h3 className="prj-hero-title">{p.title}</h3>
+        <p className="prj-hero-desc">{p.shortDesc}</p>
+        <div className="prj-tags">
+          {p.tags.map(t => <Tag key={t} label={t} accentA={p.accentA} />)}
+        </div>
+        <div className="prj-actions">
+          {p.github && (
+            <a href={p.github} target="_blank" rel="noopener noreferrer" className="prj-btn" style={{ '--ta': p.accentA }}>
+              <FaGithub /> GitHub
+            </a>
+          )}
+          {p.slug ? (
+            <Link to={`/projects/${p.slug}`} className="prj-btn see-more" style={{ '--ta': p.accentA }}>
+              See More <FaArrowRight size={12} />
+            </Link>
+          ) : (
+            p.demo && (
+              <a href={p.demo} target="_blank" rel="noopener noreferrer" className="prj-btn see-more" style={{ '--ta': p.accentA }}>
+                Live Demo <FaArrowRight size={12} />
               </a>
-            </div>
-          </motion.div>
+            )
+          )}
+        </div>
+      </div>
+
+      <div className="prj-hero-deco">
+        <div className="prj-ring ring-1" style={{ borderColor: `${p.accentA}30` }} />
+        <div className="prj-ring ring-2" style={{ borderColor: `${p.accentB}20` }} />
+        <div className="prj-ring ring-3" style={{ borderColor: `${p.accentA}12` }} />
+        <span className="prj-feat-badge">Featured</span>
+      </div>
+    </motion.div>
+  );
+};
+
+const SmallCard = ({ p, index }) => {
+  const cardVariant = {
+    hidden: { opacity: 0, scale: 0.5, rotateY: -30, transformPerspective: 1000 },
+    visible: { 
+      opacity: 1, scale: 1, rotateY: 0, transformPerspective: 1000,
+      transition: { duration: 0.7, delay: 0.15 + index * 0.1, type: "spring", stiffness: 100, damping: 20 } 
+    }
+  };
+
+  return (
+    <motion.div
+      className="prj-small-card"
+      style={{ background: p.gradient }}
+      variants={cardVariant}
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportConfig}
+      whileHover={{ scale: 1.025, y: -6 }}
+    >
+      <div className="prj-small-glow" style={{ background: p.accentA }} />
+      
+      <div className="prj-small-body">
+        <span className="prj-label" style={{ '--ta': p.accentA }}>{p.label}</span>
+        <h3 className="prj-small-title">{p.title}</h3>
+        <p className="prj-small-desc">{p.shortDesc}</p>
+        
+        <div className="prj-tags">
+          {p.tags.slice(0, 3).map(t => <Tag key={t} label={t} accentA={p.accentA} />)}
+        </div>
+
+        <div className="prj-actions">
+          {p.github && (
+            <a href={p.github} target="_blank" rel="noopener noreferrer" className="prj-btn small" style={{ '--ta': p.accentA }}>
+              <FaGithub /> GitHub
+            </a>
+          )}
+          {p.slug ? (
+            <Link to={`/projects/${p.slug}`} className="prj-btn see-more small" style={{ '--ta': p.accentA }}>
+              See More <FaArrowRight size={11} />
+            </Link>
+          ) : (
+            p.demo && (
+              <a href={p.demo} target="_blank" rel="noopener noreferrer" className="prj-btn see-more small" style={{ '--ta': p.accentA }}>
+                Live Demo <FaArrowRight size={11} />
+              </a>
+            )
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// Convert a raw DB project row to the shape the card components expect
+const mapDbProject = (p, index) => ({
+  id: p.id,
+  slug: p.slug || null,
+  num: p.num || String(index + 1).padStart(2, '0'),
+  title: p.title,
+  shortDesc: p.short_desc || p.description || '',
+  tags: p.tech_stack ? p.tech_stack.split(',').map(t => t.trim()).filter(Boolean) : [],
+  github: p.github_link || null,
+  demo: p.demo_link || null,
+  gradient: p.gradient || 'linear-gradient(135deg, #1a1040 0%, #312e81 50%, #1e3a5f 100%)',
+  accentA: p.accent_a || '#818cf8',
+  accentB: p.accent_b || '#38bdf8',
+  label: p.label || 'Project',
+  hero: !!p.hero,
+});
+
+const Projects = () => {
+  const [items, setItems] = React.useState([]);
+  const [headerSettings, setHeaderSettings] = React.useState({
+    subtitle: "What I've Built",
+    title: 'Featured ',
+    title_highlight: 'Projects',
+    title_gradient: 'linear-gradient(135deg, #818cf8 0%, #38bdf8 100%)',
+    description: 'Real-world DevOps & automation projects — built, deployed, and documented end-to-end.'
+  });
+
+  React.useEffect(() => {
+    const fetchAll = async () => {
+      try {
+        const [res, headerRes] = await Promise.all([
+          api.get('/projects').catch(() => ({ data: { success: false, data: [] } })),
+          api.get('/sectionSettings/projects').catch(() => ({ data: { data: null } }))
+        ]);
+        
+        if (headerRes.data?.data) {
+          setHeaderSettings(headerRes.data.data);
+        }
+
+        if (res.data?.success && Array.isArray(res.data.data) && res.data.data.length > 0) {
+          setItems(res.data.data.map(mapDbProject));
+        }
+      } catch (e) {
+        console.error('Failed to load projects:', e);
+      }
+    };
+    fetchAll();
+  }, []);
+
+  const hero = items.find(p => p.hero) || items[0];
+  const rest = items.filter(p => p.id !== hero?.id);
+
+  return (
+    <section id="projects" className="prj-section">
+      <div className="prj-bg-glow prj-glow-1" />
+      <div className="prj-bg-glow prj-glow-2" />
+      <div className="prj-bg-grid" />
+
+      <div className="prj-container">
+        <motion.div
+          className="prj-header"
+          variants={headerVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportConfig}
+        >
+          <p className="prj-eyebrow">{headerSettings.subtitle}</p>
+          <h2 className="prj-main-title">
+            {headerSettings.title}
+            <span style={{ 
+              background: headerSettings.title_gradient, 
+              WebkitBackgroundClip: 'text', 
+              WebkitTextFillColor: 'transparent', 
+              backgroundClip: 'text', 
+              color: 'transparent' 
+            }}>{headerSettings.title_highlight}</span>
+          </h2>
+          <p className="prj-main-sub">
+            {headerSettings.description}
+          </p>
+        </motion.div>
+
+        {hero && <HeroCard p={hero} />}
+
+        <div className="prj-small-row">
+          {rest.map((p, i) => <SmallCard key={p.id} p={p} index={i} />)}
         </div>
       </div>
     </section>

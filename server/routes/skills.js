@@ -9,11 +9,13 @@ const auth = require('../middleware/auth');
 // ---------------------------
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await promisePool.execute('SELECT * FROM skills');
-    res.json(rows);
+    const [rows] = await promisePool.execute(
+      'SELECT id, skill_name AS name, proficiency_level AS level, category, icon, emoji, bg, created_at, updated_at FROM skills ORDER BY category, skill_name'
+    );
+    res.json({ success: true, data: rows, count: rows.length });
   } catch (err) {
     console.error('Error fetching skills:', err);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ success: false, error: 'Server error' });
   }
 });
 
@@ -29,10 +31,10 @@ router.post('/', auth, async (req, res) => {
 
   try {
     const [result] = await promisePool.execute(
-      'INSERT INTO skills (name, level, category) VALUES (?, ?, ?)',
+      'INSERT INTO skills (skill_name, proficiency_level, category) VALUES (?, ?, ?)',
       [name, level, category]
     );
-    res.status(201).json({ id: result.insertId, name, level, category });
+    res.status(201).json({ success: true, data: { id: result.insertId, name, level, category } });
   } catch (err) {
     console.error('Error adding skill:', err);
     res.status(500).json({ error: 'Server error' });
@@ -46,9 +48,13 @@ router.put('/:id', auth, async (req, res) => {
   const { name, level, category } = req.body;
   const { id } = req.params;
 
+  if (!name || !level || !category) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
   try {
     const [result] = await promisePool.execute(
-      'UPDATE skills SET name=?, level=?, category=? WHERE id=?',
+      'UPDATE skills SET skill_name=?, proficiency_level=?, category=? WHERE id=?',
       [name, level, category, id]
     );
 
@@ -56,7 +62,7 @@ router.put('/:id', auth, async (req, res) => {
       return res.status(404).json({ error: 'Skill not found' });
     }
 
-    res.json({ id, name, level, category });
+    res.json({ success: true, data: { id, name, level, category } });
   } catch (err) {
     console.error('Error updating skill:', err);
     res.status(500).json({ error: 'Server error' });
@@ -73,7 +79,7 @@ router.delete('/:id', auth, async (req, res) => {
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Skill not found' });
     }
-    res.json({ message: 'Skill deleted successfully' });
+    res.json({ success: true, message: 'Skill deleted successfully' });
   } catch (err) {
     console.error('Error deleting skill:', err);
     res.status(500).json({ error: 'Server error' });

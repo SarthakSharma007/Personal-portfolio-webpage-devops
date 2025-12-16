@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { promisePool } = require('../config/db');
 const auth = require('../middleware/auth');
+const { sendNotificationEmail } = require('../config/email');
 
 // POST /api/messages - Submit contact form
 router.post('/', async (req, res) => {
@@ -28,6 +29,9 @@ router.post('/', async (req, res) => {
       'INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)',
       [name, email, subject || null, message]
     );
+
+    // Forward the email to the admin natively asynchronously without blocking response
+    sendNotificationEmail({ name, email, subject, message }).catch(err => console.error('Email forwarding failed:', err));
     
     res.status(201).json({
       success: true,
@@ -90,6 +94,27 @@ router.get('/:id', auth, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to fetch message',
+      error: error.message
+    });
+  }
+});
+
+// PUT /api/messages/mark-all-read - Mark all messages as read (Admin only)
+router.put('/mark-all-read', auth, async (req, res) => {
+  try {
+    const [result] = await promisePool.execute(
+      'UPDATE messages SET read_status = true WHERE read_status = false'
+    );
+    res.json({
+      success: true,
+      message: 'All messages marked as read',
+      updated: result.affectedRows
+    });
+  } catch (error) {
+    console.error('Error updating messages:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update messages',
       error: error.message
     });
   }

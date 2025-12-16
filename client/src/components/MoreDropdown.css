@@ -1,0 +1,63 @@
+/* MoreDropdown.css — More ▾ popup styles */
+
+.md-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: var(--shadow-heavy);
+  min-width: 170px;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+  z-index: 1001;
+  animation: md-fade-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: top right;
+}
+
+@keyframes md-fade-in {
+  from { opacity: 0; transform: scale(0.93) translateY(-8px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+
+.md-item {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.75rem 1.4rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.md-item:hover {
+  background: var(--bg-tertiary);
+  color: var(--accent-primary);
+}
+
+.md-item.active {
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.md-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 0.4rem 0;
+}
+
+.md-theme-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1.4rem;
+  color: var(--text-secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+}

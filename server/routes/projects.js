@@ -1,152 +1,43 @@
 const express = require('express');
 const router = express.Router();
 const { promisePool } = require('../config/db');
-const auth = require('../middleware/auth');
 
-// GET /api/projects - Get all featured projects
+const parseProject = (row) => {
+  try { row.tech_stack_json = row.tech_stack_json ? JSON.parse(row.tech_stack_json) : []; } catch { row.tech_stack_json = []; }
+  try { row.timeline_json  = row.timeline_json  ? JSON.parse(row.timeline_json)  : []; } catch { row.timeline_json  = []; }
+  try { row.learnings_json = row.learnings_json ? JSON.parse(row.learnings_json) : []; } catch { row.learnings_json = []; }
+  return row;
+};
+
+// GET /api/projects — public featured projects
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await promisePool.execute(
-      // This query now only selects projects where featured is true (or 1)
-      'SELECT * FROM projects WHERE featured = 1 ORDER BY created_at DESC'
-    );
-    res.json({
-      success: true,
-      data: rows,
-      count: rows.length
-    });
+    const [rows] = await promisePool.execute('SELECT * FROM projects WHERE featured = 1 ORDER BY created_at ASC');
+    res.json({ success: true, data: rows.map(parseProject), count: rows.length });
   } catch (error) {
-    console.error('Error fetching projects:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch projects',
-      error: error.message
-    });
+    res.status(500).json({ success: false, message: 'Failed to fetch projects', error: error.message });
   }
 });
 
-// GET /api/projects/:id - Get single project
+// GET /api/projects/slug/:slug — detail page by slug
+router.get('/slug/:slug', async (req, res) => {
+  try {
+    const [rows] = await promisePool.execute('SELECT * FROM projects WHERE slug = ?', [req.params.slug]);
+    if (rows.length === 0) return res.status(404).json({ success: false, message: 'Project not found' });
+    res.json({ success: true, data: parseProject(rows[0]) });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch project', error: error.message });
+  }
+});
+
+// GET /api/projects/:id
 router.get('/:id', async (req, res) => {
   try {
-    const { id } = req.params;
-    const [rows] = await promisePool.execute(
-      'SELECT * FROM projects WHERE id = ?',
-      [id]
-    );
-    
-    if (rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'Project not found'
-      });
-    }
-    
-    res.json({
-      success: true,
-      data: rows[0]
-    });
+    const [rows] = await promisePool.execute('SELECT * FROM projects WHERE id = ?', [req.params.id]);
+    if (rows.length === 0) return res.status(404).json({ success: false, message: 'Project not found' });
+    res.json({ success: true, data: parseProject(rows[0]) });
   } catch (error) {
-    console.error('Error fetching project:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch project',
-      error: error.message
-    });
-  }
-});
-
-// POST /api/projects - Create new project (Admin only)
-router.post('/', auth, async (req, res) => {
-  try {
-    const { title, description, tech_stack, github_link, demo_link, image_url, featured } = req.body;
-    
-    if (!title || !description || !tech_stack) {
-      return res.status(400).json({
-        success: false,
-        message: 'Title, description, and tech_stack are required'
-      });
-    }
-    
-    const [result] = await promisePool.execute(
-      'INSERT INTO projects (title, description, tech_stack, github_link, demo_link, image_url, featured) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [title, description, tech_stack, github_link || null, demo_link || null, image_url || null, featured || false]
-    );
-    
-    res.status(201).json({
-      success: true,
-      message: 'Project created successfully',
-      data: { id: result.insertId, ...req.body }
-    });
-  } catch (error) {
-    console.error('Error creating project:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to create project',
-      error: error.message
-    });
-  }
-});
-
-// PUT /api/projects/:id - Update project (Admin only)
-router.put('/:id', auth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { title, description, tech_stack, github_link, demo_link, image_url, featured } = req.body;
-    
-    const [result] = await promisePool.execute(
-      'UPDATE projects SET title = ?, description = ?, tech_stack = ?, github_link = ?, demo_link = ?, image_url = ?, featured = ? WHERE id = ?',
-      [title, description, tech_stack, github_link, demo_link, image_url, featured, id]
-    );
-    
-    if (result.affectedRows === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'Project not found'
-      });
-    }
-    
-    res.json({
-      success: true,
-      message: 'Project updated successfully'
-    });
-  } catch (error) {
-    console.error('Error updating project:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to update project',
-      error: error.message
-    });
-  }
-});
-
-// DELETE /api/projects/:id - Delete project (Admin only)
-router.delete('/:id', auth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    
-    const [result] = await promisePool.execute(
-      'DELETE FROM projects WHERE id = ?',
-      [id]
-    );
-    
-    if (result.affectedRows === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'Project not found'
-      });
-    }
-    
-    res.json({
-      success: true,
-      message: 'Project deleted successfully'
-    });
-  } catch (error) {
-    console.error('Error deleting project:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to delete project',
-      error: error.message
-    });
+    res.status(500).json({ success: false, message: 'Failed to fetch project', error: error.message });
   }
 });
 

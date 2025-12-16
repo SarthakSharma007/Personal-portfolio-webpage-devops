@@ -1,333 +1,379 @@
-.projects {
-  background: var(--bg-primary);
-  position: relative;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap');
+
+/* ═══════════════════════════════════════════════════════
+   PROJECTS  ·  Magazine Spotlight Layout
+═══════════════════════════════════════════════════════ */
+
+/* ─── Tokens ─────────────────────────────────────────── */
+:root {
+  --prj-bg:    #f0f4fb;
+  --prj-grid:  rgba(99,102,241,0.05);
+  --prj-h:     #0f172a;
+  --prj-body:  #475569;
+  --prj-muted: #94a3b8;
+  --prj-strip-bg:   rgba(255,255,255,0.92);
+  --prj-strip-bdr:  rgba(0,0,0,0.07);
+  --prj-strip-text: #0f172a;
+  --prj-strip-sub:  #64748b;
+}
+[data-theme="dark"] {
+  --prj-bg:    #07101f;
+  --prj-grid:  rgba(99,102,241,0.04);
+  --prj-h:     #f0f6ff;
+  --prj-body:  #94a3b8;
+  --prj-muted: #64748b;
+  --prj-strip-bg:   rgba(10,20,40,0.92);
+  --prj-strip-bdr:  rgba(255,255,255,0.08);
+  --prj-strip-text: #e2e8f0;
+  --prj-strip-sub:  #64748b;
 }
 
-/* Section-specific background pattern */
-.projects::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    linear-gradient(135deg, var(--accent-primary) 0%, transparent 50%, var(--accent-secondary) 100%);
-  opacity: 0.03;
-  z-index: 0;
-}
-
-.projects-content {
-  max-width: 1200px;
-  margin: 0 auto;
+/* ─── Section ─────────────────────────────────────────── */
+.prj-section {
   position: relative;
+  background: var(--prj-bg);
+  padding: 100px 0 130px;
+  overflow: hidden;
   z-index: 1;
 }
 
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
-  margin-bottom: 4rem;
+/* ─── Background ──────────────────────────────────────── */
+.prj-bg-grid {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(var(--prj-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--prj-grid) 1px, transparent 1px);
+  background-size: 52px 52px;
+}
+.prj-bg-glow {
+  position: absolute; border-radius: 50%; filter: blur(120px);
+  pointer-events: none; z-index: 0;
+}
+.prj-glow-1 {
+  width: 700px; height: 700px; top: -200px; left: -200px;
+  background: rgba(99,102,241,0.18);
+  animation: prj-blob 22s ease-in-out infinite alternate;
+}
+.prj-glow-2 {
+  width: 600px; height: 600px; bottom: -150px; right: -150px;
+  background: rgba(16,185,129,0.13);
+  animation: prj-blob 17s ease-in-out infinite alternate-reverse;
+}
+@keyframes prj-blob {
+  0% { transform: translate(0,0) scale(1); }
+  100% { transform: translate(40px,-30px) scale(1.08); }
 }
 
-.project-card {
-  background: var(--bg-primary);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px var(--shadow-light);
-  border: 1px solid var(--border-color);
-  transition: all 0.3s ease;
-  position: relative;
+/* ─── Container ───────────────────────────────────────── */
+.prj-container {
+  position: relative; z-index: 2;
+  max-width: 1160px; margin: 0 auto;
+  padding: 0 36px;
 }
 
-.project-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 40px var(--shadow-medium);
-}
-
-.project-image {
-  position: relative;
-  height: 200px;
-  overflow: hidden;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.project-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.project-card:hover .project-image img {
-  transform: scale(1.1);
-}
-
-.project-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--accent-gradient);
-}
-
-.placeholder-icon {
-  font-size: 3rem;
-  color: white;
-  opacity: 0.8;
-}
-
-.project-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.project-card:hover .project-overlay {
-  opacity: 1;
-}
-
-.project-links {
-  display: flex;
-  gap: 1rem;
-}
-
-.project-link {
-  width: 50px;
-  height: 50px;
-  background: var(--bg-primary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent-primary);
-  font-size: 1.2rem;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  border: 1px solid var(--border-color);
-}
-
-.project-link:hover {
-  background: var(--accent-primary);
-  color: white;
-  transform: scale(1.1);
-}
-
-.project-content {
-  padding: 2rem;
-}
-
-.project-title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-  line-height: 1.3;
-}
-
-.project-description {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  margin-bottom: 1.5rem;
-  text-align: justify;
-}
-
-.project-tech h4 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 0.8rem;
-}
-
-.tech-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.tech-tag {
-  background: var(--accent-gradient);
-  color: white;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  transition: transform 0.2s ease;
-}
-
-.tech-tag:hover {
-  transform: scale(1.05);
-}
-
-.project-actions {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.project-actions .btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 10px 20px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-decoration: none;
-  border-radius: 50px;
-  transition: all 0.3s ease;
-  justify-content: center;
-  min-width: 140px;
-}
-
-.github-section {
+/* ─── Header ──────────────────────────────────────────── */
+.prj-header {
   text-align: center;
+  margin-bottom: 64px;
+}
+.prj-eyebrow {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  background: linear-gradient(90deg, #6366f1, #a855f7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; margin-bottom: 14px;
+}
+.prj-main-title {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 800; color: var(--prj-h);
+  letter-spacing: -0.03em; line-height: 1.1;
+  margin: 0 0 16px;
+}
+.prj-main-title em {
+  font-weight: 800;
+  background: linear-gradient(135deg, #6366f1, #a855f7 55%, #ec4899);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.prj-main-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem; color: var(--prj-body);
+  max-width: 500px; margin: 0 auto; line-height: 1.65;
 }
 
-.github-card {
-  background: var(--accent-gradient);
-  color: white;
-  padding: 3rem 2rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px var(--shadow-medium);
+/* ─── Ghost Number ────────────────────────────────────── */
+.prj-ghost-num {
+  position: absolute;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11rem; font-weight: 800;
+  line-height: 1; letter-spacing: -0.06em;
+  color: rgba(255,255,255,0.04);
+  right: 4%; bottom: -2%;
+  pointer-events: none; user-select: none;
+  z-index: 0;
+}
+.prj-ghost-num.small {
+  font-size: 6rem; right: 6%; bottom: 4%;
 }
 
-.github-icon {
-  font-size: 3rem;
-  margin-bottom: 1.5rem;
-  opacity: 0.9;
+/* ─── Glow Orbs (inside cards) ────────────────────────── */
+.prj-orb {
+  position: absolute; border-radius: 50%; filter: blur(80px);
+  pointer-events: none; z-index: 0; opacity: 0.4;
+  transition: opacity 0.4s;
+}
+.prj-orb-a {
+  width: 300px; height: 300px;
+  top: -80px; right: -60px;
+}
+.prj-orb-b {
+  width: 200px; height: 200px;
+  bottom: -50px; left: -40px;
+  opacity: 0.25;
+}
+.prj-orb-a.small { width: 180px; height: 180px; top: -50px; right: -40px; opacity: 0.35; }
+
+/* ─── HERO CARD ───────────────────────────────────────── */
+.prj-hero-card {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  border-radius: 28px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  border: 1.5px solid rgba(255,255,255,0.08);
+  min-height: 340px;
+  cursor: default;
+  transition: box-shadow 0.4s ease;
+}
+.prj-hero-card:hover {
+  box-shadow: 0 32px 100px rgba(0,0,0,0.45), 0 0 0 1.5px rgba(255,255,255,0.12);
+}
+.prj-hero-card:hover .prj-orb { opacity: 0.65; }
+
+/* Hero body */
+.prj-hero-body {
+  position: relative; z-index: 2;
+  flex: 1;
+  padding: 52px 52px 48px;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  gap: 18px;
 }
 
-.github-card h3 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+/* Hero deco (right panel) */
+.prj-hero-deco {
+  position: relative;
+  width: 260px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.prj-ring {
+  position: absolute;
+  border-radius: 50%;
+  border-width: 1.5px; border-style: solid;
+}
+.ring-1 { width: 220px; height: 220px; }
+.ring-2 { width: 310px; height: 310px; }
+.ring-3 { width: 400px; height: 400px; }
+
+.prj-feat-badge {
+  position: relative; z-index: 2;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 7px 16px; border-radius: 20px;
+  backdrop-filter: blur(8px);
 }
 
-.github-card p {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-bottom: 2rem;
-  opacity: 0.9;
+/* ─── SMALL CARDS ─────────────────────────────────────── */
+.prj-small-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.prj-small-card {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1.5px solid rgba(255,255,255,0.07);
+  min-height: 320px;
+  cursor: default;
+  transition: box-shadow 0.35s ease;
+}
+.prj-small-card:hover {
+  box-shadow: 0 24px 70px rgba(0,0,0,0.4), 0 0 0 1.5px rgba(255,255,255,0.1);
+}
+.prj-small-card:hover .prj-orb { opacity: 0.6; }
+
+.prj-small-body {
+  position: relative; z-index: 2;
+  padding: 36px 32px 32px;
+  display: flex; flex-direction: column;
+  gap: 14px; height: 100%;
 }
 
-.github-card .btn {
-  background: white;
-  color: var(--accent-primary);
-  padding: 12px 30px;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 50px;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+/* ─── Shared label ────────────────────────────────────── */
+.prj-label {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ta, #818cf8);
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 4px 12px; border-radius: 20px;
+  align-self: flex-start;
 }
 
-.github-card .btn:hover {
+/* ─── Titles ──────────────────────────────────────────── */
+.prj-hero-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.65rem; font-weight: 800;
+  color: #fff; letter-spacing: -0.02em; line-height: 1.25;
+  margin: 0;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+}
+.prj-small-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem; font-weight: 700;
+  color: #fff; letter-spacing: -0.01em; line-height: 1.3;
+  margin: 0;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.4);
+}
+
+/* ─── Descriptions ────────────────────────────────────── */
+.prj-hero-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.97rem; color: rgba(255,255,255,0.72);
+  line-height: 1.65; margin: 0;
+}
+.prj-small-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem; color: rgba(255,255,255,0.65);
+  line-height: 1.6; margin: 0;
+}
+
+/* ─── Tags ────────────────────────────────────────────── */
+.prj-tags {
+  display: flex; flex-wrap: wrap; gap: 7px;
+}
+.prj-tag {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.68rem; font-weight: 600;
+  color: var(--ta, #818cf8);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  padding: 4px 11px; border-radius: 20px;
+  letter-spacing: 0.01em;
+  transition: background 0.2s, transform 0.2s;
+  cursor: default;
+}
+.prj-tag:hover { background: rgba(255,255,255,0.15); transform: translateY(-1px); }
+.prj-tag.more { color: rgba(255,255,255,0.55); }
+
+/* ─── Buttons ─────────────────────────────────────────── */
+.prj-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.prj-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem; font-weight: 700;
+  color: #fff;
+  background: rgba(255,255,255,0.12);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  padding: 11px 22px; border-radius: 50px;
+  text-decoration: none; cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.28s cubic-bezier(0.22,1,0.36,1);
+}
+.prj-btn:hover {
+  background: var(--ta, #818cf8);
+  border-color: var(--ta, #818cf8);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+}
+.prj-btn.small {
+  font-size: 0.75rem; 
+  padding: 8px 16px;
+  height: 38px;
+  box-sizing: border-box;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-  .projects-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  
-  .project-content {
-    padding: 1.5rem;
-  }
-  
-  .project-title {
-    font-size: 1.3rem;
-  }
-  
-  .project-description {
-    font-size: 0.95rem;
-  }
-  
-  .project-actions .btn {
-    width: 100%;
-    min-width: auto;
-  }
-  
-  .github-card {
-    padding: 2rem 1.5rem;
-  }
-  
-  .github-card h3 {
-    font-size: 1.6rem;
-  }
-  
-  .github-card p {
-    font-size: 1rem;
-  }
+/* See More — filled accent style */
+.prj-btn.see-more {
+  background: var(--ta, #818cf8);
+  border-color: var(--ta, #818cf8);
+  color: #fff;
+}
+.prj-btn.see-more:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
 }
 
-@media (max-width: 480px) {
-  .projects-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .project-image {
-    height: 150px;
-  }
-  
-  .placeholder-icon {
-    font-size: 2rem;
-  }
-  
-  .project-content {
-    padding: 1.2rem;
-  }
-  
-  .project-title {
-    font-size: 1.2rem;
-  }
-  
-  .project-description {
-    font-size: 0.9rem;
-  }
-  
-  .tech-tag {
-    font-size: 0.75rem;
-    padding: 0.3rem 0.6rem;
-  }
-  
-  .project-actions .btn {
-    padding: 8px 16px;
-    font-size: 0.85rem;
-  }
-  
-  .github-card {
-    padding: 1.5rem 1rem;
-  }
-  
-  .github-icon {
-    font-size: 2.5rem;
-  }
-  
-  .github-card h3 {
-    font-size: 1.4rem;
-  }
-  
-  .github-card p {
-    font-size: 0.95rem;
-  }
+/* Small card action row */
+.prj-small-body .prj-actions {
+  margin-top: auto;
+  padding-top: 12px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ─── GitHub Strip ────────────────────────────────────── */
+.prj-github-strip {
+  display: flex; align-items: center; gap: 18px;
+  background: var(--prj-strip-bg);
+  border: 1.5px solid var(--prj-strip-bdr);
+  border-radius: 18px;
+  padding: 22px 30px;
+  text-decoration: none;
+  backdrop-filter: blur(16px);
+  transition: all 0.3s ease;
+}
+.prj-github-strip:hover {
+  border-color: rgba(99,102,241,0.3);
+  box-shadow: 0 12px 50px rgba(99,102,241,0.12);
+}
+.prj-strip-icon {
+  font-size: 1.8rem; color: var(--prj-strip-text); flex-shrink: 0;
+}
+.prj-strip-text {
+  display: flex; flex-direction: column; gap: 2px; flex: 1;
+}
+.prj-strip-text strong {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem; font-weight: 700; color: var(--prj-strip-text);
+}
+.prj-strip-text span {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem; color: var(--prj-strip-sub);
+}
+.prj-strip-arrow {
+  font-size: 1.3rem; color: var(--prj-strip-sub); flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+.prj-github-strip:hover .prj-strip-arrow { transform: translateX(5px); }
+
+/* ─── Responsive ──────────────────────────────────────── */
+@media (max-width: 900px) {
+  .prj-container { padding: 0 20px; }
+  .prj-small-row { grid-template-columns: 1fr; }
+  .prj-hero-deco { display: none; }
+  .prj-hero-body { padding: 40px 36px; }
+}
+@media (max-width: 600px) {
+  .prj-section { padding: 80px 0 100px; }
+  .prj-hero-body { padding: 30px 24px; }
+  .prj-small-body { padding: 28px 22px; }
+  .prj-hero-title { font-size: 1.3rem; }
+  .prj-github-strip { padding: 18px 20px; gap: 12px; }
 }

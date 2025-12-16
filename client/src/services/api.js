@@ -19,5 +19,22 @@ api.interceptors.request.use(
   }
 );
 
+// Add a response interceptor to handle token expiration globally
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // Don't redirect if we are already trying to login
+      if (!error.config.url.includes('/auth/login')) {
+        // Clear token if invalid/expired
+        localStorage.removeItem('token');
+        // Redirect to login page
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;
 

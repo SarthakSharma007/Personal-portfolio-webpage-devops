@@ -106,6 +106,7 @@ CREATE TABLE IF NOT EXISTS personal_info (
     linkedin_url VARCHAR(255),
     resume_url VARCHAR(255),
     profile_image VARCHAR(255),
+    about_image VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

@@ -1,121 +1,400 @@
-.skills {
-  background: var(--bg-secondary);
-  position: relative;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap');
+
+/* ═══════════════════════════════════════════════════════════
+   SKILLS — Bento Grid Redesign
+═══════════════════════════════════════════════════════════ */
+
+/* ─── Tokens ─────────────────────────────────────────────── */
+:root {
+  --sk2-bg:        #f1f5fb;
+  --sk2-card:      rgba(255,255,255,0.82);
+  --sk2-border:    rgba(0,0,0,0.07);
+  --sk2-text-h:    #0f172a;
+  --sk2-text-sub:  #64748b;
+  --sk2-eyebrow:   #6366f1;
+  --sk2-grid:      rgba(99,102,241,0.05);
+  --sk2-dot:       rgba(99,102,241,0.18);
+  --sk2-tile-bg:   rgba(255,255,255,0.5);
+  --sk2-tile-bdr:  rgba(0,0,0,0.06);
+  --sk2-name:      #334155;
+  --sk2-accent-g:  'linear-gradient(135deg,#6366f1,#a855f7)';
 }
 
-/* Background pattern */
-.skills::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(circle at 10% 20%, var(--accent-primary-transparent), transparent 50%),
-    radial-gradient(circle at 90% 80%, var(--accent-secondary-transparent), transparent 50%);
-  opacity: 0.1;
-  z-index: 0;
+[data-theme="dark"] {
+  --sk2-bg:        #090e1a;
+  --sk2-card:      rgba(13,18,30,0.88);
+  --sk2-border:    rgba(255,255,255,0.07);
+  --sk2-text-h:    #f0f6ff;
+  --sk2-text-sub:  #94a3b8;
+  --sk2-eyebrow:   #818cf8;
+  --sk2-grid:      rgba(99,102,241,0.04);
+  --sk2-dot:       rgba(99,102,241,0.25);
+  --sk2-tile-bg:   rgba(255,255,255,0.04);
+  --sk2-tile-bdr:  rgba(255,255,255,0.08);
+  --sk2-name:      #94a3b8;
 }
 
-.skills .container {
+/* ─── Section ────────────────────────────────────────────── */
+.sk2-section {
   position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--sk2-bg);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  padding: 100px 0 130px;
   z-index: 1;
 }
 
-/* Two-column grid layout for skills */
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  max-width: 1000px;
-  margin: 0 auto;
+/* ─── Background Grid ────────────────────────────────────── */
+.sk2-bg-grid {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(var(--sk2-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--sk2-grid) 1px, transparent 1px);
+  background-size: 52px 52px;
 }
 
-.skills-category-block {
-  background: var(--bg-primary);
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 8px 30px var(--shadow-light);
-  border: 1px solid var(--border-color);
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-}
-
-[data-theme="dark"] .skills-category-block {
-  background: var(--bg-secondary);
-}
-
-.skills-category-block:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px var(--shadow-medium);
-}
-
-.category-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 1.5rem;
-  position: relative;
-  padding-bottom: 0.5rem;
-}
-
-.category-title::after {
-  content: '';
+/* ─── Background Radial Blobs ────────────────────────────── */
+.sk2-bg-radial {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 40px;
-  height: 3px;
-  background: var(--accent-gradient);
-  border-radius: 2px;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+.sk2-radial-1 {
+  width: 700px; height: 700px;
+  top: -200px; left: -200px;
+  background: rgba(99,102,241,0.18);
+  animation: sk2-blob 18s ease-in-out infinite alternate;
+}
+.sk2-radial-2 {
+  width: 600px; height: 600px;
+  bottom: -150px; right: -100px;
+  background: rgba(236,72,153,0.14);
+  animation: sk2-blob 22s ease-in-out infinite alternate-reverse;
+}
+.sk2-radial-3 {
+  width: 450px; height: 450px;
+  top: 45%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(16,185,129,0.10);
+  animation: sk2-blob 14s ease-in-out infinite alternate;
 }
 
-.skills-list {
+@keyframes sk2-blob {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(30px, -20px) scale(1.05); }
+  100% { transform: translate(-20px, 30px) scale(0.96); }
+}
+.sk2-radial-3 {
+  animation-name: sk2-blob-center;
+}
+@keyframes sk2-blob-center {
+  0%   { transform: translate(-50%, -50%) scale(1); }
+  100% { transform: translate(-50%, -50%) scale(1.18); }
+}
+
+/* ─── Animated Dots ──────────────────────────────────────── */
+.sk2-bg-dots {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+}
+.sk2-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--sk2-dot);
+  animation: sk2-dot-pulse ease-in-out infinite alternate;
+}
+@keyframes sk2-dot-pulse {
+  0%   { opacity: 0.1; transform: scale(1); }
+  100% { opacity: 0.7; transform: scale(2); }
+}
+
+/* ─── Container ──────────────────────────────────────────── */
+.sk2-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 36px;
+}
+
+/* ─── Header ─────────────────────────────────────────────── */
+.sk2-header {
+  text-align: center;
+  margin-bottom: 70px;
+}
+
+.sk2-eyebrow {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sk2-eyebrow);
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 14px;
+}
+
+.sk2-title {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 800;
+  color: var(--sk2-text-h);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin: 0 0 18px;
+}
+
+.sk2-title-accent {
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sk2-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  color: var(--sk2-text-sub);
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+/* ─── Bento Grid ─────────────────────────────────────────── */
+.sk2-bento {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+/* ─── Card ───────────────────────────────────────────────── */
+.sk2-card {
+  position: relative;
+  background: var(--sk2-card);
+  border: 1.5px solid var(--sk2-border);
+  border-radius: 24px;
+  padding: 0 0 32px;
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.35s ease,
+              border-color 0.35s ease;
+  cursor: default;
+  will-change: transform;
+}
+
+.sk2-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(99,102,241,0.25);
+  box-shadow: 0 24px 80px var(--glow), 0 4px 20px rgba(0,0,0,0.12);
+}
+
+/* Wide = full 2-column span */
+.sk2-wide {
+  grid-column: 1 / -1;
+}
+
+/* Half = 1 column */
+.sk2-half {
+  grid-column: span 1;
+}
+
+/* ─── Gradient top bar ───────────────────────────────────── */
+.sk2-card-bar {
+  width: 100%;
+  height: 5px;
+  border-radius: 24px 24px 0 0;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+/* ─── Glow blob inside card ──────────────────────────────── */
+.sk2-card-blob {
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: var(--glow);
+  filter: blur(60px);
+  opacity: 0.15;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.sk2-card:hover .sk2-card-blob {
+  opacity: 0.35;
+}
+
+/* ─── Card Header ────────────────────────────────────────── */
+.sk2-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 28px 20px;
+  gap: 12px;
+}
+
+.sk2-card-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--sk2-text-h);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.sk2-card-count {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--sk2-text-sub);
+  background: var(--sk2-tile-bg);
+  border: 1px solid var(--sk2-tile-bdr);
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* ─── Tiles Wrap ─────────────────────────────────────────── */
+.sk2-tiles-wrap {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: auto; /* Pushes tags to the bottom if cards have different heights */
+  gap: 14px;
+  padding: 0 28px;
 }
 
-.skill-tag {
-  background: var(--accent-gradient);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: transform 0.2s ease;
+/* ─── Skill Tile ─────────────────────────────────────────── */
+.sk2-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  padding: 16px 14px 12px;
+  border-radius: 16px;
+  border: 1.5px solid var(--sk2-tile-bdr);
+  min-width: 90px;
+  cursor: pointer;
+  transition: background 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  overflow: hidden;
+  will-change: transform, opacity;
 }
 
-.skill-tag:hover {
-  transform: scale(1.05);
+.sk2-tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, white 0%, transparent 80%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .skills-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+.sk2-tile:hover::after {
+  opacity: 0.05;
+}
+
+.sk2-tile:hover {
+  border-color: rgba(99,102,241,0.25);
+}
+
+/* ─── Icon Area ──────────────────────────────────────────── */
+.sk2-tile-icon {
+  width: 52px; height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.sk2-devicon {
+  font-size: 2.6rem;
+  line-height: 1;
+  display: block;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+.sk2-tile:hover .sk2-devicon {
+  transform: scale(1.15);
+  filter: drop-shadow(0 4px 12px rgba(99,102,241,0.4));
+}
+
+.sk2-emoji {
+  font-size: 2.2rem;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+.sk2-tile:hover .sk2-emoji {
+  transform: scale(1.15);
+}
+
+/* ─── Tile Name ──────────────────────────────────────────── */
+.sk2-tile-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--sk2-name);
+  text-align: center;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* ─── Responsive ─────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .sk2-container { padding: 0 20px; }
+  .sk2-bento { grid-template-columns: 1fr; gap: 18px; }
+  .sk2-wide, .sk2-half { grid-column: 1 / -1; }
+}
+
+@media (max-width: 600px) {
+  .sk2-section { padding: 80px 0 100px; }
+  .sk2-title { font-size: 2rem; }
+  .sk2-tile { min-width: 76px; padding: 12px 10px 10px; }
+  .sk2-devicon { font-size: 2rem; }
+  .sk2-emoji { font-size: 1.8rem; }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .sk2-card {
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
   }
 
-  .skills-category-block {
-    padding: 1.5rem;
+  .sk2-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.12);
   }
 
-  .category-title {
-    font-size: 1.3rem;
+  .sk2-card-blob {
+    display: none;
   }
 
-  .skill-tag {
-    font-size: 0.85rem;
-    padding: 0.4rem 0.8rem;
+  .sk2-tile::after {
+    display: none;
+  }
+
+  .sk2-tile:hover .sk2-devicon,
+  .sk2-tile:hover .sk2-emoji {
+    transform: none;
+    filter: none;
   }
 }
 
-@media (max-width: 480px) {
-  .category-title {
-    font-size: 1.2rem;
+@media (prefers-reduced-motion: reduce) {
+  .sk2-radial-1,
+  .sk2-radial-2,
+  .sk2-radial-3,
+  .sk2-dot {
+    animation: none !important;
   }
 }

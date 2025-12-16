@@ -13,9 +13,7 @@ import Experience from './components/Experience';
 import Education from './components/Education';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import Login from './components/Login';
-import AdminPanel from './components/AdminPanel';
-import ProtectedRoute from './components/ProtectedRoute';
+import ProjectDetail from './components/ProjectDetail';
 import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
@@ -52,20 +50,11 @@ const AppRoutes = () => {
       {/* Routes that use the MainLayout (Navbar, ScrollToTop, theme) */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
-        {/* Add any other public pages that need the Navbar/Footer here */}
-        {/* e.g., <Route path="/portfolio" element={<PortfolioPage />} /> */}
-      </Route>
-
-      {/* Routes that DO NOT use the MainLayout */}
-      <Route path="/login" element={<Login />} />
-
-      {/* Protected Admin Route (also does not use MainLayout) */}
-      <Route element={<ProtectedRoute />}>
-        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/projects/:slug" element={<ProjectDetail />} />
       </Route>
 
       {/* Optional: Catch-all 404 Not Found route */}
-      {/* <Route path="*" element={<div>404 Not Found</div>} /> */}
+      <Route path="*" element={<div style={{ padding: '100px', textAlign: 'center', color: 'var(--text-color)' }}><h2>404 Not Found</h2><p>The page you are looking for does not exist.</p></div>} />
     </Routes>
   );
 };

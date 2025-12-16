@@ -1,120 +1,293 @@
-.contact {
-  background: var(--bg-primary);
-  color: var(--text-primary);
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+
+/* ═══════════════════════════════════════════════════════
+   CONTACT  ·  Legendary Split Layout
+═══════════════════════════════════════════════════════ */
+
+:root {
+  --contact-bg: #f8fafc;
+  --contact-text: #0f172a;
+  --contact-body: #475569;
+  --contact-accent: #6366f1;
+  --contact-glass: rgba(255, 255, 255, 0.7);
+  --contact-border: rgba(0, 0, 0, 0.1);
+  --contact-input-bg: rgba(255, 255, 255, 0.5);
 }
 
-.contact-content {
-  display: flex;
-  gap: 2rem;
-  align-items: flex-start;
+[data-theme="dark"] {
+  --contact-bg: #030712;
+  --contact-text: #f8fafc;
+  --contact-body: #94a3b8;
+  --contact-accent: #818cf8;
+  --contact-glass: rgba(15, 23, 42, 0.6);
+  --contact-border: rgba(255, 255, 255, 0.08);
+  --contact-input-bg: rgba(0, 0, 0, 0.2);
 }
 
-.contact-form-container {
-  flex: 2;
-  background: var(--bg-secondary);
-  padding: 2rem;
-  border-radius: 16px;
-  border: 1px solid var(--border-color);
+.contact-section {
+  position: relative;
+  background: var(--contact-bg);
+  padding: 120px 0 150px;
+  overflow: hidden;
+  z-index: 1;
 }
 
-.contact-form .form-group {
-  margin-bottom: 1.5rem;
+/* ─── Abstract Backgrounds ────────────────────────────── */
+.contact-bg-glow {
+  position: absolute;
+  width: 800px; height: 800px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, var(--contact-accent) 0%, transparent 60%);
+  opacity: 0.05;
+  z-index: 0;
+  pointer-events: none;
 }
 
-.contact-form input,
-.contact-form textarea {
+.contact-bg-grid {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(128,128,128,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(128,128,128,0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.contact-container {
+  position: relative; z-index: 2;
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ─── Header ─────────────────────────────────────────── */
+.contact-header-main {
+  text-align: center;
+  margin-bottom: 70px;
+}
+
+.contact-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.15em;
+  color: var(--contact-accent); margin-bottom: 16px;
+  background: rgba(99, 102, 241, 0.1);
+  padding: 8px 18px; border-radius: 50px;
+}
+
+.contact-heading {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(2.8rem, 5vw, 4rem); font-weight: 800;
+  color: var(--contact-text); letter-spacing: -0.03em; margin: 0;
+}
+
+/* ─── Layout ─────────────────────────────────────────── */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* ─── Left: Info Panel ───────────────────────────────── */
+.contact-statement {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 800; color: var(--contact-text);
+  line-height: 1.1; margin: 0 0 24px 0;
+  letter-spacing: -0.02em;
+}
+
+.contact-statement span {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.contact-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem; color: var(--contact-body);
+  line-height: 1.6; margin: 0 0 40px 0;
+  max-width: 90%;
+}
+
+.contact-cards {
+  display: flex; flex-direction: column; gap: 20px;
+}
+
+.contact-card {
+  display: flex; align-items: center; gap: 20px;
+  padding: 20px;
+  background: var(--contact-glass);
+  border: 1px solid var(--contact-border);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.contact-card:hover {
+  transform: translateX(10px);
+  border-color: var(--contact-accent);
+}
+
+.c-icon {
+  width: 50px; height: 50px; flex-shrink: 0;
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--contact-accent);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+}
+
+.c-details h4 {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem; font-weight: 600;
+  color: var(--contact-body); text-transform: uppercase;
+  letter-spacing: 0.1em; margin: 0 0 4px 0;
+}
+
+.c-details a, .c-details span {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem; font-weight: 600;
+  color: var(--contact-text); text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.c-details a:hover {
+  color: var(--contact-accent);
+}
+
+/* ─── Right: Form Panel ──────────────────────────────── */
+.form-glass-container {
+  background: var(--contact-glass);
+  border: 1px solid var(--contact-border);
+  border-radius: 32px;
+  padding: 48px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+}
+
+.c-form {
+  display: flex; flex-direction: column; gap: 32px;
+}
+
+/* Float Label Inputs */
+.c-input-group {
+  position: relative;
+}
+
+.c-input-group input,
+.c-input-group textarea {
   width: 100%;
-  padding: 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-size: 1rem;
+  background: var(--contact-input-bg);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 24px 20px 12px; /* Bottom padding less to fit label */
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem; color: var(--contact-text);
+  outline: none;
+  transition: background 0.3s ease;
 }
 
-.contact-form textarea {
-  min-height: 150px;
-  resize: vertical;
+.c-input-group textarea {
+  resize: vertical; min-height: 120px;
 }
 
-/* Container for the new info boxes */
-.contact-info-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.c-input-group input:focus,
+.c-input-group textarea:focus {
+  background: rgba(128,128,128,0.05);
 }
 
-/* Individual info box styling */
-.contact-info-item {
-  background: var(--bg-secondary);
-  padding: 1.5rem;
+/* The floating label */
+.c-input-group label {
+  position: absolute;
+  left: 20px; top: 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem; color: var(--contact-body);
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Trigger float when focused or has content (via placeholder-shown hack) */
+.c-input-group input:focus ~ label,
+.c-input-group input:not(:placeholder-shown) ~ label,
+.c-input-group textarea:focus ~ label,
+.c-input-group textarea:not(:placeholder-shown) ~ label {
+  transform: translateY(-10px) scale(0.85);
+  transform-origin: left top;
+  color: var(--contact-accent);
+  font-weight: 600;
+}
+
+/* Animated bottom line */
+.c-line {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: var(--contact-accent);
+  transform: scaleX(0); transform-origin: center;
+  transition: transform 0.4s ease;
+  border-radius: 0 0 12px 12px;
+}
+
+.c-input-group input:focus ~ .c-line,
+.c-input-group textarea:focus ~ .c-line {
+  transform: scaleX(1);
+}
+
+/* Submit Button */
+.c-submit-btn {
+  background: var(--contact-accent);
+  color: #fff;
+  border: none;
   border-radius: 16px;
+  padding: 18px;
+  font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  transition: all 0.3s ease;
+  overflow: hidden; position: relative;
+}
+
+.c-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+}
+
+.c-submit-btn:disabled {
+  opacity: 0.7; cursor: not-allowed;
+}
+
+.btn-icon.sending {
+  animation: fly 1.5s infinite linear;
+}
+
+@keyframes fly {
+  0% { transform: translate(0, 0); opacity: 1; }
+  50% { transform: translate(20px, -20px); opacity: 0; }
+  51% { transform: translate(-20px, 20px); opacity: 0; }
+  100% { transform: translate(0, 0); opacity: 1; }
+}
+
+/* Status Message */
+.c-status-msg {
+  padding: 16px; border-radius: 12px;
+  font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.95rem;
   text-align: center;
-  border: 1px solid var(--border-color);
 }
 
-.contact-icon {
-  font-size: 1.8rem;
-  color: var(--accent-primary);
-  margin-bottom: 1rem;
+.c-status-msg.success {
+  background: rgba(16, 185, 129, 0.1); color: #10b981;
 }
 
-.contact-info-item h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
+.c-status-msg.error {
+  background: rgba(239, 68, 68, 0.1); color: #ef4444;
 }
 
-.contact-info-item a,
-.contact-info-item p {
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 0.3s;
-  font-size: 0.95rem;
-  word-break: break-all;
+/* ─── Responsive ─────────────────────────────────────── */
+@media (max-width: 900px) {
+  .contact-layout { grid-template-columns: 1fr; gap: 40px; }
+  .contact-statement { font-size: 2.5rem; }
 }
 
-.contact-info-item a:hover {
-  color: var(--accent-primary);
+@media (max-width: 600px) {
+  .contact-section { padding: 100px 0; }
+  .contact-container { padding: 0 20px; }
+  .form-glass-container { padding: 32px 24px; }
 }
-
-.form-status {
-  margin-top: 1rem;
-  text-align: center;
-  font-weight: 600;
-}
-
-.form-status.success {
-  color: #2ecc71;
-}
-
-.form-status.error {
-  color: #e74c3c;
-}
-
-/* Dark Theme Styles */
-[data-theme="dark"] .contact {
-  background: var(--bg-primary);
-}
-
-[data-theme="dark"] .contact-form-container,
-[data-theme="dark"] .contact-info-item {
-  background: var(--bg-secondary);
-  border-color: var(--border-color);
-}
-
-[data-theme="dark"] .contact-form input,
-[data-theme="dark"] .contact-form textarea {
-  background: var(--bg-tertiary);
-  border-color: var(--border-color-dark);
-  color: var(--text-primary);
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .contact-content {
-    flex-direction: column;
-  }
-}
-

@@ -1,1 +1,59 @@
-node_modules
+# Dependency directories
+node_modules/
+jspm_packages/
+web_modules/
+
+# Python Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+pyvenv.cfg
+
+# Python Cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+*.env.*
+!env.example
+!env.exmaple
+
+# Production builds
+build/
+dist/
+out/
+client/build/
+client/dist/
+
+# Test output and logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+client/test_output.txt
+client/test_output_utf8.txt
+
+# Editor / System Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary files & directories for manual git operations
+*_temp/
+*_temp

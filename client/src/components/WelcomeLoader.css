@@ -1,0 +1,109 @@
+/* ══════════════════════════════════════════════════
+   LEGENDARY KATANA ANIME — Welcome Loader CSS
+   ══════════════════════════════════════════════════ */
+
+/* Base */
+.katana-loader {
+  position: fixed;
+  inset: 0;
+  background: #05010f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+/* Full-page canvas */
+.katana-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+}
+
+/* ── Text overlay wrapper ── */
+.katana-text-wrap {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  /* Sit at upper-center, above the sword clash point */
+  margin-top: -20vh;
+  perspective: 600px;
+}
+
+/* Row of letters */
+.katana-text-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Individual character */
+.katana-char {
+  display: inline-block;
+  font-size: clamp(3.8rem, 11vw, 9rem);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  -webkit-text-stroke: 2px rgba(200, 80, 80, 0.85);
+  /* Blood-red + white glow — classic Demon Slayer / Bleach title card */
+  text-shadow:
+    0 0 18px rgba(255, 80, 80, 1),
+    0 0 40px rgba(200, 40, 40, 0.8),
+    0 0 80px rgba(160, 0, 0, 0.5),
+    3px 4px 0 rgba(80, 0, 0, 0.95);
+  transform-origin: center bottom;
+  animation: char-pulse 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes char-pulse {
+  0% {
+    text-shadow:
+      0 0 18px rgba(255,80,80,1),
+      0 0 40px rgba(200,40,40,0.8),
+      0 0 80px rgba(160,0,0,0.5),
+      3px 4px 0 rgba(80,0,0,0.95);
+  }
+  100% {
+    text-shadow:
+      0 0 28px rgba(255,120,120,1),
+      0 0 60px rgba(220,60,60,0.9),
+      0 0 110px rgba(180,20,20,0.6),
+      3px 4px 0 rgba(80,0,0,0.95);
+  }
+}
+
+/* Japanese subtitle */
+.katana-jp {
+  font-size: clamp(1rem, 3vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: 0.5em;
+  color: rgba(255, 200, 200, 0.85);
+  text-shadow: 0 0 14px rgba(255, 80, 80, 0.6);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .katana-char {
+    -webkit-text-stroke: 1.5px rgba(200,80,80,0.85);
+  }
+  .katana-jp {
+    letter-spacing: 0.3em;
+  }
+}
+
+@media (max-width: 480px) {
+  .katana-char {
+    -webkit-text-stroke: 1px rgba(200,80,80,0.85);
+    letter-spacing: 0.02em;
+  }
+  .katana-jp { font-size: 0.9rem; }
+}

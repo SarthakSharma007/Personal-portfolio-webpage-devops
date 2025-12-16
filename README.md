@@ -205,4 +205,28 @@ CREATE DATABASE portfolio_db;
 mysql -u root -p portfolio_db < server/database/schema.sql
 
 # Insert Sample Data (Optional)
-mysql -
+mysql -u root -p portfolio_db < server/database/sample-data.sql
+  </pre>
+
+  <h2>🏃 Running the Application</h2>
+  <p>You can run the application in development mode, which starts both the backend and frontend concurrently.</p>
+  <pre>
+# Start both server and client together
+npm run dev
+
+# Or start them separately:
+# Start the backend server (on port 5000)
+npm run server
+
+# Start the frontend client (on http://localhost:3000)
+npm run client
+  </pre>
+
+  <h2>✅ Verification</h2>
+  <ul>
+    <li>Backend: <a href="http://localhost:5000">http://localhost:5000</a></li>
+    <li>Frontend: <a href="http://localhost:3000">http://localhost:3000</a></li>
+  </ul>
+
+</body>
+</html>

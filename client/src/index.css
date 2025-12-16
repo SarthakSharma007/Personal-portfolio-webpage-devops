@@ -1,36 +1,44 @@
 /* CSS Custom Properties for Theme */
 :root {
-  /* Light Theme */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #e9ecef;
-  --text-primary: #2c3e50;
-  --text-secondary: #6c757d;
-  --text-muted: #adb5bd;
-  --accent-primary: #667eea;
-  --accent-secondary: #764ba2;
-  --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --border-color: #e9ecef;
-  --shadow-light: rgba(0, 0, 0, 0.1);
-  --shadow-medium: rgba(0, 0, 0, 0.15);
-  --shadow-heavy: rgba(0, 0, 0, 0.2);
+  /* Light Theme - Clean, sleek, neo-morphic */
+  --bg-primary: #fdfdfd;
+  --bg-primary-rgb: 253, 253, 253;
+  --bg-secondary: #f0f4f8;
+  --bg-tertiary: #e1e8f0;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --accent-primary: #0ea5e9; /* Tech Blue */
+  --accent-secondary: #6366f1; /* Deep Indigo */
+  --accent-glow: rgba(14, 165, 233, 0.4);
+  --accent-gradient: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+  --border-color: rgba(15, 23, 42, 0.1);
+  --shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --shadow-heavy: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
 }
 
 [data-theme="dark"] {
-  /* Dark Theme */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #2d2d2d;
-  --bg-tertiary: #404040;
-  --text-primary: #ffffff;
-  --text-secondary: #b3b3b3;
-  --text-muted: #808080;
-  --accent-primary: #7c3aed;
-  --accent-secondary: #a855f7;
-  --accent-gradient: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
-  --border-color: #404040;
-  --shadow-light: rgba(0, 0, 0, 0.3);
-  --shadow-medium: rgba(0, 0, 0, 0.4);
-  --shadow-heavy: rgba(0, 0, 0, 0.5);
+  /* Dark Theme - Legendary deep space with neon cyber aesthetics */
+  --bg-primary: #050508;
+  --bg-primary-rgb: 5, 5, 8;
+  --bg-secondary: #0a0a0f;
+  --bg-tertiary: #12121a;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-primary: #00f8ff; /* Neon Cyan */
+  --accent-secondary: #b026ff; /* Neon Purple */
+  --accent-glow: rgba(0, 248, 255, 0.5);
+  --accent-gradient: linear-gradient(135deg, #00f8ff 0%, #b026ff 100%);
+  --border-color: rgba(255, 255, 255, 0.05);
+  --shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  --shadow-heavy: 0 0 30px rgba(0, 248, 255, 0.2);
+  --glass-bg: rgba(10, 10, 15, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 /* Reset and base styles */
@@ -42,6 +50,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -53,7 +62,29 @@ body {
   line-height: 1.6;
   color: var(--text-primary);
   background-color: var(--bg-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  overflow-x: hidden;
+}
+
+#root {
+  overflow-x: hidden;
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+section[id] {
+  scroll-margin-top: 92px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: -0.02em;
 }
 
 code {
@@ -206,6 +237,10 @@ code {
     font-size: 2rem;
     margin-bottom: 2rem;
   }
+
+  section[id] {
+    scroll-margin-top: 84px;
+  }
   
   .btn {
     padding: 10px 25px;
@@ -221,5 +256,13 @@ code {
   .btn {
     padding: 8px 20px;
     font-size: 0.85rem;
+  }
+
+  .container {
+    padding: 0 14px;
+  }
+
+  section[id] {
+    scroll-margin-top: 76px;
   }
 }

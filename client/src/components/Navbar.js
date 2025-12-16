@@ -1,34 +1,50 @@
-/* client/src/components/Navbar.js */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
-import ThemeToggle from './ThemeToggle';
+import MoreDropdown from './MoreDropdown';
 import './Navbar.css';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [homeFlash, setHomeFlash] = useState(false);   // 1-sec underline flash
+  const prevSectionRef = useRef('home');               // track previous section
+  const flashTimerRef  = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
+      setIsMoreMenuOpen(false);
 
-      // Update active section based on scroll position
-      // Corrected order based on App.js layout
       const sections = ['home', 'about', 'skills', 'projects', 'certifications', 'experience', 'education', 'contact'];
       const scrollPosition = window.scrollY + 100;
 
+      let current = 'home';
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.getElementById(sections[i]);
         if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(sections[i]);
+          current = sections[i];
           break;
         }
       }
+
+      // If arriving at 'home' from a different section → trigger flash
+      if (current === 'home' && prevSectionRef.current !== 'home') {
+        clearTimeout(flashTimerRef.current);
+        setHomeFlash(true);
+        flashTimerRef.current = setTimeout(() => setHomeFlash(false), 1000);
+      }
+
+      prevSectionRef.current = current;
+      setActiveSection(current);
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(flashTimerRef.current);
+    };
   }, []);
 
   const toggleMenu = () => {
@@ -39,6 +55,12 @@ const Navbar = () => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+    }
+    // When user clicks Home from another section → flash
+    if (sectionId === 'home' && prevSectionRef.current !== 'home') {
+      clearTimeout(flashTimerRef.current);
+      setHomeFlash(true);
+      flashTimerRef.current = setTimeout(() => setHomeFlash(false), 1000);
     }
     setIsMenuOpen(false);
   };
@@ -52,9 +74,12 @@ const Navbar = () => {
     { id: 'home', label: 'Home' },
     { id: 'about', label: 'About' },
     { id: 'skills', label: 'Skills' },
-    { id: 'projects', label: 'Projects' }, // Moved Projects up
+    { id: 'projects', label: 'Projects' },
     { id: 'certifications', label: 'Certifications' },
-    { id: 'experience', label: 'Experience' },
+    { id: 'experience', label: 'Experience' }
+  ];
+
+  const moreItems = [
     { id: 'education', label: 'Education' },
     { id: 'contact', label: 'Contact' }
   ];
@@ -72,16 +97,36 @@ const Navbar = () => {
             {navItems.map((item) => (
               <button
                 key={item.id}
-                className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
+                className={`nav-link ${
+                  item.id === 'home'
+                    ? homeFlash ? 'home-flash' : ''           // home: only flash class, never 'active'
+                    : activeSection === item.id ? 'active' : '' // others: normal active
+                }`}
                 onClick={() => scrollToSection(item.id)}
               >
                 {item.label}
               </button>
             ))}
+            
+            <div className="more-dropdown-container">
+              <button
+                className={`nav-link ${(activeSection === 'education' || activeSection === 'contact') ? 'active' : ''}`}
+                onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
+              >
+                More ▾
+              </button>
+
+              <MoreDropdown
+                isOpen={isMoreMenuOpen}
+                onClose={() => setIsMoreMenuOpen(false)}
+                moreItems={moreItems}
+                activeSection={activeSection}
+                onNavigate={scrollToSection}
+              />
+            </div>
           </div>
 
           <div className="nav-actions">
-            <ThemeToggle />
             <div className="nav-toggle" onClick={toggleMenu}>
               {isMenuOpen ? <FaTimes /> : <FaBars />}
             </div>

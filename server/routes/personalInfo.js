@@ -11,9 +11,12 @@ const router = express.Router();
 // Configure storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Correctly resolve the path to 'client/public/uploads'
-    // This assumes the server is running from the 'server' directory
-    const uploadPath = path.join(__dirname, '..', '..', 'client', 'public', 'uploads');
+    // Save to server/uploads so it matches the express.static path in server.js
+    const uploadPath = path.join(__dirname, '..', 'uploads');
+    const fs = require('fs');
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
@@ -58,9 +61,9 @@ router.get('/', async (req, res) => {
 });
 
 // PUT /api/personal-info - Update personal information
-// Use multer to handle multipart/form-data, expecting a single file named 'profile_image'
+// Use multer to handle multipart/form-data, expecting 'profile_image' and/or 'about_image'
 // FIX: Using async/await and promisePool.execute
-router.put('/', auth, upload.single('profile_image'), async (req, res) => {
+router.put('/', auth, upload.fields([{ name: 'profile_image', maxCount: 1 }, { name: 'about_image', maxCount: 1 }]), async (req, res) => {
   try {
     const {
       full_name, title, email, phone, location,
@@ -99,11 +102,17 @@ router.put('/', auth, upload.single('profile_image'), async (req, res) => {
     `;
 
     // Only add profile_image to the SQL query if a new file was uploaded
-    if (req.file) {
-      // Get the web-accessible path for the new image
-      const profileImagePath = '/uploads/' + req.file.filename;
-      sql += `, profile_image = ?`; // Add to SQL query
-      updateFields.push(profileImagePath); // Add to values array
+    if (req.files && req.files['profile_image']) {
+      const profileImagePath = '/uploads/' + req.files['profile_image'][0].filename;
+      sql += `, profile_image = ?`;
+      updateFields.push(profileImagePath);
+    }
+
+    // Only add about_image to the SQL query if a new file was uploaded
+    if (req.files && req.files['about_image']) {
+      const aboutImagePath = '/uploads/' + req.files['about_image'][0].filename;
+      sql += `, about_image = ?`;
+      updateFields.push(aboutImagePath);
     }
     
     // Add the WHERE clause to complete the query
