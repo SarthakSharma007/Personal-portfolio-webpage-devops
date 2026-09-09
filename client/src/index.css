@@ -8,8 +8,10 @@
   --text-primary: #1e293b;
   --text-secondary: #475569;
   --text-muted: #94a3b8;
-  --accent-primary: #0ea5e9; /* Tech Blue */
-  --accent-secondary: #6366f1; /* Deep Indigo */
+  --accent-primary: #0ea5e9;
+  /* Tech Blue */
+  --accent-secondary: #6366f1;
+  /* Deep Indigo */
   --accent-glow: rgba(14, 165, 233, 0.4);
   --accent-gradient: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
   --border-color: rgba(15, 23, 42, 0.1);
@@ -29,8 +31,10 @@
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
-  --accent-primary: #00f8ff; /* Neon Cyan */
-  --accent-secondary: #b026ff; /* Neon Purple */
+  --accent-primary: #00f8ff;
+  /* Neon Cyan */
+  --accent-secondary: #b026ff;
+  /* Neon Purple */
   --accent-glow: rgba(0, 248, 255, 0.5);
   --accent-gradient: linear-gradient(135deg, #00f8ff 0%, #b026ff 100%);
   --border-color: rgba(255, 255, 255, 0.05);
@@ -82,7 +86,12 @@ section[id] {
   scroll-margin-top: 92px;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Space Grotesk', sans-serif;
   letter-spacing: -0.02em;
 }
@@ -228,11 +237,11 @@ code {
   .container {
     padding: 0 15px;
   }
-  
+
   .section {
     padding: 60px 0;
   }
-  
+
   .section-title {
     font-size: 2rem;
     margin-bottom: 2rem;
@@ -241,7 +250,7 @@ code {
   section[id] {
     scroll-margin-top: 84px;
   }
-  
+
   .btn {
     padding: 10px 25px;
     font-size: 0.9rem;
@@ -252,7 +261,7 @@ code {
   .section-title {
     font-size: 1.8rem;
   }
-  
+
   .btn {
     padding: 8px 20px;
     font-size: 0.85rem;

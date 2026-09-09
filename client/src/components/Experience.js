@@ -107,7 +107,17 @@ const Experience = () => {
       try {
         const res = await api.get('/experiences');
         if (!res.data?.success || !Array.isArray(res.data.data) || res.data.data.length === 0) return;
-        const mapped = res.data.data.map((item, idx) => {
+        const seen = new Set();
+        const uniqueRaw = [];
+        for (const item of res.data.data) {
+          const key = `${(item.company || '').trim().toLowerCase()}-${(item.title || '').trim().toLowerCase()}-${(item.start_date || '').toString().split('T')[0]}`;
+          if (!seen.has(key)) {
+            seen.add(key);
+            uniqueRaw.push(item);
+          }
+        }
+
+        const mapped = uniqueRaw.map((item, idx) => {
           const start = item.start_date ? new Date(item.start_date).toLocaleString('default', { month: 'short', year: 'numeric' }) : '';
           const end = item.current ? 'Present' : (item.end_date ? new Date(item.end_date).toLocaleString('default', { month: 'short', year: 'numeric' }) : '');
           const technologies = item.technologies

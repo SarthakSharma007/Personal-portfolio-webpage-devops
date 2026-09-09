@@ -1,51 +1,104 @@
-# Dependency directories
+# ==============================================================================
+# Gitignore — Personal Portfolio Webpage (DevOps)
+# Production-Hardened Security & Build Hygiene
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Environment Variables & Secrets (CRITICAL SECURITY)
+# ------------------------------------------------------------------------------
+.env
+.env.*
+*.env
+*.env.*
+!.env.example
+!env.example
+!env.exmaple
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+id_rsa*
+*.pub.private
+.npmrc
+.yarnrc
+
+# ------------------------------------------------------------------------------
+# 2. Dependency Directories
+# ------------------------------------------------------------------------------
 node_modules/
+client/node_modules/
+server/node_modules/
 jspm_packages/
 web_modules/
 
-# Python Virtual Environment
-venv/
-.venv/
-env/
-ENV/
-pyvenv.cfg
+# ------------------------------------------------------------------------------
+# 3. Dynamic Uploads & User Media (Prevents dynamic uploads committing to git)
+# ------------------------------------------------------------------------------
+server/uploads/*
+!server/uploads/.gitkeep
+client/public/uploads/*
+!client/public/uploads/.gitkeep
+uploads/
 
-# Python Cache and bytecode
-__pycache__/
-*.py[cod]
-*$py.class
+# ------------------------------------------------------------------------------
+# 4. Database Data, Dumps & Persistent Volumes
+# ------------------------------------------------------------------------------
+mysql-data/
+*.sql.gz
+*.dump
+*.db
+*.sqlite
+*.sqlite3
 
-# Environment Variables & Secrets
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-*.env
-*.env.*
-!env.example
-!env.exmaple
-
-# Production builds
+# ------------------------------------------------------------------------------
+# 5. Production Builds & Compiled Output
+# ------------------------------------------------------------------------------
 build/
 dist/
 out/
 client/build/
 client/dist/
 
-# Test output and logs
+# ------------------------------------------------------------------------------
+# 6. Test Output, Coverage & Logs
+# ------------------------------------------------------------------------------
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 *.log
+coverage/
+.nyc_output/
 client/test_output.txt
 client/test_output_utf8.txt
 
-# Editor / System Files
+# ------------------------------------------------------------------------------
+# 7. Python Virtual Environment & Bytecode
+# ------------------------------------------------------------------------------
+venv/
+.venv/
+env/
+ENV/
+pyvenv.cfg
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ------------------------------------------------------------------------------
+# 8. Docker Local Overrides & Secrets
+# ------------------------------------------------------------------------------
+docker-compose.override.yml
+.dockerignore.local
+
+# ------------------------------------------------------------------------------
+# 9. Editor, OS & System Files
+# ------------------------------------------------------------------------------
 .DS_Store
 Thumbs.db
+desktop.ini
 .vscode/
 .idea/
 *.suo
@@ -54,6 +107,13 @@ Thumbs.db
 *.sln
 *.sw?
 
-# Temporary files & directories for manual git operations
+# ------------------------------------------------------------------------------
+# 10. Temporary Files & Scratch Dirs
+# ------------------------------------------------------------------------------
 *_temp/
 *_temp
+*_temp.*
+temp/
+temp_*
+temp.*
+scratch/

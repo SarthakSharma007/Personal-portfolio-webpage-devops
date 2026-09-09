@@ -1,8 +1,8 @@
 /* client/src/components/ProjectDetail.js */
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { FaGithub, FaArrowLeft, FaExternalLinkAlt, FaCheckCircle } from 'react-icons/fa';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaGithub, FaArrowLeft, FaExternalLinkAlt, FaCheckCircle, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import api from '../services/api';
 import './ProjectDetail.css';
 
@@ -17,8 +17,102 @@ const Fade = ({ children, delay = 0, y = 24 }) => (
   </motion.div>
 );
 
+/* ─── Level Badge ────────────────────────────────────── */
+const LEVEL_CONFIG = {
+  Basic:        { color: '#34d399', label: 'Basic' },
+  Intermediate: { color: '#fbbf24', label: 'Intermediate' },
+  Advanced:     { color: '#f87171', label: 'Advanced' },
+};
+
+const LevelBadge = ({ level }) => {
+  const cfg = LEVEL_CONFIG[level] || LEVEL_CONFIG['Basic'];
+  return (
+    <span className="pd-level-badge" style={{ '--lc': cfg.color }}>
+      <span className="pd-level-dot" />
+      {cfg.label}
+    </span>
+  );
+};
+
+/* ─── Vertical Image Slider ──────────────────────────── */
+const ImageSlider = ({ images, accentA }) => {
+  const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const total = images.length;
+
+  const go = (dir) => {
+    setDirection(dir);
+    setCurrent(prev => (prev + dir + total) % total);
+  };
+
+  const variants = {
+    enter: (d) => ({ y: d > 0 ? 60 : -60, opacity: 0, scale: 0.97 }),
+    center: { y: 0, opacity: 1, scale: 1 },
+    exit: (d) => ({ y: d > 0 ? -60 : 60, opacity: 0, scale: 0.97 }),
+  };
+
+  return (
+    <div className="pd-slider">
+      {/* Main image */}
+      <div className="pd-slider-viewport" style={{ '--ta': accentA }}>
+        <AnimatePresence custom={direction} mode="wait">
+          <motion.div
+            key={current}
+            className="pd-slider-slide"
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <img
+              src={images[current]}
+              alt={`Project screenshot ${current + 1}`}
+              className="pd-slider-img"
+              onError={e => { e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450"><rect width="800" height="450" fill="%231e293b"/><text x="400" y="220" fill="%23475569" font-size="18" text-anchor="middle" font-family="sans-serif">Image not available</text></svg>'; }}
+            />
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Counter badge */}
+        <span className="pd-slider-counter" style={{ '--ta': accentA }}>
+          {current + 1} / {total}
+        </span>
+      </div>
+
+      {/* Controls + Thumbnails */}
+      <div className="pd-slider-sidebar">
+        <button className="pd-slider-arrow" onClick={() => go(-1)} aria-label="Previous" style={{ '--ta': accentA }}>
+          <FaChevronUp />
+        </button>
+
+        <div className="pd-slider-thumbs">
+          {images.map((src, i) => (
+            <button
+              key={i}
+              className={`pd-slider-thumb${i === current ? ' active' : ''}`}
+              style={{ '--ta': accentA }}
+              onClick={() => { setDirection(i > current ? 1 : -1); setCurrent(i); }}
+              aria-label={`Go to image ${i + 1}`}
+            >
+              <img src={src} alt={`thumb ${i + 1}`} onError={e => e.target.style.display='none'} />
+            </button>
+          ))}
+        </div>
+
+        <button className="pd-slider-arrow" onClick={() => go(1)} aria-label="Next" style={{ '--ta': accentA }}>
+          <FaChevronDown />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+/* ─── Main Component ─────────────────────────────────── */
 const ProjectDetail = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const [project, setProject] = useState(null);
   const [otherProjects, setOtherProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,7 +136,6 @@ const ProjectDetail = () => {
         }
 
         const raw = detailRes.data.data;
-        // Normalise the shape expected by the template
         setProject({
           id: raw.id,
           slug: raw.slug,
@@ -56,15 +149,18 @@ const ProjectDetail = () => {
           gradient: raw.gradient || 'linear-gradient(135deg, #1a1040 0%, #312e81 50%, #1e3a5f 100%)',
           accentA: raw.accent_a || '#818cf8',
           accentB: raw.accent_b || '#38bdf8',
+          difficultyLevel: raw.difficulty_level || 'Basic',
+          showGithub: raw.show_github !== 0 && raw.show_github !== false && raw.show_github !== '0',
+          showDemo: raw.show_demo !== 0 && raw.show_demo !== false && raw.show_demo !== '0',
           overview: raw.overview || '',
           problem: raw.problem || '',
           solution: raw.solution || '',
           techStack: Array.isArray(raw.tech_stack_json) ? raw.tech_stack_json : [],
           timeline: Array.isArray(raw.timeline_json) ? raw.timeline_json : [],
           learnings: Array.isArray(raw.learnings_json) ? raw.learnings_json : [],
+          images: Array.isArray(raw.images_json) ? raw.images_json : [],
         });
 
-        // Other projects (exclude current)
         if (allRes.data?.success && Array.isArray(allRes.data.data)) {
           setOtherProjects(
             allRes.data.data
@@ -93,6 +189,7 @@ const ProjectDetail = () => {
   if (loading) {
     return (
       <div className="pd-not-found">
+        <div className="pd-loading-spinner" />
         <p>Loading project...</p>
       </div>
     );
@@ -117,15 +214,18 @@ const ProjectDetail = () => {
 
         <div className="pd-hero-inner">
           <Fade delay={0.05}>
-            <Link to="/#projects" className="pd-back">
+            <button onClick={() => navigate(-1)} className="pd-back">
               <FaArrowLeft size={13} /> Back to Projects
-            </Link>
+            </button>
           </Fade>
 
           <Fade delay={0.12}>
-            <span className="pd-hero-label" style={{ color: project.accentA }}>
-              {project.label}
-            </span>
+            <div className="pd-hero-badges">
+              <span className="pd-hero-label" style={{ color: project.accentA }}>
+                {project.label}
+              </span>
+              <LevelBadge level={project.difficultyLevel} />
+            </div>
           </Fade>
 
           <Fade delay={0.2}>
@@ -146,13 +246,13 @@ const ProjectDetail = () => {
 
           <Fade delay={0.44}>
             <div className="pd-hero-actions">
-              {project.github && (
+              {project.github && project.showGithub && (
                 <a href={project.github} target="_blank" rel="noopener noreferrer"
                   className="pd-btn-fill" style={{ '--ta': project.accentA }}>
                   <FaGithub /> View on GitHub
                 </a>
               )}
-              {project.demo && (
+              {project.demo && project.showDemo && (
                 <a href={project.demo} target="_blank" rel="noopener noreferrer"
                   className="pd-btn-outline">
                   <FaExternalLinkAlt size={13} /> Live Demo
@@ -165,6 +265,20 @@ const ProjectDetail = () => {
 
       {/* ── Content ─────────────────────────────────── */}
       <div className="pd-content">
+
+        {/* Project Images Vertical Slider */}
+        {project.images.length > 0 && (
+          <section className="pd-section">
+            <Fade delay={0.05}>
+              <h2 className="pd-section-title">
+                Project Screenshots
+              </h2>
+            </Fade>
+            <Fade delay={0.12}>
+              <ImageSlider images={project.images} accentA={project.accentA} />
+            </Fade>
+          </section>
+        )}
 
         {/* Overview + Problem + Solution */}
         {(project.overview || project.problem || project.solution) && (
@@ -206,7 +320,7 @@ const ProjectDetail = () => {
           <section className="pd-section">
             <Fade delay={0.1}>
               <h2 className="pd-section-title">
-                <span className="pd-section-accent" style={{ background: project.gradient }}>Tech Stack</span>
+                Tech Stack
               </h2>
             </Fade>
             <div className="pd-tech-grid">
@@ -222,12 +336,12 @@ const ProjectDetail = () => {
           </section>
         )}
 
-        {/* Timeline */}
+        {/* Timeline / Steps */}
         {project.timeline.length > 0 && (
           <section className="pd-section">
             <Fade delay={0.1}>
               <h2 className="pd-section-title">
-                <span className="pd-section-accent" style={{ background: project.gradient }}>How It Was Built</span>
+                How It Was Built
               </h2>
             </Fade>
             <div className="pd-timeline">
@@ -235,7 +349,7 @@ const ProjectDetail = () => {
                 <Fade key={step.step || i} delay={0.06 + i * 0.08}>
                   <div className="pd-timeline-item">
                     <div className="pd-timeline-marker">
-                      <div className="pd-timeline-dot" style={{ background: project.accentA }} />
+                      <div className="pd-timeline-dot" style={{ background: project.accentA }}>{step.step}</div>
                       {i < project.timeline.length - 1 && (
                         <div className="pd-timeline-line" style={{ background: `linear-gradient(180deg, ${project.accentA}60, transparent)` }} />
                       )}
@@ -257,7 +371,7 @@ const ProjectDetail = () => {
           <section className="pd-section">
             <Fade delay={0.1}>
               <h2 className="pd-section-title">
-                <span className="pd-section-accent" style={{ background: project.gradient }}>Key Learnings</span>
+                Key Learnings
               </h2>
             </Fade>
             <div className="pd-learnings">
@@ -278,7 +392,7 @@ const ProjectDetail = () => {
           <section className="pd-section pd-other-section">
             <Fade delay={0.05}>
               <h2 className="pd-section-title">
-                <span className="pd-section-accent" style={{ background: project.gradient }}>Other Projects</span>
+                Other Projects
               </h2>
             </Fade>
             <div className="pd-other-grid">

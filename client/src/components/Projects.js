@@ -2,11 +2,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FaGithub, FaArrowRight } from 'react-icons/fa';
+import { FaGithub, FaArrowRight, FaExternalLinkAlt } from 'react-icons/fa';
 import api from '../services/api';
 import './Projects.css';
 
-const viewportConfig = { once: false, amount: 0.15 };
+const viewportConfig = { once: false, amount: 0.1 };
 
 const headerVariant = {
   hidden: { opacity: 0, y: 30, scale: 0.9 },
@@ -16,115 +16,89 @@ const headerVariant = {
   }
 };
 
+const LEVEL_CONFIG = {
+  Basic:        { color: '#34d399', label: 'Basic' },
+  Intermediate: { color: '#fbbf24', label: 'Intermediate' },
+  Advanced:     { color: '#f87171', label: 'Advanced' },
+};
+
 const Tag = ({ label, accentA }) => (
   <span className="prj-tag" style={{ '--ta': accentA }}>{label}</span>
 );
 
-const HeroCard = ({ p }) => {
+const LevelBadge = ({ level }) => {
+  const cfg = LEVEL_CONFIG[level] || LEVEL_CONFIG['Basic'];
+  return (
+    <span className="prj-level-badge" style={{ '--lc': cfg.color }}>
+      <span className="prj-level-dot" />
+      {cfg.label}
+    </span>
+  );
+};
+
+const ProjectCard = ({ p, index }) => {
   const cardVariant = {
-    hidden: { opacity: 0, scale: 0.5, rotateY: 30, transformPerspective: 1000 },
-    visible: { 
-      opacity: 1, scale: 1, rotateY: 0, transformPerspective: 1000,
-      transition: { duration: 0.8, type: "spring", stiffness: 100, damping: 20 } 
+    hidden: { opacity: 0, scale: 0.85, y: 30 },
+    visible: {
+      opacity: 1, scale: 1, y: 0,
+      transition: { duration: 0.6, delay: index * 0.08, type: "spring", stiffness: 90, damping: 18 }
     }
   };
 
   return (
     <motion.div
-      className="prj-hero-card"
+      className="prj-card"
       style={{ background: p.gradient }}
       variants={cardVariant}
       initial="hidden"
       whileInView="visible"
       viewport={viewportConfig}
+      whileHover={{ scale: 1.022, y: -6 }}
     >
+      {/* Background serial number */}
       <span className="prj-ghost-num">{p.num}</span>
+
+      {/* Glow orbs */}
       <div className="prj-orb prj-orb-a" style={{ background: p.accentA }} />
       <div className="prj-orb prj-orb-b" style={{ background: p.accentB }} />
 
-      <div className="prj-hero-body">
-        <span className="prj-label" style={{ '--ta': p.accentA }}>{p.label}</span>
-        <h3 className="prj-hero-title">{p.title}</h3>
-        <p className="prj-hero-desc">{p.shortDesc}</p>
-        <div className="prj-tags">
-          {p.tags.map(t => <Tag key={t} label={t} accentA={p.accentA} />)}
+      <div className="prj-card-body">
+        {/* Top row: label + level badge */}
+        <div className="prj-card-top">
+          <span className="prj-label" style={{ '--ta': p.accentA }}>{p.label}</span>
+          <LevelBadge level={p.difficultyLevel} />
         </div>
+
+        {/* Title */}
+        <h3 className="prj-card-title">{p.title}</h3>
+
+        {/* Short description */}
+        <p className="prj-card-desc">{p.shortDesc}</p>
+
+        {/* Tech stack */}
+        <div className="prj-tags">
+          {p.tags.slice(0, 4).map(t => <Tag key={t} label={t} accentA={p.accentA} />)}
+          {p.tags.length > 4 && (
+            <span className="prj-tag more">+{p.tags.length - 4}</span>
+          )}
+        </div>
+
+        {/* Actions */}
         <div className="prj-actions">
-          {p.github && (
+          {p.github && p.showGithub && (
             <a href={p.github} target="_blank" rel="noopener noreferrer" className="prj-btn" style={{ '--ta': p.accentA }}>
               <FaGithub /> GitHub
             </a>
           )}
-          {p.slug ? (
-            <Link to={`/projects/${p.slug}`} className="prj-btn see-more" style={{ '--ta': p.accentA }}>
-              See More <FaArrowRight size={12} />
-            </Link>
-          ) : (
-            p.demo && (
-              <a href={p.demo} target="_blank" rel="noopener noreferrer" className="prj-btn see-more" style={{ '--ta': p.accentA }}>
-                Live Demo <FaArrowRight size={12} />
-              </a>
-            )
-          )}
-        </div>
-      </div>
-
-      <div className="prj-hero-deco">
-        <div className="prj-ring ring-1" style={{ borderColor: `${p.accentA}30` }} />
-        <div className="prj-ring ring-2" style={{ borderColor: `${p.accentB}20` }} />
-        <div className="prj-ring ring-3" style={{ borderColor: `${p.accentA}12` }} />
-        <span className="prj-feat-badge">Featured</span>
-      </div>
-    </motion.div>
-  );
-};
-
-const SmallCard = ({ p, index }) => {
-  const cardVariant = {
-    hidden: { opacity: 0, scale: 0.5, rotateY: -30, transformPerspective: 1000 },
-    visible: { 
-      opacity: 1, scale: 1, rotateY: 0, transformPerspective: 1000,
-      transition: { duration: 0.7, delay: 0.15 + index * 0.1, type: "spring", stiffness: 100, damping: 20 } 
-    }
-  };
-
-  return (
-    <motion.div
-      className="prj-small-card"
-      style={{ background: p.gradient }}
-      variants={cardVariant}
-      initial="hidden"
-      whileInView="visible"
-      viewport={viewportConfig}
-      whileHover={{ scale: 1.025, y: -6 }}
-    >
-      <div className="prj-small-glow" style={{ background: p.accentA }} />
-      
-      <div className="prj-small-body">
-        <span className="prj-label" style={{ '--ta': p.accentA }}>{p.label}</span>
-        <h3 className="prj-small-title">{p.title}</h3>
-        <p className="prj-small-desc">{p.shortDesc}</p>
-        
-        <div className="prj-tags">
-          {p.tags.slice(0, 3).map(t => <Tag key={t} label={t} accentA={p.accentA} />)}
-        </div>
-
-        <div className="prj-actions">
-          {p.github && (
-            <a href={p.github} target="_blank" rel="noopener noreferrer" className="prj-btn small" style={{ '--ta': p.accentA }}>
-              <FaGithub /> GitHub
+          {p.demo && p.showDemo && (
+            <a href={p.demo} target="_blank" rel="noopener noreferrer" className="prj-btn" style={{ '--ta': p.accentA }}>
+              <FaExternalLinkAlt size={12} /> Live Demo
             </a>
           )}
-          {p.slug ? (
-            <Link to={`/projects/${p.slug}`} className="prj-btn see-more small" style={{ '--ta': p.accentA }}>
+          {p.slug && p.showDetails && (
+            <Link to={`/projects/${p.slug}`} className="prj-btn see-more" style={{ '--ta': p.accentA }}>
               See More <FaArrowRight size={11} />
             </Link>
-          ) : (
-            p.demo && (
-              <a href={p.demo} target="_blank" rel="noopener noreferrer" className="prj-btn see-more small" style={{ '--ta': p.accentA }}>
-                Live Demo <FaArrowRight size={11} />
-              </a>
-            )
           )}
         </div>
       </div>
@@ -146,7 +120,11 @@ const mapDbProject = (p, index) => ({
   accentA: p.accent_a || '#818cf8',
   accentB: p.accent_b || '#38bdf8',
   label: p.label || 'Project',
+  difficultyLevel: p.difficulty_level || 'Basic',
   hero: !!p.hero,
+  showGithub: p.show_github !== 0 && p.show_github !== false && p.show_github !== '0',
+  showDemo: p.show_demo !== 0 && p.show_demo !== false && p.show_demo !== '0',
+  showDetails: p.show_details !== 0 && p.show_details !== false && p.show_details !== '0',
 });
 
 const Projects = () => {
@@ -181,9 +159,6 @@ const Projects = () => {
     fetchAll();
   }, []);
 
-  const hero = items.find(p => p.hero) || items[0];
-  const rest = items.filter(p => p.id !== hero?.id);
-
   return (
     <section id="projects" className="prj-section">
       <div className="prj-bg-glow prj-glow-1" />
@@ -214,11 +189,21 @@ const Projects = () => {
           </p>
         </motion.div>
 
-        {hero && <HeroCard p={hero} />}
-
-        <div className="prj-small-row">
-          {rest.map((p, i) => <SmallCard key={p.id} p={p} index={i} />)}
+        <div className="prj-grid">
+          {items.map((p, i) => <ProjectCard key={p.id} p={p} index={i} />)}
         </div>
+
+        <motion.div
+          className="prj-see-all"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={viewportConfig}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <Link to="/projects" className="prj-see-all-btn">
+            See More Projects <FaArrowRight size={14} />
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

@@ -50,23 +50,17 @@ const InfinityBackground = () => {
 
 const Home = () => {
   const [personalInfo, setPersonalInfo] = useState(null);
-<<<<<<< HEAD
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // Now correctly used
-  
-  const { ref, inView } = useInView({
-    threshold: 0.1,
-    triggerOnce: true
-  });
-=======
+  const [error, setError] = useState(null);
   const [apiLoading, setApiLoading] = useState(true);
-  // Only show animation if it hasn't been shown yet this session
+
   const [showAnimation, setShowAnimation] = useState(
     () => !sessionStorage.getItem('welcomeShown')
   );
 
-  const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true });
->>>>>>> 74d6f8c (Updated project files make Dynamic)
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: true
+  });
 
   useEffect(() => {
     const fetchPersonalInfo = async () => {
@@ -107,14 +101,14 @@ const Home = () => {
   }
 
   const pageEnter = {
-    initial:    { opacity: 0, y: 30, scale: 0.97 },
-    animate:    { opacity: 1, y: 0,  scale: 1    },
+    initial: { opacity: 0, y: 30, scale: 0.97 },
+    animate: { opacity: 1, y: 0, scale: 1 },
     transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
   };
 
   const childVariants = {
-    hidden:  { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0  },
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0 },
   };
 
   return (
@@ -130,35 +124,35 @@ const Home = () => {
       <div className="container">
         {/* ADDED: Display the error message if the state is set */}
         {error && (
-          <motion.div 
+          <motion.div
             className="error-message"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            style={{ 
-              position: 'absolute', 
-              top: '10px', 
-              left: '50%', 
-              transform: 'translateX(-50%)', 
-              color: 'red', 
-              backgroundColor: 'rgba(255, 0, 0, 0.1)', 
-              padding: '10px', 
+            style={{
+              position: 'absolute',
+              top: '10px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              color: 'red',
+              backgroundColor: 'rgba(255, 0, 0, 0.1)',
+              padding: '10px',
               borderRadius: '5px',
-              zIndex: 100 
+              zIndex: 100
             }}
           >
             {error}
           </motion.div>
         )}
-        
+
         <motion.div
           ref={ref}
           className="hero-content"
           initial="hidden"
           animate={inView ? 'visible' : 'hidden'}
           variants={{
-            hidden:   { opacity: 0 },
-            visible:  { opacity: 1, transition: { staggerChildren: 0.18, delayChildren: 0.25 } },
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.18, delayChildren: 0.25 } },
           }}
         >
           {/* ── Text column ── */}
@@ -168,12 +162,14 @@ const Home = () => {
             <motion.h1
               className="hero-title"
               variants={{
-                hidden:  { opacity: 0, y: 50 },
+                hidden: { opacity: 0, y: 50 },
                 visible: { opacity: 1, y: 0, transition: { type: 'spring', bounce: 0.4, duration: 1 } },
               }}
             >
-              Hello, I'm{' '}
-              <span className="legendary-name">
+              <span style={personalInfo?.greeting_color ? { color: personalInfo.greeting_color } : {}}>
+                {personalInfo?.greeting_text || "Hello, I'm"}{' '}
+              </span>
+              <span className="legendary-name" style={personalInfo?.name_color ? { color: personalInfo.name_color, background: 'none', WebkitTextFillColor: personalInfo.name_color } : {}}>
                 {personalInfo?.full_name || 'Sarthak Sharma'}
               </span>
             </motion.h1>
@@ -182,9 +178,10 @@ const Home = () => {
             <motion.h2
               className="hero-subtitle"
               variants={{
-                hidden:  { opacity: 0, x: -30 },
+                hidden: { opacity: 0, x: -30 },
                 visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: 'easeOut' } },
               }}
+              style={personalInfo?.title_color ? { color: personalInfo.title_color } : {}}
             >
               {personalInfo?.title || 'DevOps Engineer'}
             </motion.h2>
@@ -193,7 +190,7 @@ const Home = () => {
             <motion.div
               className="hero-buttons"
               variants={{
-                hidden:  { opacity: 0, scale: 0.85 },
+                hidden: { opacity: 0, scale: 0.85 },
                 visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 120, delay: 0.1 } },
               }}
             >
@@ -204,9 +201,13 @@ const Home = () => {
                 rel="noopener noreferrer"
                 className="btn-glow btn-linkedin"
                 aria-label="LinkedIn Profile"
+                style={{
+                  ...(personalInfo?.linkedin_btn_bg ? { background: personalInfo.linkedin_btn_bg } : {}),
+                  ...(personalInfo?.linkedin_btn_color ? { color: personalInfo.linkedin_btn_color } : {})
+                }}
               >
-                <span className="btn-glow-label">
-                  <FaLinkedin size={17} /> LinkedIn
+                <span className="btn-glow-label" style={personalInfo?.linkedin_btn_color ? { color: personalInfo.linkedin_btn_color } : {}}>
+                  <FaLinkedin size={17} /> {personalInfo?.linkedin_btn_text || 'LinkedIn'}
                 </span>
               </a>
 
@@ -217,9 +218,13 @@ const Home = () => {
                 rel="noopener noreferrer"
                 className="btn-glow btn-github"
                 aria-label="GitHub Profile"
+                style={{
+                  ...(personalInfo?.github_btn_bg ? { background: personalInfo.github_btn_bg } : {}),
+                  ...(personalInfo?.github_btn_color ? { color: personalInfo.github_btn_color } : {})
+                }}
               >
-                <span className="btn-glow-label">
-                  <FaGithub size={17} /> GitHub
+                <span className="btn-glow-label" style={personalInfo?.github_btn_color ? { color: personalInfo.github_btn_color } : {}}>
+                  <FaGithub size={17} /> {personalInfo?.github_btn_text || 'GitHub'}
                 </span>
               </a>
             </motion.div>
@@ -229,15 +234,23 @@ const Home = () => {
           <motion.div
             className="hero-image-full"
             variants={{
-              hidden:  { opacity: 0, x: 50 },
-              visible: { opacity: 1, x: 0,
-                         transition: { type: 'spring', duration: 1.6, bounce: 0.3 } },
+              hidden: { opacity: 0, x: 50 },
+              visible: {
+                opacity: 1, x: 0,
+                transition: { type: 'spring', duration: 1.6, bounce: 0.3 }
+              },
             }}
           >
-            <img 
-              src={personalInfo?.profile_image ? `http://localhost:5000${personalInfo.profile_image}` : profileImage} 
-              alt={personalInfo?.full_name || "Sarthak Sharma"} 
-              className="hero-full-person" 
+            <img
+              src={
+                personalInfo?.profile_image
+                  ? personalInfo.profile_image.startsWith('http')
+                    ? personalInfo.profile_image
+                    : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${personalInfo.profile_image}`
+                  : profileImage
+              }
+              alt={personalInfo?.full_name || "Sarthak Sharma"}
+              className="hero-full-person"
             />
           </motion.div>
         </motion.div>

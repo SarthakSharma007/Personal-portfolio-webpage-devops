@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap');
 
 /* ═══════════════════════════════════════════════════════
-   PROJECTS  ·  Magazine Spotlight Layout
+   PROJECTS  ·  Uniform Grid Layout
 ═══════════════════════════════════════════════════════ */
 
 /* ─── Tokens ─────────────────────────────────────────── */
@@ -92,11 +92,12 @@
   letter-spacing: -0.03em; line-height: 1.1;
   margin: 0 0 16px;
 }
-.prj-main-title em {
-  font-weight: 800;
-  background: linear-gradient(135deg, #6366f1, #a855f7 55%, #ec4899);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
+.prj-main-title span {
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+  display: inline;
 }
 .prj-main-sub {
   font-family: 'Inter', sans-serif;
@@ -104,101 +105,15 @@
   max-width: 500px; margin: 0 auto; line-height: 1.65;
 }
 
-/* ─── Ghost Number ────────────────────────────────────── */
-.prj-ghost-num {
-  position: absolute;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 11rem; font-weight: 800;
-  line-height: 1; letter-spacing: -0.06em;
-  color: rgba(255,255,255,0.04);
-  right: 4%; bottom: -2%;
-  pointer-events: none; user-select: none;
-  z-index: 0;
-}
-.prj-ghost-num.small {
-  font-size: 6rem; right: 6%; bottom: 4%;
-}
-
-/* ─── Glow Orbs (inside cards) ────────────────────────── */
-.prj-orb {
-  position: absolute; border-radius: 50%; filter: blur(80px);
-  pointer-events: none; z-index: 0; opacity: 0.4;
-  transition: opacity 0.4s;
-}
-.prj-orb-a {
-  width: 300px; height: 300px;
-  top: -80px; right: -60px;
-}
-.prj-orb-b {
-  width: 200px; height: 200px;
-  bottom: -50px; left: -40px;
-  opacity: 0.25;
-}
-.prj-orb-a.small { width: 180px; height: 180px; top: -50px; right: -40px; opacity: 0.35; }
-
-/* ─── HERO CARD ───────────────────────────────────────── */
-.prj-hero-card {
-  position: relative;
-  display: flex;
-  align-items: stretch;
-  border-radius: 28px;
-  overflow: hidden;
-  margin-bottom: 24px;
-  border: 1.5px solid rgba(255,255,255,0.08);
-  min-height: 340px;
-  cursor: default;
-  transition: box-shadow 0.4s ease;
-}
-.prj-hero-card:hover {
-  box-shadow: 0 32px 100px rgba(0,0,0,0.45), 0 0 0 1.5px rgba(255,255,255,0.12);
-}
-.prj-hero-card:hover .prj-orb { opacity: 0.65; }
-
-/* Hero body */
-.prj-hero-body {
-  position: relative; z-index: 2;
-  flex: 1;
-  padding: 52px 52px 48px;
-  display: flex; flex-direction: column;
-  justify-content: center;
-  gap: 18px;
-}
-
-/* Hero deco (right panel) */
-.prj-hero-deco {
-  position: relative;
-  width: 260px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-}
-.prj-ring {
-  position: absolute;
-  border-radius: 50%;
-  border-width: 1.5px; border-style: solid;
-}
-.ring-1 { width: 220px; height: 220px; }
-.ring-2 { width: 310px; height: 310px; }
-.ring-3 { width: 400px; height: 400px; }
-
-.prj-feat-badge {
-  position: relative; z-index: 2;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.7rem; font-weight: 700;
-  letter-spacing: 0.18em; text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
-  border: 1px solid rgba(255,255,255,0.15);
-  padding: 7px 16px; border-radius: 20px;
-  backdrop-filter: blur(8px);
-}
-
-/* ─── SMALL CARDS ─────────────────────────────────────── */
-.prj-small-row {
+/* ─── Grid ────────────────────────────────────────────── */
+.prj-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
-  margin-bottom: 28px;
 }
-.prj-small-card {
+
+/* ─── Project Card ────────────────────────────────────── */
+.prj-card {
   position: relative;
   border-radius: 24px;
   overflow: hidden;
@@ -206,24 +121,63 @@
   min-height: 320px;
   cursor: default;
   transition: box-shadow 0.35s ease;
+  display: flex;
+  flex-direction: column;
 }
-.prj-small-card:hover {
-  box-shadow: 0 24px 70px rgba(0,0,0,0.4), 0 0 0 1.5px rgba(255,255,255,0.1);
+.prj-card:hover {
+  box-shadow: 0 28px 80px rgba(0,0,0,0.42), 0 0 0 1.5px rgba(255,255,255,0.12);
 }
-.prj-small-card:hover .prj-orb { opacity: 0.6; }
+.prj-card:hover .prj-orb { opacity: 0.65; }
 
-.prj-small-body {
+.prj-card-body {
   position: relative; z-index: 2;
   padding: 36px 32px 32px;
   display: flex; flex-direction: column;
   gap: 14px; height: 100%;
 }
 
+/* ─── Ghost Number ────────────────────────────────────── */
+.prj-ghost-num {
+  position: absolute;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9rem; font-weight: 800;
+  line-height: 1; letter-spacing: -0.06em;
+  color: rgba(255,255,255,0.04);
+  right: 5%; bottom: -2%;
+  pointer-events: none; user-select: none;
+  z-index: 0;
+}
+
+/* ─── Glow Orbs ───────────────────────────────────────── */
+.prj-orb {
+  position: absolute; border-radius: 50%; filter: blur(80px);
+  pointer-events: none; z-index: 0; opacity: 0.35;
+  transition: opacity 0.4s;
+}
+.prj-orb-a {
+  width: 220px; height: 220px;
+  top: -70px; right: -50px;
+}
+.prj-orb-b {
+  width: 160px; height: 160px;
+  bottom: -40px; left: -30px;
+  opacity: 0.2;
+}
+
+/* ─── Card Top Row (label + level badge) ──────────────── */
+.prj-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 /* ─── Shared label ────────────────────────────────────── */
 .prj-label {
   display: inline-block;
   font-family: 'Inter', sans-serif;
-  font-size: 0.68rem; font-weight: 700;
+  font-size: 0.65rem; font-weight: 700;
   letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--ta, #818cf8);
   background: rgba(255,255,255,0.1);
@@ -232,15 +186,31 @@
   align-self: flex-start;
 }
 
-/* ─── Titles ──────────────────────────────────────────── */
-.prj-hero-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.65rem; font-weight: 800;
-  color: #fff; letter-spacing: -0.02em; line-height: 1.25;
-  margin: 0;
-  text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+/* ─── Level Badge ─────────────────────────────────────── */
+.prj-level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.63rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--lc, #34d399);
+  background: rgba(0,0,0,0.25);
+  border: 1px solid var(--lc, #34d399);
+  padding: 4px 10px; border-radius: 20px;
+  align-self: flex-start;
+  backdrop-filter: blur(6px);
 }
-.prj-small-title {
+.prj-level-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--lc, #34d399);
+  flex-shrink: 0;
+  box-shadow: 0 0 6px var(--lc, #34d399);
+}
+
+/* ─── Title ───────────────────────────────────────────── */
+.prj-card-title {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1.15rem; font-weight: 700;
   color: #fff; letter-spacing: -0.01em; line-height: 1.3;
@@ -248,13 +218,8 @@
   text-shadow: 0 2px 16px rgba(0,0,0,0.4);
 }
 
-/* ─── Descriptions ────────────────────────────────────── */
-.prj-hero-desc {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.97rem; color: rgba(255,255,255,0.72);
-  line-height: 1.65; margin: 0;
-}
-.prj-small-desc {
+/* ─── Description ─────────────────────────────────────── */
+.prj-card-desc {
   font-family: 'Inter', sans-serif;
   font-size: 0.85rem; color: rgba(255,255,255,0.65);
   line-height: 1.6; margin: 0;
@@ -279,31 +244,32 @@
 .prj-tag.more { color: rgba(255,255,255,0.55); }
 
 /* ─── Buttons ─────────────────────────────────────────── */
-.prj-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.prj-actions {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 10px;
+  align-items: center;
+}
 
 .prj-btn {
-  display: inline-flex; align-items: center; gap: 8px;
+  display: inline-flex; align-items: center; gap: 7px;
   font-family: 'Inter', sans-serif;
-  font-size: 0.82rem; font-weight: 700;
+  font-size: 0.75rem; font-weight: 700;
   color: #fff;
   background: rgba(255,255,255,0.12);
   border: 1.5px solid rgba(255,255,255,0.2);
-  padding: 11px 22px; border-radius: 50px;
+  padding: 8px 16px; border-radius: 50px;
   text-decoration: none; cursor: pointer;
   backdrop-filter: blur(8px);
   transition: all 0.28s cubic-bezier(0.22,1,0.36,1);
+  height: 36px;
+  box-sizing: border-box;
 }
 .prj-btn:hover {
   background: var(--ta, #818cf8);
   border-color: var(--ta, #818cf8);
   transform: translateY(-2px);
   box-shadow: 0 8px 28px rgba(0,0,0,0.35);
-}
-.prj-btn.small {
-  font-size: 0.75rem; 
-  padding: 8px 16px;
-  height: 38px;
-  box-sizing: border-box;
 }
 
 /* See More — filled accent style */
@@ -316,16 +282,6 @@
   opacity: 0.88;
   transform: translateY(-2px);
   box-shadow: 0 8px 28px rgba(0,0,0,0.35);
-}
-
-/* Small card action row */
-.prj-small-body .prj-actions {
-  margin-top: auto;
-  padding-top: 12px;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  align-items: center;
 }
 
 /* ─── GitHub Strip ────────────────────────────────────── */
@@ -363,17 +319,60 @@
 }
 .prj-github-strip:hover .prj-strip-arrow { transform: translateX(5px); }
 
+/* ─── See More Projects Button ────────────────────────── */
+.prj-see-all {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+.prj-see-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+  border: 2px solid transparent;
+  padding: 14px 36px;
+  border-radius: 50px;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
+  box-shadow: 0 8px 30px rgba(99,102,241,0.3);
+}
+.prj-see-all-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+  opacity: 0;
+  transition: opacity 0.35s;
+  border-radius: inherit;
+}
+.prj-see-all-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 44px rgba(99,102,241,0.45);
+}
+.prj-see-all-btn:hover::before {
+  opacity: 1;
+}
+.prj-see-all-btn > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* ─── Responsive ──────────────────────────────────────── */
 @media (max-width: 900px) {
+  .prj-grid { grid-template-columns: 1fr; }
   .prj-container { padding: 0 20px; }
-  .prj-small-row { grid-template-columns: 1fr; }
-  .prj-hero-deco { display: none; }
-  .prj-hero-body { padding: 40px 36px; }
 }
 @media (max-width: 600px) {
   .prj-section { padding: 80px 0 100px; }
-  .prj-hero-body { padding: 30px 24px; }
-  .prj-small-body { padding: 28px 22px; }
-  .prj-hero-title { font-size: 1.3rem; }
+  .prj-card-body { padding: 28px 22px; }
+  .prj-ghost-num { font-size: 6rem; }
   .prj-github-strip { padding: 18px 20px; gap: 12px; }
 }

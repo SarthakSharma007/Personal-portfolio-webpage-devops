@@ -4,6 +4,7 @@
   "description": "Frontend React app for DevOps Portfolio",
   "private": true,
   "dependencies": {
+    "@lottiefiles/dotlottie-react": "^0.19.4",
     "axios": "^1.6.2",
     "bootstrap": "^5.3.8",
     "framer-motion": "^10.18.0",
@@ -16,7 +17,7 @@
     "react-scripts": "5.0.1"
   },
   "scripts": {
-    "start": "cross-env DISABLE_ESLINT_PLUGIN=true GENERATE_SOURCEMAP=false react-scripts start",
+    "start": "cross-env PORT=3000 DISABLE_ESLINT_PLUGIN=true GENERATE_SOURCEMAP=false react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

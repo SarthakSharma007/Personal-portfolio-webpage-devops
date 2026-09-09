@@ -14,6 +14,7 @@ import Education from './components/Education';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ProjectDetail from './components/ProjectDetail';
+import AllProjects from './components/AllProjects';
 import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
@@ -50,6 +51,7 @@ const AppRoutes = () => {
       {/* Routes that use the MainLayout (Navbar, ScrollToTop, theme) */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
+        <Route path="/projects" element={<AllProjects />} />
         <Route path="/projects/:slug" element={<ProjectDetail />} />
       </Route>
 

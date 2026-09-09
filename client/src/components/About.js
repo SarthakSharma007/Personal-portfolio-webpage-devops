@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { FaGithub, FaLinkedin, FaFileDownload } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaFileAlt } from 'react-icons/fa';
 import api from '../services/api';
 import './About.css';
 import profileImage from '../assets/profile/my resume photot.jpg';
@@ -8,10 +8,10 @@ import profileImage from '../assets/profile/my resume photot.jpg';
 const defaultPersonalInfo = {
   full_name: 'Sarthak Sharma',
   title: 'DevOps Cloud Engineer',
-  bio: 'I\'m a highly driven Computer Science undergraduate with a strong foundation in DevOps and automation practices, passionate about building scalable and efficient systems. I\'ve successfully automated CI/CD pipelines, reducing software release times by 95%, and have hands-on experience with Docker, Kubernetes, and AWS for cloud deployment and orchestration. My expertise also includes system observability using Prometheus and Grafana, and effective project tracking with Jira. Recognized as the 2nd runner-up in a National Hackathon, I bring strong problem-solving and leadership skills to every project.',
+  bio: "I'm a highly driven Computer Science undergraduate with a strong foundation in DevOps and automation practices, passionate about building scalable and efficient systems. I've successfully automated CI/CD pipelines, reducing software release times by 95%, and have hands-on experience with Docker, Kubernetes, and AWS for cloud deployment and orchestration. My expertise also includes system observability using Prometheus and Grafana, and effective project tracking with Jira. Recognized as the 2nd runner-up in a National Hackathon, I bring strong problem-solving and leadership skills to every project.",
   github_url: 'https://github.com/SarthakSharma007',
   linkedin_url: 'https://www.linkedin.com/in/sarthaksharmaprofile/',
-  resume_url: 'https://drive.google.com/file/d/1KbZhwxc0CYKciz7xF_1fB1-pHv_VpqsS/view?usp=sharing'
+  resume_url: 'https://drive.google.com/file/d/1KbZhwxc0CYKciz7xF_1fB1-pHv_VpqsS/view?usp=sharing',
 };
 
 const About = () => {
@@ -23,8 +23,6 @@ const About = () => {
       try {
         const res = await api.get('/personal-info');
         if (res.data?.success && res.data.data) {
-          // Only merge non-null, non-empty-string values so the
-          // hardcoded defaults are preserved when the DB field is blank.
           const apiData = Object.fromEntries(
             Object.entries(res.data.data).filter(
               ([, v]) => v !== null && v !== ''
@@ -39,133 +37,114 @@ const About = () => {
     fetchPersonal();
   }, []);
 
-  const viewportConfig = reducedMotion
-    ? { once: true, amount: 0.3 }
-    : { once: false, amount: 0.22, margin: '0px 0px -8% 0px' };
-
-  const sectionTransition = reducedMotion
-    ? { duration: 0.22, ease: 'linear' }
-    : { type: 'spring', stiffness: 120, damping: 24, mass: 0.95 };
-
-  const childTransition = reducedMotion
+  const spring = reducedMotion
     ? { duration: 0.2, ease: 'linear' }
-    : { type: 'spring', stiffness: 140, damping: 26, mass: 0.85 };
+    : { type: 'spring', stiffness: 100, damping: 20 };
 
-  const headerVariant = {
-    hidden: {
-      opacity: 0,
-      y: 24,
-      scale: 0.985,
-      filter: reducedMotion ? 'none' : 'blur(8px)'
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      filter: 'blur(0px)',
-      transition: sectionTransition
-    }
+  const fadeUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: spring },
+  };
+  
+  const fadeLeft = {
+    hidden: { opacity: 0, x: -30 },
+    visible: { opacity: 1, x: 0, transition: spring },
   };
 
-  const detailVariant = {
-    hidden: {
-      opacity: 0,
-      y: 30,
-      scale: 0.99,
-      filter: reducedMotion ? 'none' : 'blur(10px)'
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      filter: 'blur(0px)',
-      transition: childTransition
-    }
+  const fadeRight = {
+    hidden: { opacity: 0, x: 30 },
+    visible: { opacity: 1, x: 0, transition: spring },
   };
 
-  const profileVariant = {
-    hidden: {
-      opacity: 0,
-      y: 34,
-      scale: 0.985,
-      filter: reducedMotion ? 'none' : 'blur(10px)'
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      filter: 'blur(0px)',
-      transition: { ...childTransition, delay: reducedMotion ? 0 : 0.06 }
-    }
-  };
+  const profileSrc = personalInfo.about_image
+    ? personalInfo.about_image.startsWith('http')
+      ? personalInfo.about_image
+      : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${personalInfo.about_image}`
+    : profileImage;
 
   return (
-    <section id="about" className="about-legendary-section">
-      {/* Background Glow Orbs */}
-      <div className="about-orb about-orb-1" />
-      <div className="about-orb about-orb-2" />
-      <div className="about-orb about-orb-3" />
-      <div className="about-grid-overlay" />
-
-      <div className="about-content-wrap">
-
-        {/* 1. HEADER — from Top */}
-        <motion.div
-          className="about-header"
-          variants={headerVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportConfig}
-        >
-          <h2 className="about-heading">About Me.</h2>
-          <div className="about-heading-bar" />
-        </motion.div>
-
-        {/* Grid: Detail + Profile */}
-        <div className="about-grid">
-
-          {/* 2. DETAIL BLOCK — from Right */}
+    <section id="about" className="about-section">
+      <div className="about-inner">
+        <div className="about-card">
+          
+          {/* Left Column: Image — hidden on mobile, replaced by inline mobile image */}
           <motion.div
-            className="about-detail-block"
-            variants={detailVariant}
+            className="about-photo-wrap about-photo-desktop"
             initial="hidden"
             whileInView="visible"
-            viewport={viewportConfig}
-            whileHover={reducedMotion ? undefined : { y: -4, scale: 1.01 }}
-            transition={reducedMotion ? { duration: 0.2 } : { type: 'spring', stiffness: 210, damping: 22 }}
+            viewport={{ once: true, amount: 0.3 }}
+            variants={fadeLeft}
           >
-            <p className="about-bio-text">{personalInfo.bio}</p>
+            <img src={profileSrc} alt={personalInfo.full_name} className="about-photo" />
           </motion.div>
 
-          {/* 3. PROFILE BLOCK — from Left */}
+          {/* Right Column: Text content */}
           <motion.div
-            className="about-profile-block"
-            variants={profileVariant}
+            className="about-text"
             initial="hidden"
             whileInView="visible"
-            viewport={viewportConfig}
-            whileHover={reducedMotion ? undefined : { y: -5, scale: 1.01 }}
-            transition={reducedMotion ? { duration: 0.2 } : { type: 'spring', stiffness: 210, damping: 22 }}
+            viewport={{ once: true, amount: 0.3 }}
+            variants={fadeRight}
           >
-            <div className="about-profile-ring">
-              <div className="about-profile-glow" />
-              <img
-                src={personalInfo.about_image ? `http://localhost:5000${personalInfo.about_image}` : profileImage}
-                alt={personalInfo.full_name}
-                className="about-profile-img"
-              />
+            <div className="about-label">
+              <span className="about-label-dot" /> About Me
             </div>
-            <h3 className="about-profile-name">{personalInfo.full_name}</h3>
-            <p className="about-profile-title">{personalInfo.title}</p>
-            <div className="about-profile-actions">
-              <a href={personalInfo.github_url} target="_blank" rel="noopener noreferrer" className="about-profile-btn about-profile-btn-primary">
-                <FaGithub />
+            
+            <h3 className="about-name">{personalInfo.full_name}</h3>
+            <p className="about-role">{personalInfo.title}</p>
+
+            {/* Mobile-only image — between role and bio */}
+            <div className="about-photo-mobile-wrap">
+              <img src={profileSrc} alt={personalInfo.full_name} className="about-photo" />
+            </div>
+
+            <p className="about-bio">{personalInfo.bio}</p>
+
+            <div className="about-links">
+              <a 
+                href={personalInfo.github_url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="about-pill"
+                style={{
+                  ...(personalInfo?.about_github_btn_bg ? { background: personalInfo.about_github_btn_bg, borderColor: personalInfo.about_github_btn_bg } : {}),
+                  ...(personalInfo?.about_github_btn_color ? { color: personalInfo.about_github_btn_color } : {})
+                }}
+              >
+                <FaGithub style={personalInfo?.about_github_btn_color ? { color: personalInfo.about_github_btn_color } : {}} /> 
+                <span style={personalInfo?.about_github_btn_color ? { color: personalInfo.about_github_btn_color } : {}}>
+                  {personalInfo?.about_github_btn_text || 'GitHub'}
+                </span>
               </a>
-              <a href={personalInfo.linkedin_url} target="_blank" rel="noopener noreferrer" className="about-profile-btn about-profile-btn-secondary">
-                <FaLinkedin />
+              <a 
+                href={personalInfo.linkedin_url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="about-pill"
+                style={{
+                  ...(personalInfo?.about_linkedin_btn_bg ? { background: personalInfo.about_linkedin_btn_bg, borderColor: personalInfo.about_linkedin_btn_bg } : {}),
+                  ...(personalInfo?.about_linkedin_btn_color ? { color: personalInfo.about_linkedin_btn_color } : {})
+                }}
+              >
+                <FaLinkedin style={personalInfo?.about_linkedin_btn_color ? { color: personalInfo.about_linkedin_btn_color } : {}} /> 
+                <span style={personalInfo?.about_linkedin_btn_color ? { color: personalInfo.about_linkedin_btn_color } : {}}>
+                  {personalInfo?.about_linkedin_btn_text || 'LinkedIn'}
+                </span>
               </a>
-              <a href={personalInfo.resume_url} target="_blank" rel="noopener noreferrer" className="about-profile-btn about-profile-btn-ghost">
-                <FaFileDownload />
+              <a 
+                href={personalInfo.resume_url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="about-pill about-pill-accent"
+                style={{
+                  ...(personalInfo?.about_resume_btn_bg ? { background: personalInfo.about_resume_btn_bg, borderColor: personalInfo.about_resume_btn_bg } : {}),
+                  ...(personalInfo?.about_resume_btn_color ? { color: personalInfo.about_resume_btn_color } : {})
+                }}
+              >
+                <FaFileAlt style={personalInfo?.about_resume_btn_color ? { color: personalInfo.about_resume_btn_color } : {}} /> 
+                <span style={personalInfo?.about_resume_btn_color ? { color: personalInfo.about_resume_btn_color } : {}}>
+                  {personalInfo?.about_resume_btn_text || 'Resume'}
+                </span>
               </a>
             </div>
           </motion.div>

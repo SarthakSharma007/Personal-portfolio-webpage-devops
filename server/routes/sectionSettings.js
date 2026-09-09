@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { promisePool } = require('../config/db');
+const auth = require('../middleware/auth');
 
+// GET /api/sectionSettings/:section
 router.get('/:section', async (req, res) => {
   const { section } = req.params;
   try {
@@ -16,6 +18,36 @@ router.get('/:section', async (req, res) => {
     }
   } catch (err) {
     console.error('Error fetching section settings:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// PUT /api/sectionSettings/:section (protected — admin only)
+router.put('/:section', auth, async (req, res) => {
+  const { section } = req.params;
+  const { subtitle, title, title_highlight, title_gradient, description } = req.body;
+  try {
+    const [result] = await promisePool.execute(
+      `UPDATE section_settings 
+       SET subtitle=?, title=?, title_highlight=?, title_gradient=?, description=? 
+       WHERE section_name=?`,
+      [subtitle, title, title_highlight, title_gradient, description, section]
+    );
+    
+    if (result.affectedRows === 0) {
+      // No row yet — insert it
+      await promisePool.execute(
+        `INSERT INTO section_settings (section_name, subtitle, title, title_highlight, title_gradient, description)
+         VALUES (?, ?, ?, ?, ?, ?)
+         ON DUPLICATE KEY UPDATE 
+         subtitle=VALUES(subtitle), title=VALUES(title), title_highlight=VALUES(title_highlight), title_gradient=VALUES(title_gradient), description=VALUES(description)`,
+        [section, subtitle, title, title_highlight, title_gradient, description]
+      );
+    }
+    
+    res.json({ success: true, message: 'Settings updated' });
+  } catch (err) {
+    console.error('Error updating section settings:', err);
     res.status(500).json({ success: false, error: 'Server error' });
   }
 });

@@ -32,58 +32,46 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-<<<<<<< HEAD
 /* ---------------------------
    Security & Middleware
 --------------------------- */
-app.use(helmet());
-=======
-// ---------------------------
-// ✅ Security & Middleware
 // Configure helmet to allow cross-origin resource loading for uploaded images
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
 }));
->>>>>>> 74d6f8c (Updated project files make Dynamic)
 
-// Required when behind Jenkins / reverse proxy
+// Required when behind Nginx reverse proxy
 app.set('trust proxy', 1);
 
-// Rate limiting
+// Rate limiting — stricter in production
 const limiter = rateLimit({
-<<<<<<< HEAD
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false
-});
-app.use(limiter);
-
-// CORS configuration
-const allowedOrigins =
-  NODE_ENV === 'production'
-    ? (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : [])
-    : ['http://localhost:4578'];
-=======
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // Increased for development
+  max: NODE_ENV === 'production' ? 200 : 1000,
+  standardHeaders: true,
+  legacyHeaders: false,
   message: 'Too many requests from this IP, please try again later.'
 });
 app.use(limiter);
 
-// ✅ CORS setup
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? [process.env.FRONTEND_URL || 'https://yourdomain.com']
-    : ['http://localhost:3000'],
-  credentials: true
-}));
->>>>>>> 74d6f8c (Updated project files make Dynamic)
+// CORS — reads allowed origins from environment variable
+const getAllowedOrigins = () => {
+  if (NODE_ENV === 'production') {
+    const envOrigins = process.env.CORS_ORIGIN
+      ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
+      : [];
+    const frontendUrl = process.env.FRONTEND_URL;
+    if (frontendUrl && !envOrigins.includes(frontendUrl)) {
+      envOrigins.push(frontendUrl);
+    }
+    return envOrigins;
+  }
+  return ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002', 'http://localhost:4578'];
+};
 
 app.use(
   cors({
-    origin: allowedOrigins,
-    credentials: true
+    origin: getAllowedOrigins(),
+    credentials: true,
   })
 );
 
@@ -91,7 +79,7 @@ app.use(
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Static files
+// Static files (uploaded images)
 app.use('/uploads', express.static('uploads'));
 
 /* ---------------------------
@@ -111,7 +99,7 @@ app.use('/api/personal-info', personalInfoRoutes);
    Health & Readiness
 --------------------------- */
 
-// Fast liveness check (Jenkins / Prometheus)
+// Fast liveness check (Nginx / load balancer)
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
@@ -126,7 +114,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Readiness check (DB dependency)
+// Readiness check (verifies DB connection)
 app.get('/ready', async (req, res) => {
   try {
     await promisePool.query('SELECT 1');
@@ -178,7 +166,7 @@ app.listen(PORT, () => {
     await testConnection();
     console.log('✅ Database connected successfully');
   } catch (err) {
-    console.error('⚠️ Database connection failed:', err.message);
-    console.error('⚠️ Application is running, but DB is NOT ready');
+    console.error('⚠️  Database connection failed:', err.message);
+    console.error('⚠️  Application is running, but DB is NOT ready');
   }
 })();

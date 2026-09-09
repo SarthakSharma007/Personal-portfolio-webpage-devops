@@ -5,7 +5,7 @@ const { promisePool } = require('../config/db');
 const auth = require('../middleware/auth');
 
 // ---------------------------
-// ✅ GET all skills
+// GET all skills
 // ---------------------------
 router.get('/', async (req, res) => {
   try {
@@ -20,21 +20,24 @@ router.get('/', async (req, res) => {
 });
 
 // ---------------------------
-// ✅ POST a new skill (protected)
+// POST a new skill (protected)
 // ---------------------------
 router.post('/', auth, async (req, res) => {
-  const { name, level, category } = req.body;
+  const { name, level, category, icon, emoji, bg } = req.body;
 
   if (!name || !level || !category) {
-    return res.status(400).json({ error: 'All fields are required' });
+    return res.status(400).json({ error: 'Name, level, and category are required' });
   }
 
   try {
     const [result] = await promisePool.execute(
-      'INSERT INTO skills (skill_name, proficiency_level, category) VALUES (?, ?, ?)',
-      [name, level, category]
+      'INSERT INTO skills (skill_name, proficiency_level, category, icon, emoji, bg) VALUES (?, ?, ?, ?, ?, ?)',
+      [name, level, category, icon || null, emoji || null, bg || null]
     );
-    res.status(201).json({ success: true, data: { id: result.insertId, name, level, category } });
+    res.status(201).json({
+      success: true,
+      data: { id: result.insertId, name, level, category, icon: icon || null, emoji: emoji || null, bg: bg || null }
+    });
   } catch (err) {
     console.error('Error adding skill:', err);
     res.status(500).json({ error: 'Server error' });
@@ -42,27 +45,27 @@ router.post('/', auth, async (req, res) => {
 });
 
 // ---------------------------
-// ✅ PUT (Update a skill)
+// PUT (Update a skill) — includes icon, emoji, bg fields
 // ---------------------------
 router.put('/:id', auth, async (req, res) => {
-  const { name, level, category } = req.body;
+  const { name, level, category, icon, emoji, bg } = req.body;
   const { id } = req.params;
 
   if (!name || !level || !category) {
-    return res.status(400).json({ error: 'All fields are required' });
+    return res.status(400).json({ error: 'Name, level, and category are required' });
   }
 
   try {
     const [result] = await promisePool.execute(
-      'UPDATE skills SET skill_name=?, proficiency_level=?, category=? WHERE id=?',
-      [name, level, category, id]
+      'UPDATE skills SET skill_name=?, proficiency_level=?, category=?, icon=?, emoji=?, bg=? WHERE id=?',
+      [name, level, category, icon || null, emoji || null, bg || null, id]
     );
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Skill not found' });
     }
 
-    res.json({ success: true, data: { id, name, level, category } });
+    res.json({ success: true, data: { id, name, level, category, icon: icon || null, emoji: emoji || null, bg: bg || null } });
   } catch (err) {
     console.error('Error updating skill:', err);
     res.status(500).json({ error: 'Server error' });
@@ -70,7 +73,7 @@ router.put('/:id', auth, async (req, res) => {
 });
 
 // ---------------------------
-// ✅ DELETE a skill
+// DELETE a skill
 // ---------------------------
 router.delete('/:id', auth, async (req, res) => {
   const { id } = req.params;
