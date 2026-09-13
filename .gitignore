@@ -1,6 +1,7 @@
 # ==============================================================================
 # Gitignore — Personal Portfolio Webpage (DevOps)
 # Production-Hardened Security & Build Hygiene
+# Aligned with githubhost.txt (Step 1.4: node_modules/, .env, build/, uploads/, *.log)
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -10,6 +11,8 @@
 .env.*
 *.env
 *.env.*
+server/.env
+client/.env
 !.env.example
 !env.example
 !env.exmaple
@@ -36,11 +39,14 @@ web_modules/
 # ------------------------------------------------------------------------------
 # 3. Dynamic Uploads & User Media (Prevents dynamic uploads committing to git)
 # ------------------------------------------------------------------------------
+uploads/*
+!uploads/.gitkeep
+**/uploads/*
+!**/uploads/.gitkeep
 server/uploads/*
 !server/uploads/.gitkeep
 client/public/uploads/*
 !client/public/uploads/.gitkeep
-uploads/
 
 # ------------------------------------------------------------------------------
 # 4. Database Data, Dumps & Persistent Volumes
