@@ -1,6 +1,6 @@
 /* client/src/components/Footer.js */
 import React from 'react';
-import { FaHeart, FaGithub, FaLinkedin, FaInstagram, FaTerminal } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaInstagram, FaTerminal } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import api from '../services/api';
 import './Footer.css';

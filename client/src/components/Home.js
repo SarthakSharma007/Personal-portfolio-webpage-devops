@@ -51,7 +51,7 @@ const InfinityBackground = () => {
 const Home = () => {
   const [personalInfo, setPersonalInfo] = useState(null);
   const [error, setError] = useState(null);
-  const [apiLoading, setApiLoading] = useState(true);
+  const [, setApiLoading] = useState(true);
 
   const [showAnimation, setShowAnimation] = useState(
     () => !sessionStorage.getItem('welcomeShown')
@@ -104,11 +104,6 @@ const Home = () => {
     initial: { opacity: 0, y: 30, scale: 0.97 },
     animate: { opacity: 1, y: 0, scale: 1 },
     transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
-  };
-
-  const childVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0 },
   };
 
   return (

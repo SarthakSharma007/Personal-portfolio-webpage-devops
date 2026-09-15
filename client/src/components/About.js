@@ -41,10 +41,6 @@ const About = () => {
     ? { duration: 0.2, ease: 'linear' }
     : { type: 'spring', stiffness: 100, damping: 20 };
 
-  const fadeUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: spring },
-  };
   
   const fadeLeft = {
     hidden: { opacity: 0, x: -30 },
