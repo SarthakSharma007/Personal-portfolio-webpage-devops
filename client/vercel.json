@@ -1,0 +1,12 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/:path*",
+            "destination": "https://portfolio-backend-l6mz.onrender.com/api/:path*"
+        },
+        {
+            "source": "/uploads/:path*",
+            "destination": "https://portfolio-backend-l6mz.onrender.com/uploads/:path*"
+        }
+    ]
+}
