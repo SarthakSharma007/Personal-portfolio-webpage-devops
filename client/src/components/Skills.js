@@ -18,8 +18,72 @@ const useDevicons = () => {
   }, []);
 };
 
-/* ─── Skill Data ─────────────────────────────────────────── */
-// Static CATEGORIES array has been migrated to the database.
+/* ─── Skill Data Defaults ───────────────────────────────── */
+const DEFAULT_CATEGORIES = [
+  {
+    id: 'cloud',
+    label: 'Cloud & DevOps',
+    gradient: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)',
+    glow: 'rgba(99,102,241,0.4)',
+    textColor: '#e0f2fe',
+    span: 'wide',
+    skills: [
+      { name: 'Docker',      icon: 'devicon-docker-plain colored',                     bg: '#2496ed22' },
+      { name: 'Kubernetes',  icon: 'devicon-kubernetes-plain colored',                 bg: '#326ce522' },
+      { name: 'Jenkins',     icon: 'devicon-jenkins-line colored',                     bg: '#d3342022' },
+      { name: 'Git',         icon: 'devicon-git-plain colored',                        bg: '#f0502422' },
+      { name: 'Terraform',   icon: 'devicon-terraform-plain colored',                  bg: '#7b42bc22' },
+      { name: 'Ansible',     icon: 'devicon-ansible-plain colored',                    bg: '#e0052622' },
+      { name: 'AWS',         icon: 'devicon-amazonwebservices-plain-wordmark colored', bg: '#ff990022' },
+      { name: 'Azure',       icon: 'devicon-azure-plain colored',                      bg: '#0078d422' },
+      { name: 'CI/CD',       icon: 'devicon-githubactions-plain colored',              bg: '#2088ff22' },
+      { name: 'Bash',        icon: 'devicon-bash-plain colored',                       bg: '#29304422' },
+      { name: 'Networking',  icon: null, emoji: '🌐',                                  bg: '#00cfff22' }
+    ]
+  },
+  {
+    id: 'monitoring',
+    label: 'Monitoring & Observability',
+    gradient: 'linear-gradient(135deg, #f97316 0%, #ef4444 100%)',
+    glow: 'rgba(249,115,22,0.35)',
+    textColor: '#fff7ed',
+    span: 'half',
+    skills: [
+      { name: 'Prometheus',    icon: 'devicon-prometheus-original colored', bg: '#e6522c22' },
+      { name: 'Grafana',       icon: 'devicon-grafana-plain colored',        bg: '#f4600022' },
+      { name: 'Elasticsearch', icon: 'devicon-elasticsearch-plain colored',  bg: '#00bfb322' }
+    ]
+  },
+  {
+    id: 'languages',
+    label: 'Languages & Databases',
+    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)',
+    glow: 'rgba(139,92,246,0.35)',
+    textColor: '#fdf4ff',
+    span: 'half',
+    skills: [
+      { name: 'Python',           icon: 'devicon-python-plain colored',     bg: '#3776ab22' },
+      { name: 'Java',             icon: 'devicon-java-plain colored',       bg: '#5382a122' },
+      { name: 'SQL / PostgreSQL', icon: 'devicon-postgresql-plain colored', bg: '#33698122' },
+      { name: 'MongoDB',          icon: 'devicon-mongodb-plain colored',    bg: '#47a24822' },
+      { name: 'Redis',            icon: 'devicon-redis-plain colored',      bg: '#dc382d22' }
+    ]
+  },
+  {
+    id: 'os',
+    label: 'Operating Systems & Tools',
+    gradient: 'linear-gradient(135deg, #10b981 0%, #0ea5e9 100%)',
+    glow: 'rgba(16,185,129,0.35)',
+    textColor: '#ecfdf5',
+    span: 'wide',
+    skills: [
+      { name: 'Linux',   icon: 'devicon-linux-plain',               bg: '#fcc62422' },
+      { name: 'Windows', icon: 'devicon-windows8-original colored', bg: '#0078d422' },
+      { name: 'Nginx',   icon: 'devicon-nginx-original colored',    bg: '#00915822' },
+      { name: 'Vagrant', icon: 'devicon-vagrant-plain colored',     bg: '#1868f222' }
+    ]
+  }
+];
 
 /* ─── Single Skill Tile ──────────────────────────────────── */
 const SkillTile = ({ skill, delay = 0, glow, motionConfig, mobileMotion }) => {
@@ -55,8 +119,10 @@ const SkillTile = ({ skill, delay = 0, glow, motionConfig, mobileMotion }) => {
       <div className="sk2-tile-icon">
         {skill.emoji ? (
           <span className="sk2-emoji">{skill.emoji}</span>
-        ) : (
+        ) : skill.icon ? (
           <i className={`${skill.icon} sk2-devicon`} />
+        ) : (
+          <span className="sk2-emoji">⚡</span>
         )}
       </div>
       <span className="sk2-tile-name">{skill.name}</span>
@@ -140,7 +206,7 @@ const BgDots = () => (
 const Skills = () => {
   useDevicons();
   const reducedMotion = useReducedMotion();
-  const [categories, setCategories] = React.useState([]);
+  const [categories, setCategories] = React.useState(DEFAULT_CATEGORIES);
   const [headerSettings, setHeaderSettings] = React.useState({
     subtitle: 'MY TOOLKIT',
     title: 'Technologies & ',
@@ -217,28 +283,53 @@ const Skills = () => {
         ]);
 
         if (headerRes.data?.data) {
-          setHeaderSettings(headerRes.data.data);
+          setHeaderSettings(prev => ({ ...prev, ...headerRes.data.data }));
         }
 
         const dbCategories = catRes.data?.data || [];
         const dbSkills = skillsRes.data?.data || [];
 
-        const updatedCategories = dbCategories.map(cat => ({
-          id: cat.category_id,
-          label: cat.label,
-          gradient: cat.gradient,
-          glow: cat.glow,
-          textColor: cat.textColor,
-          span: cat.span,
-          skills: dbSkills.filter(s => s.category === cat.category_id).map(s => ({
-            name: s.name,
-            icon: s.icon,
-            emoji: s.emoji,
-            bg: s.bg
-          }))
-        }));
+        if (dbCategories.length > 0) {
+          const updatedCategories = dbCategories.map(cat => {
+            const catId = (cat.category_id || '').toLowerCase();
+            const fallback = DEFAULT_CATEGORIES.find(c => c.id.toLowerCase() === catId) || {};
+            const catSkills = dbSkills.filter(s => {
+              const skillCat = (s.category || '').toLowerCase();
+              return skillCat === catId || skillCat === (cat.label || '').toLowerCase();
+            });
 
-        setCategories(updatedCategories);
+            return {
+              id: cat.category_id || fallback.id || 'skills',
+              label: cat.label || fallback.label || 'Skills',
+              gradient: cat.gradient || fallback.gradient || 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)',
+              glow: cat.glow || fallback.glow || 'rgba(99,102,241,0.4)',
+              textColor: cat.textColor || fallback.textColor || '#e0f2fe',
+              span: cat.span || fallback.span || 'half',
+              skills: catSkills.length > 0
+                ? catSkills.map(s => {
+                    const fallbackSkill = (fallback.skills || []).find(fs => fs.name.toLowerCase() === (s.name || s.skill_name || '').toLowerCase()) || {};
+                    return {
+                      name: s.name || s.skill_name,
+                      icon: s.icon || fallbackSkill.icon || (s.emoji ? null : 'devicon-devicon-plain colored'),
+                      emoji: s.emoji || fallbackSkill.emoji || null,
+                      bg: s.bg || fallbackSkill.bg || 'rgba(99,102,241,0.12)'
+                    };
+                  })
+                : (fallback.skills || [])
+            };
+          });
+
+          if (updatedCategories.length < DEFAULT_CATEGORIES.length) {
+            const existingIds = new Set(updatedCategories.map(c => c.id.toLowerCase()));
+            for (const defCat of DEFAULT_CATEGORIES) {
+              if (!existingIds.has(defCat.id.toLowerCase())) {
+                updatedCategories.push(defCat);
+              }
+            }
+          }
+
+          setCategories(updatedCategories);
+        }
       } catch (e) {
         console.error('Error fetching skills:', e);
       }
@@ -263,9 +354,22 @@ const Skills = () => {
           whileInView="visible"
           viewport={motionConfig.viewport}
         >
-          <span className="sk2-eyebrow">{headerSettings.subtitle}</span>
+          <span className="sk2-eyebrow">{headerSettings.subtitle || 'MY TOOLKIT'}</span>
           <h2 className="sk2-title">
-            {headerSettings.title} <span className="sk2-title-accent" style={{ background: headerSettings.title_gradient, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', color: 'transparent' }}>{headerSettings.title_highlight}</span>
+            {headerSettings.title || 'Technologies & '}
+            <span
+              className="sk2-title-accent"
+              style={{
+                backgroundImage: headerSettings.title_gradient || undefined,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                color: 'transparent',
+                display: 'inline-block'
+              }}
+            >
+              {headerSettings.title_highlight || 'Skills'}
+            </span>
           </h2>
           <p className="sk2-subtitle">
             {headerSettings.description}

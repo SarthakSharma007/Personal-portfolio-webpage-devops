@@ -177,12 +177,13 @@ const Projects = () => {
           <h2 className="prj-main-title">
             {headerSettings.title}
             <span style={{ 
-              background: headerSettings.title_gradient, 
+              backgroundImage: headerSettings.title_gradient || undefined, 
               WebkitBackgroundClip: 'text', 
               WebkitTextFillColor: 'transparent', 
               backgroundClip: 'text', 
-              color: 'transparent' 
-            }}>{headerSettings.title_highlight}</span>
+              color: 'transparent',
+              display: 'inline-block'
+            }}>{headerSettings.title_highlight || 'Projects'}</span>
           </h2>
           <p className="prj-main-sub">
             {headerSettings.description}
