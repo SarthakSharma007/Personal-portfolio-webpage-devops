@@ -58,6 +58,12 @@ const About = () => {
       : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${personalInfo.about_image}`
     : profileImage;
 
+  const resumeSrc = personalInfo.resume_url
+    ? personalInfo.resume_url.startsWith('http')
+      ? personalInfo.resume_url
+      : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${personalInfo.resume_url}`
+    : '#';
+
   return (
     <section id="about" className="about-section">
       <div className="about-inner">
@@ -128,7 +134,7 @@ const About = () => {
                 </span>
               </a>
               <a 
-                href={personalInfo.resume_url} 
+                href={resumeSrc} 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="about-pill about-pill-accent"
