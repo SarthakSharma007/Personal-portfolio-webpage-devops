@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaFileAlt } from 'react-icons/fa';
 import api from '../services/api';
+import { getAssetUrl, handleImageError } from '../utils/assetUrl';
 import './About.css';
 import profileImage from '../assets/profile/my resume photot.jpg';
 
@@ -53,15 +54,11 @@ const About = () => {
   };
 
   const profileSrc = personalInfo.about_image
-    ? personalInfo.about_image.startsWith('http')
-      ? personalInfo.about_image
-      : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${personalInfo.about_image}`
+    ? getAssetUrl(personalInfo.about_image)
     : profileImage;
 
   const resumeSrc = personalInfo.resume_url
-    ? personalInfo.resume_url.startsWith('http')
-      ? personalInfo.resume_url
-      : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${personalInfo.resume_url}`
+    ? getAssetUrl(personalInfo.resume_url)
     : '#';
 
   return (
@@ -77,7 +74,12 @@ const About = () => {
             viewport={{ once: true, amount: 0.3 }}
             variants={fadeLeft}
           >
-            <img src={profileSrc} alt={personalInfo.full_name} className="about-photo" />
+            <img
+              src={profileSrc}
+              alt={personalInfo.full_name}
+              className="about-photo"
+              onError={(e) => handleImageError(e, profileImage)}
+            />
           </motion.div>
 
           {/* Right Column: Text content */}
@@ -97,7 +99,12 @@ const About = () => {
 
             {/* Mobile-only image — between role and bio */}
             <div className="about-photo-mobile-wrap">
-              <img src={profileSrc} alt={personalInfo.full_name} className="about-photo" />
+              <img
+                src={profileSrc}
+                alt={personalInfo.full_name}
+                className="about-photo"
+                onError={(e) => handleImageError(e, profileImage)}
+              />
             </div>
 
             <p className="about-bio">{personalInfo.bio}</p>

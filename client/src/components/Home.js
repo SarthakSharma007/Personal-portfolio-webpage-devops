@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaChevronDown } from 'react-icons/fa';
 import { useInView } from 'react-intersection-observer';
 import api from '../services/api';
+import { getAssetUrl, handleImageError } from '../utils/assetUrl';
 import './Home.css';
 import profileImage from '../assets/profile/Gemini_Generated_Image_lnd0gnlnd0gnlnd0.png';
 import WelcomeLoader from './WelcomeLoader';
@@ -237,15 +238,10 @@ const Home = () => {
             }}
           >
             <img
-              src={
-                personalInfo?.profile_image
-                  ? personalInfo.profile_image.startsWith('http')
-                    ? personalInfo.profile_image
-                    : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${personalInfo.profile_image}`
-                  : profileImage
-              }
+              src={personalInfo?.profile_image ? getAssetUrl(personalInfo.profile_image) : profileImage}
               alt={personalInfo?.full_name || "Sarthak Sharma"}
               className="hero-full-person"
+              onError={(e) => handleImageError(e, profileImage)}
             />
           </motion.div>
         </motion.div>
