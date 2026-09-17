@@ -16,21 +16,25 @@ export const getAssetUrl = (url) => {
 
   const cleanPath = url.startsWith('/') ? url : `/${url}`;
 
-  if (process.env.REACT_APP_API_URL) {
-    const base = process.env.REACT_APP_API_URL.replace(/\/+$/, '');
-    return `${base}${cleanPath}`;
-  }
-
   const isLocalhost =
     typeof window !== 'undefined' &&
     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-  if (!isLocalhost) {
-    // In production, relative path is proxied by Vercel/Nginx over HTTPS
-    return cleanPath;
+  if (isLocalhost) {
+    // In local development, uploads are served by Admin server on port 5001 (or 5000)
+    return `http://localhost:5001${cleanPath}`;
   }
 
-  return `http://localhost:5000${cleanPath}`;
+  // In production:
+  // If an explicit admin / upload URL is provided, use it
+  if (process.env.REACT_APP_ADMIN_URL) {
+    const base = process.env.REACT_APP_ADMIN_URL.replace(/\/+$/, '');
+    return `${base}${cleanPath}`;
+  }
+
+  // Otherwise return relative path (/uploads/...) so Vercel's vercel.json rewrite
+  // proxies it directly over HTTPS to the admin backend where files reside
+  return cleanPath;
 };
 
 /**

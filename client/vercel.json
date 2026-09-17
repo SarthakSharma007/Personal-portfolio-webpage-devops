@@ -6,7 +6,7 @@
         },
         {
             "source": "/uploads/:path*",
-            "destination": "https://portfolio-backend-l6mz.onrender.com/uploads/:path*"
+            "destination": "https://admin-backend-zf1c.onrender.com/uploads/:path*"
         }
     ]
 }
